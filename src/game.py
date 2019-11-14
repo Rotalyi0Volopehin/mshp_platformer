@@ -4,6 +4,7 @@ import pygame
 from src.ball import Ball
 from src.board import Board
 from src.constants import Color
+from src.mushroom import Mushroom
 
 
 class Game:
@@ -20,6 +21,7 @@ class Game:
         for i in range(5):
             self.objects.append(Ball(self))
         self.objects.append(Board(self))
+        self.objects.append(Mushroom(self, [0, 0]))
 
     def library_init(self):
         pygame.init()  # Инициализация библиотеки
