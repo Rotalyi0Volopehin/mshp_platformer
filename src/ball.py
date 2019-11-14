@@ -25,5 +25,5 @@ class Ball(DrawableObject):
         self.rect.x += self.shift_x
         self.rect.y += self.shift_y
 
-    def process_draw(self):
+    def process_draw(self, screen):
         self.game_object.screen.blit(self.image, self.rect)

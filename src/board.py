@@ -1,7 +1,7 @@
 import pygame
 
 from src.base_classes import DrawableObject
-from src.constants import Color
+from src.constants import Colors
 
 
 class Board(DrawableObject):
@@ -23,5 +23,5 @@ class Board(DrawableObject):
     def process_logic(self):
         self.rect.x += self.shift
 
-    def process_draw(self):
-        pygame.draw.rect(self.game_object.screen, Color.RED, self.rect, 5)
+    def process_draw(self, screen):
+        pygame.draw.rect(self.game_object.screen, Colors.RED, self.rect, 5)
