@@ -15,7 +15,7 @@ class Player(sprite.Sprite, DrawableObject):
         self.image = Surface((Stats.WIDTH, Stats.HEIGHT))
         self.image.fill(Colors.BOLD)
         self.image = image.load("%s/raccoon_32.png" % IMAGES_DIR)
-        self.rect = Rect(x, y, Stats.WIDTH, Stats.HEIGHT)  # прямоугольный объект
+        self.rect = Rect(x, y, Stats.WIDTH, Stats.HEIGHT) # прямоугольный объект
         self.left = self.right = False
         self.up = False
         self.yvel = 0  # скорость вертикального перемещения

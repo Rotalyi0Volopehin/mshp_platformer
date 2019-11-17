@@ -4,7 +4,7 @@ import pygame
 from src.ball import Ball
 from src.board import Board
 from src.mushroom import Mushroom
-from src.constants import Colors
+from src.constants import *
 from src.camera import *
 from src.player import *
 from src.blocks import *
@@ -22,7 +22,6 @@ def camera_configure(camera, target_rect):
     t = min(0, t)  # Не движемся дальше верхней границы
 
     return Rect(l, t, w, h)
-
 
 
 class Game:

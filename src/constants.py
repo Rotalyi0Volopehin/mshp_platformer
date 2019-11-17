@@ -33,20 +33,20 @@ class Level:
         "-         -------                        ---                   -",
         "-                                                              -",
         "----------------------------------------------------------------",
-]
+ ]
 
 
 class Stats:
     MOVE_SPEED = 7
-    WIDTH = 32 # 64
-    HEIGHT = 32 # 64
+    WIDTH = 32  # 64
+    HEIGHT = 32  # 64
     JUMP_POWER = 10
-    GRAVITY = 0.35 # Сила, которая будет тянуть нас вниз
+    GRAVITY = 0.35  # Сила, которая будет тянуть нас вниз
 
 
 class PLATFORM:
-    WIDTH = 32 # 64
-    HEIGHT = 32 # 64
+    WIDTH = 32  # 64
+    HEIGHT = 32  # 64
     S = []
 
 
