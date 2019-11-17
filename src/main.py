@@ -1,7 +1,10 @@
 from src.game import Game
+from src.menu import Menu
 
 
 def main():
+    menu = Menu()
+    menu.show()
     g = Game()
     g.main_loop()
 

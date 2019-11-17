@@ -1,4 +1,5 @@
 import  pygame
+import sys
 from src.constants import Color
 
 class Menu:
@@ -13,7 +14,7 @@ class Menu:
         self.settingsIsActive = False
         self.highscoresIsActive = False
 
-        self.main_font = pygame.font.Font('RetroGaming.ttf', 46)
+        self.main_font = pygame.font.Font('font/RetroGaming.ttf', 46)
         self.newGameText = self.main_font.render("Новая игра", 1, Color.WHITE)
         self.settingsText = self.main_font.render("Настройки", 1, Color.WHITE) # инициализация надписей
         self.highscoresText = self.main_font.render("Рекорды", 1, Color.WHITE)
@@ -49,6 +50,7 @@ class Menu:
                     self.highscores_click()
                 elif 421 < mouse[0] < 605 and 391 < mouse[1] < 435:
                     self.exit_click()
+
 
     # обработка событий раздела настроек
     def settings_events(self):
@@ -87,6 +89,7 @@ class Menu:
 
     def exit_click(self):
         self.menuIsActive = False
+        sys.exit(0)
 
     def go_back_click(self):
         self.settingsIsActive = False
@@ -143,24 +146,28 @@ class Menu:
     def show(self):
         while self.menuIsActive:
             self.screen.blit(self.background, self.background_rect)
+
             if self.mainIsActive: # если мы в главном меню
                 self.main_events()
                 self.new_game_show()
                 self.settings_show()
                 self.highscores_show()
                 self.exit_show()
+
             elif self.settingsIsActive: # если мы в разделе настроек
                 self.settings_events()
                 self.go_back_show()
+
             elif self.highscoresIsActive: # если мы в разделе рекордов
                 self.highscores_events()
                 self.go_back_show()
+
             pygame.display.flip()
             pygame.time.wait(5)
             pygame.display.update()
 
-# def main():
-#     obj = Menu()
-#     obj.show()
-# if __name__ == '__main__':
-#     main()
+def main():
+    obj = Menu()
+    obj.show()
+if __name__ == '__main__':
+    main()
