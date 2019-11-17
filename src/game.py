@@ -24,7 +24,7 @@ def camera_configure(camera, target_rect):
 
 
 class Game:
-    def __init__(self, width=800, height=640):
+    def __init__(self, width=1024, height=640):
         self.width = width
         self.height = height
         self.size = [self.width, self.height]
@@ -36,16 +36,10 @@ class Game:
 
     def create_game_objects(self):
         self.objects = []
-        self.hero = Player(50,50)
+        self.hero = Player(50, 50)
         self.objects.append(self.hero)
         self.entities = []
         self.entities.append(self.hero)
-
-    """
-        for i in range(5):
-            self.objects.append(Ball(self))
-        self.objects.append(Board(self))
-        """
 
     def library_init(self):
         pygame.init()  # Инициализация библиотеки
@@ -73,19 +67,22 @@ class Game:
         sys.exit(0)  # Выход из программы
 
     def process_draw(self):
-        self.screen.fill(Colors.RED)  # Заливка цветом
+        self.screen.fill(Colors.RED)  # Заливка цветом TODO: Работа дизайнеров
         self.test_level()
+
         for item in self.objects:
             item.process_draw(self.screen)
+
         self.total_level_width = len(Level.test_level[0]) * PLATFORM.WIDTH  # Высчитываем фактическую ширину уровня
         self.total_level_height = len(Level.test_level) * PLATFORM.HEIGHT  # высоту
         camera = Camera(camera_configure, self.total_level_width, self.total_level_height)
         camera.update(self.hero)
+
         #self.hero.update(self.platforms)
         for ent in self.entities:
             self.screen.blit(ent.image, camera.apply(ent))
-        pygame.display.flip()  # Double bufferingd
-        pygame.time.wait(5)  # Ждать 10 миллисекунд
+        pygame.display.flip()
+        pygame.time.wait(5)
 
     def process_logic(self):
         for item in self.objects:

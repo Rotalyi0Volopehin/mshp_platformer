@@ -9,7 +9,7 @@ from pygame import *
 
 class Player(sprite.Sprite, DrawableObject):
 
-    def __init__(self, x=55, y=55):
+    def __init__(self, x = 55, y = 55):
         sprite.Sprite.__init__(self)
         self.xvel = 0  # скорость перемещения. 0 - стоять на месте
         self.startX = x  # Начальная позиция Х, пригодится когда будем переигрывать уровень
@@ -24,25 +24,32 @@ class Player(sprite.Sprite, DrawableObject):
         self.onGround = False  # На земле ли я?
 
     def update(self, platforms):
-        self.platforms = platforms
+        self.platforms = platforms #TODO: Платформы во время игры не обновляются, надо засунуть их в __init__ и метод Update не нужен, используй process_logic
         self.process_logic()
 
     def process_logic(self):
         if self.up:
             if self.onGround:  # прыгаем, только когда можем оттолкнуться от земли
                 self.yvel = -Stats.JUMP_POWER
+
         if self.left:
             self.xvel = -Stats.MOVE_SPEED  # Лево = x- n
+
         if self.right:
             self.xvel = Stats.MOVE_SPEED  # Право = x + n
+
         if not (self.left or self.right):  # стоим, когда нет указаний идти
             self.xvel = 0
+
         if not self.onGround:
             self.yvel += Stats.GRAVITY
+
         self.onGround = False  # Мы не знаем, когда мы на земле((
+
+        # Передвижение
         self.rect.y += self.yvel
         self.collide(0, self.yvel, self.platforms)
-        self.rect.x += self.xvel  # переносим свои положение на xvel
+        self.rect.x += self.xvel
         self.collide(self.xvel, 0, self.platforms)
 
     def process_draw(self, screen):  # Выводим себя на экран
@@ -51,12 +58,14 @@ class Player(sprite.Sprite, DrawableObject):
     def process_event(self, event):
         if event.type == KEYDOWN and event.key == K_a:
             self.left = True
+        if event.type == KEYUP and event.key == K_a:
+            self.left = False
+
         if event.type == KEYDOWN and event.key == K_d:
             self.right = True
         if event.type == KEYUP and event.key == K_d:
             self.right = False
-        if event.type == KEYUP and event.key == K_a:
-            self.left = False
+
         if event.type == KEYDOWN and event.key == K_w:
             self.up = True
         if event.type == KEYUP and event.key == K_w:
