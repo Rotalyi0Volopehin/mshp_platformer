@@ -34,7 +34,6 @@ class Game:
         self.game_over = False
         self.create_game_objects()
         self.timer = pygame.time.Clock()
-        self.platforms = []  # то, во что мы будем врезаться или опираться
 
     def create_game_objects(self):
         self.objects = []
@@ -57,7 +56,7 @@ class Game:
             for col in row:  # каждый символ
                 if col == "-":
                     pf = Platform(x, y)
-                    self.platforms.append(pf)
+                    PLATFORM.S.append(pf)
                     self.entities.append(pf)
                 x += PLATFORM.WIDTH  # блоки платформы ставятся на ширине блоков
             y += PLATFORM.HEIGHT  # то же самое и с высотой
@@ -82,7 +81,6 @@ class Game:
         camera = Camera(camera_configure, self.total_level_width, self.total_level_height)
         camera.update(self.hero)
 
-        #self.hero.update(self.platforms)
         for ent in self.entities:
             self.screen.blit(ent.image, camera.apply(ent))
         pygame.display.flip()
@@ -90,7 +88,6 @@ class Game:
 
     def process_logic(self):
         for item in self.objects:
-            item.update(self.platforms)
             item.process_logic()
 
     def process_events(self):

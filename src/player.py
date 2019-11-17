@@ -1,5 +1,3 @@
-# !/usr/bin/env python https://habr.com/ru/post/196432/
-# -*- coding: utf-8 -*- https://habr.com/ru/post/193888/
 
 import pygame
 from src.base_classes import DrawableObject
@@ -22,10 +20,9 @@ class Player(sprite.Sprite, DrawableObject):
         self.up = False
         self.yvel = 0  # скорость вертикального перемещения
         self.onGround = False  # На земле ли я?
+        self.paltforms = []
+        self.platforms = PLATFORM.S
 
-    def update(self, platforms):
-        self.platforms = platforms #TODO: Платформы во время игры не обновляются, надо засунуть их в __init__ и метод Update не нужен, используй process_logic
-        self.process_logic()
 
     def process_logic(self):
         if self.up:
@@ -66,9 +63,9 @@ class Player(sprite.Sprite, DrawableObject):
         if event.type == KEYUP and event.key == K_d:
             self.right = False
 
-        if event.type == KEYDOWN and event.key == K_w:
+        if event.type == KEYDOWN and event.key == K_SPACE:
             self.up = True
-        if event.type == KEYUP and event.key == K_w:
+        if event.type == KEYUP and event.key == K_SPACE:
             self.up = False
 
     def collide(self, xvel, yvel, platforms):
