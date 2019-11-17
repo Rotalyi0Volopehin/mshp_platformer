@@ -3,6 +3,7 @@ import pygame
 
 from src.ball import Ball
 from src.board import Board
+from src.time import TimeGame
 from src.constants import Color
 
 
@@ -20,6 +21,7 @@ class Game:
         for i in range(5):
             self.objects.append(Ball(self))
         self.objects.append(Board(self))
+        self.objects.append(TimeGame(self))
 
     def library_init(self):
         pygame.init()  # Инициализация библиотеки
@@ -31,7 +33,7 @@ class Game:
             self.process_events()
             self.process_logic()
             self.process_draw()
-        sys.exit(0)  # Выход из программы
+        sys.exit(0)  # TODO: Сделать выход в меню
 
     def process_draw(self):
         self.screen.fill(Color.BLACK)  # Заливка цветом
