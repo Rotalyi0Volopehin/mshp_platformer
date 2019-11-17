@@ -40,8 +40,10 @@ class Game:
         self.objects = []
         self.hero = Player(50, 50)
         self.objects.append(self.hero)
+
         self.entities = []
         self.entities.append(self.hero)
+        self.entities.append(Mushroom(self, [100, 100])) # TODO: Переделать логику. Главная проблема - создали лиший метод Update
 
     def library_init(self):
         pygame.init()  # Инициализация библиотеки
