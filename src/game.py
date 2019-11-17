@@ -4,6 +4,7 @@ import pygame
 from src.ball import Ball
 from src.board import Board
 from src.time import TimeGame
+from src.coins import Coins
 from src.score import Score
 from src.constants import Color
 
@@ -24,6 +25,7 @@ class Game:
         self.objects.append(Board(self))
         self.objects.append(TimeGame(self))
         self.objects.append(Score(self))
+        self.objects.append(Coins(self))
 
     def library_init(self):
         pygame.init()  # Инициализация библиотеки
