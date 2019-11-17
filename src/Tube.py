@@ -4,15 +4,13 @@ import pygame
 
 from src.base_classes import DrawableObject
 from src.constants import IMAGES_DIR
+from src.static_grid_cells import StaticGridCell
 
 
-class Tube(DrawableObject):
+class Tube(StaticGridCell):
 
-    def __init__(self, game_object, start_pos, typpe = 0):
-        super().__init__(game_object)
-        self.rect = self.image.get_rect()
-        self.rect.x = start_pos[0]  # x
-        self.rect.y = start_pos[1]  # y
+    def __init__(self, game, image, locx, locy, typpe):
+        super().__init__(game, image, locx, locy)
         self.typpe = typpe
         if typpe == 0:
             image = pygame.image.load(os.path.join(IMAGES_DIR, 'tube0.png'))  # верняя часть трубы
