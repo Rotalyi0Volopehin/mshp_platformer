@@ -7,8 +7,8 @@ from src.exceptions import Exceptions
 class RigidBody(DrawableObject): #abstract
     def __init__(self, game, rect):
         super().__init__(game)
-        if not isinstance(rect, int):
-            Exceptions.throw(Exceptions.argument_type)
+        if not isinstance(rect, pygame.Rect):
+            Exceptions.throw(Exceptions.argument_type, "parameter \"rect\" must be pygame.Rect")
         if (rect.width != 64) or (rect.height != 64):
             Exceptions.throw(Exceptions.argument, "size of rigid body must be 64x64 pixels")
         self.rect = rect
