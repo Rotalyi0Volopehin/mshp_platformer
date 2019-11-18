@@ -2,6 +2,7 @@
 
 from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
+from src.rigid_body import RigidBody
 
 # Это статические игровые объекты, применяемые в классе StaticGrid
 
