@@ -4,8 +4,8 @@ class Exceptions: #static
     argument_type = "Argument type exception"
     argument = "Argument exception"
 
-    def throw(exception):
-        raise TypeError(exception + '!')
-
-    def throw(exception, message):
+    @staticmethod
+    def throw(exception, message = None):
+        if message == None:
+            raise TypeError(exception + '!')
         raise TypeError("{}: {}!".format(exception, message))
