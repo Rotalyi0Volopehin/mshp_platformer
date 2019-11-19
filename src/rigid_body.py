@@ -3,7 +3,7 @@
 from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
 
-# Это твёрдое тело с физическими параметрами
+# Это твёрдое тело с физическими параметрами (коллизией и геометрией)
 class RigidBody(DrawableObject): #abstract
     def __init__(self, game, rect):
         super().__init__(game)
@@ -12,7 +12,6 @@ class RigidBody(DrawableObject): #abstract
         if (rect.width != 64) or (rect.height != 64):
             Exceptions.throw(Exceptions.argument, "size of rigid body must be 64x64 pixels")
         self.rect = rect
-        self.vx = self.vy = 0
 
     def CollideWith(self, other_rigid_body):
         return CollisionInfo(self, other_rigid_body)
