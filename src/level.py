@@ -2,7 +2,9 @@ import glob
 import pygame
 
 from src.static_grid import StaticGrid
+from src.entity import Entity
 from src.io_tools import IO_Tools
+from src.entity_set import EntitySet
 
 # Уровень и информация о нём
 # Каждый уровень в папке levels имеет свою папку, название которой должно быть "level_*" (* - параметр name)
@@ -27,3 +29,5 @@ class Level:
             lvl_struct_lines[i] = lvl_struct_lines[i].strip("\n\r")
         self.grid = StaticGrid(game, self, lvl_struct_lines, self.images)
         game.objects.append(self.grid)
+        self.entity_set = EntitySet(game, self, lvl_struct_lines, self.images)
+        game.objects.append(self.entity_set)

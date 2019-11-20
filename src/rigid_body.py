@@ -3,6 +3,7 @@
 from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
 
+
 # Это твёрдое тело с физическими параметрами (коллизией и геометрией)
 class RigidBody(DrawableObject): #abstract
     def __init__(self, game, rect):

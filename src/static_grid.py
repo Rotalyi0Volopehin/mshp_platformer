@@ -1,5 +1,6 @@
 ﻿from src.exceptions import Exceptions
-from src.static_grid_cells import StaticGridCell
+from src.static_grid_cell import StaticGridCell
+from src.save_symbol_register import SaveSymbolRegister
 from src.base_classes import DrawableObject
 
 
@@ -11,8 +12,8 @@ class StaticGrid(DrawableObject):
             Exceptions.throw(Exceptions.argument_type)
         self.level = level
         self.cells = [[]] * len(lvl_struct_lines)
-        if StaticGridCell.cell_types_from_save_symbols == None:
-            StaticGridCell.init()
+        if SaveSymbolRegister.static_grid_cell_dict == None:
+            SaveSymbolRegister.init()
         for iy in range(len(lvl_struct_lines)):
             line = lvl_struct_lines[iy]
             if not isinstance(line, str):
@@ -21,11 +22,11 @@ class StaticGrid(DrawableObject):
                 Exceptions.throw(Exceptions.argument_type, "lines of the level's save-file must have equal length")
             for ix in range(len(line)):
                 symbol = line[ix]
-                if symbol in StaticGridCell.cell_types_from_save_symbols:
-                    cell_type = StaticGridCell.cell_types_from_save_symbols[symbol]
+                if symbol in SaveSymbolRegister.static_grid_cell_dict:
+                    cell_type = SaveSymbolRegister.static_grid_cell_dict[symbol]
                     cell = cell_type(game, images[cell_type.__name__], ix, iy)
                     if not isinstance(cell, StaticGridCell):
-                        Exceptions.throw(Exceptions.argument_type)
+                        Exceptions.throw(Exceptions.return_type)
                     self.cells[iy].append(cell)
                 else:
                     self.cells[iy].append(None)
