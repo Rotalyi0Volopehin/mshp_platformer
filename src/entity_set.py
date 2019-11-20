@@ -18,7 +18,7 @@ class EntitySet(DrawableObject):
             line = lvl_struct_lines[iy]
             if not isinstance(line, str):
                 Exceptions.throw(Exceptions.argument_type)
-            if (iy > 0) and (len(line) != len(self.cells[iy - 1])):
+            if (iy > 0) and (len(line) != len(lvl_struct_lines[iy - 1])):
                 Exceptions.throw(Exceptions.argument_type, "lines of the level's save-file must have equal length")
             for ix in range(len(line)):
                 symbol = line[ix]
@@ -30,5 +30,14 @@ class EntitySet(DrawableObject):
                     self.entities.append(cell)
 
     def process_draw(self):
-        for entity in entities:
+        for entity in self.entities:
             entity.process_draw()
+
+    def process_logic(self):
+        for entity in self.entities:
+            entity.process_logic()
+            entity.apply_velocity()
+
+    def process_event(self, event):
+        for entity in self.entities:
+            entity.process_event(event)

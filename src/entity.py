@@ -20,3 +20,7 @@ class Entity(RigidBody): #abstract
 
     def apply_gravity_force(self, value):
         self.vy += value
+
+    def apply_velocity(self):
+        self.rect.x += self.vx
+        self.rect.y += self.vy

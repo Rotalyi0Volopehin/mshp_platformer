@@ -37,3 +37,17 @@ class StaticGrid(DrawableObject):
             for cell in row:
                 if cell != None:
                     cell.process_draw()
+
+    def process_logic(self):
+        self.game_object.screen.blit(self.level.background, self.level.background.get_rect())
+        for row in self.cells:
+            for cell in row:
+                if cell != None:
+                    cell.process_logic()
+
+    def process_event(self, event):
+        self.game_object.screen.blit(self.level.background, self.level.background.get_rect())
+        for row in self.cells:
+            for cell in row:
+                if cell != None:
+                    cell.process_event(event)

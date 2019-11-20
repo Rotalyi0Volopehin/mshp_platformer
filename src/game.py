@@ -1,10 +1,11 @@
-﻿import sys
+import sys
 import pygame
 import time
 
 from src.ball import Ball
 from src.board import Board
 from src.constants import Color
+from src.level import Level
 
 
 class Game:
@@ -12,13 +13,14 @@ class Game:
         self.width = width
         self.height = height
         self.size = [self.width, self.height]
-        self.loop_delay = 10
+        self.loop_delay = 5
         self.library_init()
         self.game_over = False
-        self.create_game_objects()
+        self.objects = []
+        self.levels = [Level(self, "0")]
+        #self.create_game_objects()
 
     def create_game_objects(self):
-        self.objects = []
         for i in range(5):
             self.objects.append(Ball(self))
         self.objects.append(Board(self))
@@ -37,7 +39,7 @@ class Game:
             time_elapsed = int((time.time() - start_time) * 1000)
             time_left = self.loop_delay - time_elapsed
             if time_left > 0:
-                pygame.time.wait(time_left)  # Ждать оставшееся время
+                pygame.time.wait(time_left)
         sys.exit(0)  # Выход из программы
 
     def process_draw(self):
