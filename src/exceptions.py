@@ -3,6 +3,8 @@
 class Exceptions: #static
     argument_type = "Argument type exception"
     argument = "Argument exception"
+    not_implemented = "Not implemented exception"
+    return_type = "Unexpected type returned exception"
 
     @staticmethod
     def throw(exception, message = None):
