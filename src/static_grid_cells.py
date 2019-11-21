@@ -8,9 +8,11 @@ from src.exceptions import Exceptions
 class StaticGridCell(DrawableObject): #abstract
     cell_types_from_save_symbols = None
 
-    def init():
+    def init(self):
         StaticGridCell.cell_types_from_save_symbols = { }
         StaticGridCell.cell_types_from_save_symbols['B'] = BrickCell
+        StaticGridCell.cell_types_from_save_symbols['T'] = BrickCell
+        StaticGridCell.cell_types_from_save_symbols['F'] = BrickCell
 
     def __init__(self, game, image, locx, locy):
         super().__init__(game)

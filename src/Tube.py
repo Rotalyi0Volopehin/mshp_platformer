@@ -16,6 +16,3 @@ class Tube(StaticGridCell):
             image = pygame.image.load(os.path.join(IMAGES_DIR, 'tube0.png'))  # верняя часть трубы
         if typpe == 1:
             image = pygame.image.load(os.path.join(IMAGES_DIR, 'tube1.png'))  # нижняя часть трубы
-
-    def process_draw(self):
-        self.game_object.screen.blit(self.image, self.rect)
