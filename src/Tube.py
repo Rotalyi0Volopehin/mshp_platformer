@@ -13,6 +13,6 @@ class Tube(StaticGridCell):
         super().__init__(game, image, locx, locy)
         self.typpe = typpe
         if typpe == 0:
-            image = pygame.image.load(os.path.join(IMAGES_DIR, 'tube0.png'))  # верняя часть трубы
+            image = pygame.image.load(os.path.join(IMAGES_DIR, 'pipe.xcf'))  # верняя часть трубы
         if typpe == 1:
-            image = pygame.image.load(os.path.join(IMAGES_DIR, 'tube1.png'))  # нижняя часть трубы
+            image = pygame.image.load(os.path.join(IMAGES_DIR, 'pipe2.xcf'))  # нижняя часть трубы
