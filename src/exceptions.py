@@ -3,9 +3,11 @@
 class Exceptions: #static
     argument_type = "Argument type exception"
     argument = "Argument exception"
+    not_implemented = "Not implemented exception"
+    return_type = "Unexpected type returned exception"
 
-    def throw(self, exception):
-        raise TypeError(exception + '!')
-
-    def throw(self, exception, message):
+    @staticmethod
+    def throw(exception, message = None):
+        if message == None:
+            raise TypeError(exception + '!')
         raise TypeError("{}: {}!".format(exception, message))

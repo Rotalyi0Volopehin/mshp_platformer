@@ -1,9 +1,11 @@
 import sys
 import pygame
+import time
 
 from src.ball import Ball
 from src.board import Board
 from src.constants import Color
+from src.level import Level
 
 
 class Game:
@@ -11,26 +13,34 @@ class Game:
         self.width = width
         self.height = height
         self.size = [self.width, self.height]
+        self.loop_delay = 5
         self.library_init()
         self.game_over = False
-        self.create_game_objects()
+        self.objects = []
+        self.levels = [Level(self, "0")]
+        #self.create_game_objects()
 
     def create_game_objects(self):
-        self.objects = []
         for i in range(5):
             self.objects.append(Ball(self))
         self.objects.append(Board(self))
 
     def library_init(self):
-        pygame.init()  # Инициализация библиотеки
+        if not pygame.display.get_init(): #Инициализация библиотеки
+            pygame.display.init()
         pygame.font.init()
         self.screen = pygame.display.set_mode(self.size)  # Создание окна (установка размера)
 
     def main_loop(self):
         while not self.game_over:  # Основной цикл работы программы
+            start_time = time.time()
             self.process_events()
             self.process_logic()
             self.process_draw()
+            time_elapsed = int((time.time() - start_time) * 1000)
+            time_left = self.loop_delay - time_elapsed
+            if time_left > 0:
+                pygame.time.wait(time_left)
         sys.exit(0)  # Выход из программы
 
     def process_draw(self):
@@ -38,7 +48,6 @@ class Game:
         for item in self.objects:
             item.process_draw()
         pygame.display.flip()  # Double buffering
-        pygame.time.wait(5)  # Ждать 10 миллисекунд
 
     def process_logic(self):
         for item in self.objects:
