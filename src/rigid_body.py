@@ -20,7 +20,7 @@ class RigidBody(DrawableObject): #abstract
 
 # Это информация о столкновении двух RigidBody (главного и дополнительного)
 # Поля left, top, right, bottom - флаги столкновения тел относительно главного тела
-class CollisionInfo: #abstract
+class CollisionInfo:
     def __init__(self, main_rigid_body, opp_rigid_body):
         if not (isinstance(main_rigid_body, RigidBody) and isinstance(opp_rigid_body, RigidBody)):
             Exceptions.throw(Exceptions.argument_type)
