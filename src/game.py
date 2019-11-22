@@ -18,7 +18,12 @@ class Game:
         self.game_over = False
         self.objects = []
         self.levels = [Level(self, "0")]
+        self.objects = [self.levels[0]]
+        self.current_level_index = 0
         #self.create_game_objects()
+
+    def current_level(self):
+        return self.levels[self.current_level_index]
 
     def create_game_objects(self):
         for i in range(5):
