@@ -1,31 +1,59 @@
 import os
-from random import randrange
 import pygame
 
-from src.base_classes import DrawableObject
 from src.constants import IMAGES_DIR
+from src.entity import Entity
+from src.entities.temp_entities_for_mushroom import *
 
 
-class Mushroom(DrawableObject):
-    image = pygame.image.load(os.path.join(IMAGES_DIR, 'mushroom.png'))
+class Mushroom(Entity):
 
-    shift_speed = 1
-    shift_distance = 400
+    _image_name = 'mushroom.png'
+    _speed = 1
+    _distance = 100
 
-    def __init__(self, game_object, start_pos):
-        super().__init__(game_object)
-        self.rect = self.image.get_rect()
-        self.rect.x = start_pos[0]
-        self.rect.y = start_pos[1]
-        self.shift_x = 1
+    _temp_gravity = 2
+
+    def __init__(self, game, posx, posy):
+        self.game = game
+        image = pygame.image.load(os.path.join(IMAGES_DIR, self._image_name))
+        super().__init__(game, image, posx, posy)
+        self.current_speed = self._speed
         self.current_distance = 0
+        self.on_ground = False
+        self.alive = True
 
     def process_logic(self):
-        self.rect.x += self.shift_x * self.shift_speed
-        self.current_distance += abs(self.shift_x * self.shift_speed)
-        if self.current_distance >= self.shift_distance:
-            self.shift_x *= -1
+        # Проверка коллизии со всеми объектами
+        for entity in self.game.levels[0].entity_set.entities:
+            # Если есть коллизия с платформой
+            if isinstance(entity, Platform):
+                collision_info = self.CollideWith(entity)
+                if collision_info.is_collision():
+                    if collision_info.bottom:
+                        self.on_ground = True
+            # Если есть коллизия с игроком
+            elif isinstance(entity, Player):
+                collision_info = self.CollideWith(entity)
+                if collision_info.is_collision():
+                    if collision_info.top:
+                        self.die()
+            else:
+                self.on_ground = False
+
+        # Установка гравитации
+        if self.on_ground:
+            self.vy = 0
+            self.vx = self.current_speed
+        else:
+            self.vy = self._temp_gravity
+            self.vx = 0
+
+        self.apply_velocity()
+        self.current_distance += abs(self.current_speed)
+        if self.current_distance >= self._distance:
+            self.current_speed *= -1
             self.current_distance = 0
 
-    def process_draw(self):
-        self.game_object.screen.blit(self.image, self.rect)
+    def die(self):
+        self.alive = False

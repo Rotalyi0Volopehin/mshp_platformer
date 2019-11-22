@@ -19,13 +19,15 @@ class Game:
         self.game_over = False
         self.objects = []
         self.levels = [Level(self, "0")]
+        # === TEMP ===
+        self.objects.append(Mushroom(self, 0, 20))
+        # === ==== ===
         #self.create_game_objects()
 
     def create_game_objects(self):
         for i in range(5):
             self.objects.append(Ball(self))
         self.objects.append(Board(self))
-        self.objects.append(Mushroom(self, [0, 0]))
 
     def library_init(self):
         if not pygame.display.get_init(): #Инициализация библиотеки
