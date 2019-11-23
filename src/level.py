@@ -6,6 +6,8 @@ from src.entity import Entity
 from src.io_tools import IO_Tools
 from src.entity_set import EntitySet
 from src.base_classes import DrawableObject
+from src.exceptions import Exceptions
+from src.static_grid_cell import StaticGridCell
 
 # Уровень и информация о нём
 # Каждый уровень в папке levels имеет свою папку, название которой должно быть "level_*" (* - параметр name)
@@ -43,10 +45,36 @@ class Level(DrawableObject):
             self.rigid_bodies.append(entity)
 
     def width(self):
-        return len(self.grid.cells[0]) << 6
+        return self.grid.width() << 6
 
     def height(self):
-        return len(self.grid.cells) << 6
+        return self.grid.height() << 6
+
+    def delete_static_grid_cell(self, locx, locy):
+        cell = self.grid.cells[locy][locx]
+        if cell != None:
+            self.grid.cells[locy][locx] = None
+            self.rigid_bodies.remove(cell)
+
+    def delete_entity(self, entity):
+        if not isinstance(entity, Entity):
+            Exceptions.throw(Exceptions.argument_type)
+        self.entity_set.entities.remove(entity)
+        self.rigid_bodies.remove(entity)
+
+    def add_new_static_grid_cell(self, cell, locx, locy):
+        if not isinstance(cell, StaticGridCell):
+            Exceptions.throw(Exceptions.argument_type)
+        if self.grid.cells[locy][locx] != None:
+            Exceptions.throw(Exceptions.invalid_operation, "the specified location already contains a cell")
+        self.grid.cells[locy][locx] = cell
+        self.rigid_bodies.append(cell)
+
+    def add_new_entity(self, entity):
+        if not isinstance(entity, Entity):
+            Exceptions.throw(Exceptions.argument_type)
+        self.entity_set.entities.append(entity)
+        self.rigid_bodies.append(entity)
 
     def process_draw(self):
         self.game_object.screen.blit(self.background, self.background.get_rect())
