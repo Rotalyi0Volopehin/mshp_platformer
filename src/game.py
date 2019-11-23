@@ -33,6 +33,7 @@ class Game:
         self.game_over = False
         self.create_game_objects()
         self.timer = pygame.time.Clock()
+        self.test_level()
 
     def create_game_objects(self):
         self.objects = []
@@ -70,7 +71,6 @@ class Game:
 
     def process_draw(self):
         self.screen.fill(Colors.RED)  # Заливка цветом TODO: Работа дизайнеров
-        self.test_level()
 
         for item in self.objects:
             item.process_draw(self.screen)
