@@ -5,7 +5,7 @@ import time
 from src.ball import Ball
 from src.board import Board
 from src.constants import Color
-from src.mushroom import Mushroom
+from src.entities.mushroom import Mushroom
 from src.level import Level
 
 
