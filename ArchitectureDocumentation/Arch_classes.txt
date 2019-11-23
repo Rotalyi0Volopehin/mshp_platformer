@@ -7,35 +7,43 @@
 - CollisionInfo - информация о столкновении двух RigidBody
 - StaticGridCell [abstract] - ячейка статической сетки (блок)
 - Entity [abstract] - сущность, обладающая позицией, скоростью и спрайтом
+- Obstacle [abstract] - ячейка статической сетки (блок), препятствующий движению игрока
 
 
-class Level:
+class Level(DrawableObject):
 Методы:
     def __init__(game, name) #Этот конструктор подгружает данные уровня из директории "levels\level_*\" (* - параметр name)
+    def __collect_rigid_bodies() #Инициализатор поля rigid_bodies
+    def width() #(int) Ширина уровня в пикселях
+    def height() #(int) Высота уровня в пикселях
+    def delete_static_grid_cell(locx, locy) #Правильное удаление ячейки статической сетки (блока) по её положению
+    def delete_entity(entity) #Правильное удаление сущности
+    def add_new_static_grid_cell(cell, locx, locy) #Правильное добавление ячейки статической сетки (блока)
+    def add_new_entity(entity) #Правильное добавление сущности
+    def process_draw() #Запускает метод process_draw у всех твёрдых тел уровня
+    def process_logic() #Запускает метод process_logic у всех твёрдых тел уровня
+    def process_event(event) #Запускает метод process_event у всех твёрдых тел уровня
 Поля:
     self.grid = #(StaticGrid) Лежит в game.objects
     self.entity_set #(EntitySet) Лежит в game.objects
     self.images #(словарь с именами спрайтов как ключи и спрайтами как значения) Спрайты из директории "levels\level_*\images"
     self.background #(pygame.Surface) Задник
+    self.rigid_bodies #(массив RigidBody) Множество всех твёрдых тел уровня
 
 
-class StaticGrid(DrawableObject):
+class StaticGrid:
 Методы:
     def __init__(game, level, lvl_struct_lines, images) #Этот конструктор загружает расположение ячеек (блоков) из файла "levels\level_*\struct.txt"
-    def process_draw() #Запускает метод process_draw у всех ячеек статической сетки (блоков) уровня
-    def process_logic() #Запускает метод process_logic у всех ячеек статической сетки (блоков) уровня
-    def process_event(event) #Запускает метод process_event у всех ячеек статической сетки (блоков) уровня
+    def width() #(int) Ширина сетки в ячейках (блоках)
+    def height() #(int) Высота сетки в ячейках (блоках)
 Поля:
     self.level #(Level) Указатель на уровень
     self.cells #(массив массивов ячеек (блоков); cells[строка][столбец]) Сетка ячеек (блоков)
 
 
-class EntitySet(DrawableObject):
+class EntitySet:
 Методы:
     def __init__(game, level, lvl_struct_lines, images) #Этот конструктор загружает расположение сущностей из файла "levels\level_*\struct.txt"
-    def process_draw() #Запускает метод process_draw у всех сущностей уровня
-    def process_logic() #Запускает метод process_logic у всех сущностей уровня, запуская при этом метод Entity.apply_velocity
-    def process_event(event) #Запускает метод process_event у всех сущностей уровня
 Поля:
     self.level #(Level) Указатель на уровень
     self.entities #(массив сущностей) Множество сущностей
@@ -54,7 +62,9 @@ class SaveSymbolRegister: #static
 class RigidBody(DrawableObject): #abstract
 Методы:
     def __init__(game, rect) #Конструктор
-    def CollideWith(self, other_rigid_body) #(CollisionInfo) Вычисляет коллизии с другим твёрдым телом
+    def collide_with(other_rigid_body) #(CollisionInfo) Вычисляет коллизии с другим твёрдым телом
+    def quick_collide_with(other_rigid_body) #(bool) Возвращеет то, происходит ли столкновение с другим твёрдым телом
+    def on_collide(collisions): #Событие столкновения; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
 Поля:
     self.rect #(pygame.Rect) Хитбокс
 
@@ -86,9 +96,13 @@ class Entity(RigidBody): #abstract
     def __init__(game, image, posx, posy) #Конструктор
     def apply_gravity_force(value) #Применяет ускорение свободного падения value
     def apply_velocity() #Применяет скорость к позиции
+    def __calc_carry(value) #Считает остаток от числа
 Поля:
     self.image #(pygame.Surface) Спрайт
     self.vx #(real) Скорость по горизонтали
     self.vy #(real) Скорость по вертикали
     self.posx_carry #(real) Остаток позиции по горизонтали при apply_velocity
     self.posy_carry #(real) Остаток позиции по вертикали при apply_velocity
+
+class Obstacle(StaticGridCell): #abstract
+    pass
