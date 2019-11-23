@@ -1,53 +1,31 @@
 import os
 
-IMAGES_DIR = 'images'
+IMAGES_DIR = 'images_blank'
 ICON_DIR = os.path.dirname(__file__)  # Полный путь к каталогу с файлами
 
 
-class Colors:
+class Color:
     BLACK = [0, 0, 0]
     RED = [255, 0, 0]
     GREEN = [0, 255, 0]
     BLUE = [0, 0, 255]
     BOLD = [88, 88, 88]
-    PLATFORM_COLOR = [255, 62, 62]
 
 
-class Level:
-    test_level = [
-        "-                                                              -",
-        "-                                                              -",
-        "-                                                              -",
-        "-                                                              -",
-        "-                                                              -",
-        "-                                                              -",
-        "-                                                              -",
-        "-                        ----------                            -",
-        "-            ----                                              -",
-        "-                                                              -",
-        "-                                                              -",
-        "-             ----    --                                       -",
-        "-                                 --- --- --                   -",
-        "-                                                              -",
-        "-                                               ---------      -",
-        "-         -------                        ---                   -",
-        "-                                                              -",
-        "----------------------------------------------------------------",
- ]
+class PLT:
+    S = []
+
+
+class ENT:
+    S = []
 
 
 class Stats:
-    MOVE_SPEED = 7
-    WIDTH = 32  # 64
-    HEIGHT = 32  # 64
+    MOVE_SPEED = 5
+    WIDTH = 64
+    HEIGHT = 64
     JUMP_POWER = 10
     GRAVITY = 0.35  # Сила, которая будет тянуть нас вниз
-
-
-class PLATFORM:
-    WIDTH = 32  # 64
-    HEIGHT = 32  # 64
-    S = []
 
 
 class Display:
