@@ -14,6 +14,7 @@ class Entity(RigidBody): #abstract
         super().__init__(game, rect)
         self.image = image
         self.vx = self.vy = 0
+        self.posx_carry = self.posy_carry = 0
 
     def process_draw(self):
         self.game_object.screen.blit(self.image, self.rect)
@@ -22,5 +23,23 @@ class Entity(RigidBody): #abstract
         self.vy += value
 
     def apply_velocity(self):
-        self.rect.x += self.vx
-        self.rect.y += self.vy
+        self.rect.x += int(self.vx)
+        self.posx_carry += self.__calc_carry(self.vx)
+        if self.posx_carry >= 1:
+            self.posx_carry -= 1
+            self.rect.x += 1
+        elif self.posx_carry <= -1:
+            self.posx_carry += 1
+            self.rect.x -= 1
+        self.rect.y += int(self.vy)
+        self.posy_carry += self.__calc_carry(self.vy)
+        if self.posy_carry >= 1:
+            self.posy_carry -= 1
+            self.rect.y += 1
+        elif self.posy_carry <= -1:
+            self.posy_carry += 1
+            self.rect.y -= 1
+
+    def __calc_carry(self, value):
+        sign = (value > 0) - (value < 0)
+        return abs(value) % 1 * sign

@@ -1,6 +1,7 @@
-﻿from src.static_grid_cell import StaticGridCell
+﻿from src.static_grid_cells.obstacle import Obstacle
 
 
-class BrickCell(StaticGridCell):
-    def __init__(self, game, image, locx, locy):
-        super().__init__(game, image, locx, locy)
+class BrickCell(Obstacle):
+    pass
+#    def __init__(self, game, image, locx, locy):
+#        super().__init__(game, image, locx, locy)
