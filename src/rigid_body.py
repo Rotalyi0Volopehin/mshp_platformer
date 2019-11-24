@@ -14,8 +14,16 @@ class RigidBody(DrawableObject): #abstract
             Exceptions.throw(Exceptions.argument, "size of rigid body must be 64x64 pixels")
         self.rect = rect
 
-    def CollideWith(self, other_rigid_body):
+    def collide_with(self, other_rigid_body):
         return CollisionInfo(self, other_rigid_body)
+
+    def quick_collide_with(self, other_rigid_body):
+        if not isinstance(other_rigid_body, RigidBody):
+            Exceptions.throw(Exceptions.argument_type)
+        return self.rect.colliderect(other_rigid_body.rect)
+
+    def on_collide(self, collisions): #abstract event
+        pass
 
 
 # Это информация о столкновении двух RigidBody (главного и дополнительного)
@@ -26,11 +34,13 @@ class CollisionInfo:
             Exceptions.throw(Exceptions.argument_type)
         self.main_rb = main_rigid_body
         self.opp_rb = opp_rigid_body
-        if self.main_rb.rect.contains(self.opp_rb.rect):
-            self.left = (self.main_rb.left > self.opp_rb.x) and (self.main_rb.left <= self.opp_rb.right)
-            self.top = (self.main_rb.top > self.opp_rb.y) and (self.main_rb.top <= self.opp_rb.bottom)
-            self.right = (self.main_rb.right < self.opp_rb.x) and (self.main_rb.right >= self.opp_rb.left)
-            self.bottom = (self.main_rb.bottom < self.opp_rb.y) and (self.main_rb.bottom >= self.opp_rb.top)
+        main_rect = self.main_rb.rect
+        opp_rect = self.opp_rb.rect
+        if main_rect.colliderect(opp_rect):
+            self.left = (main_rect.left >= opp_rect.centerx) and (main_rect.left <= opp_rect.right)
+            self.top = (main_rect.top >= opp_rect.centery) and (main_rect.top <= opp_rect.bottom)
+            self.right = (main_rect.right <= opp_rect.centerx) and (main_rect.right >= opp_rect.left)
+            self.bottom = (main_rect.bottom <= opp_rect.centery) and (main_rect.bottom >= opp_rect.top)
         else:
             self.left = self.top = self.right = self.bottom = False
 

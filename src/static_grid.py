@@ -1,17 +1,15 @@
 ﻿from src.exceptions import Exceptions
 from src.static_grid_cell import StaticGridCell
 from src.save_symbol_register import SaveSymbolRegister
-from src.base_classes import DrawableObject
 
 
-# Это сетка статических игровых объектов 64x64 (игровое поле)
-class StaticGrid(DrawableObject):
+# Это сетка статических игровых объектов (игровое поле)
+class StaticGrid:
     def __init__(self, game, level, lvl_struct_lines, images):
-        super().__init__(game)
         if not (isinstance(lvl_struct_lines, type([])) and isinstance(images, type({}))):
             Exceptions.throw(Exceptions.argument_type)
         self.level = level
-        self.cells = [[]] * len(lvl_struct_lines)
+        self.cells = [[] for _ in  range(len(lvl_struct_lines))]
         if SaveSymbolRegister.static_grid_cell_dict == None:
             SaveSymbolRegister.init()
         for iy in range(len(lvl_struct_lines)):
@@ -31,23 +29,8 @@ class StaticGrid(DrawableObject):
                 else:
                     self.cells[iy].append(None)
 
-    def process_draw(self):
-        self.game_object.screen.blit(self.level.background, self.level.background.get_rect())
-        for row in self.cells:
-            for cell in row:
-                if cell != None:
-                    cell.process_draw()
+    def width(self):
+        return len(self.cells[0])
 
-    def process_logic(self):
-        self.game_object.screen.blit(self.level.background, self.level.background.get_rect())
-        for row in self.cells:
-            for cell in row:
-                if cell != None:
-                    cell.process_logic()
-
-    def process_event(self, event):
-        self.game_object.screen.blit(self.level.background, self.level.background.get_rect())
-        for row in self.cells:
-            for cell in row:
-                if cell != None:
-                    cell.process_event(event)
+    def height(self):
+        return len(self.cells)

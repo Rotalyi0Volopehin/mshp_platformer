@@ -1,13 +1,11 @@
 ﻿from src.entity import Entity
 from src.save_symbol_register import SaveSymbolRegister
-from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
 
 
 # Это множество всех сущностей, используемых на одном уровне
-class EntitySet(DrawableObject):
+class EntitySet:
     def __init__(self, game, level, lvl_struct_lines, images):
-        super().__init__(game)
         if not (isinstance(lvl_struct_lines, type([])) and isinstance(images, type({}))):
             Exceptions.throw(Exceptions.argument_type)
         self.level = level
@@ -28,16 +26,3 @@ class EntitySet(DrawableObject):
                     if not isinstance(cell, Entity):
                         Exceptions.throw(Exceptions.return_type)
                     self.entities.append(cell)
-
-    def process_draw(self):
-        for entity in self.entities:
-            entity.process_draw()
-
-    def process_logic(self):
-        for entity in self.entities:
-            entity.process_logic()
-            entity.apply_velocity()
-
-    def process_event(self, event):
-        for entity in self.entities:
-            entity.process_event(event)
