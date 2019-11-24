@@ -1,6 +1,6 @@
 import glob
 import pygame
-
+import copy
 from src.static_grid import StaticGrid
 from src.entity import Entity
 from src.io_tools import IO_Tools
@@ -8,6 +8,9 @@ from src.entity_set import EntitySet
 from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
 from src.static_grid_cell import StaticGridCell
+from src.entities.player import Player
+from src.constants import *
+
 
 # Уровень и информация о нём
 # Каждый уровень в папке levels имеет свою папку, название которой должно быть "level_*" (* - параметр name)
