@@ -22,8 +22,8 @@ class SaveSymbolRegister: #static
         SaveSymbolRegister.static_grid_cell_dict.update( {'T': Tube} )
         SaveSymbolRegister.static_grid_cell_dict.update({'P': TubeTop})
 
-
     def __init_entity_dict():
         SaveSymbolRegister.entity_dict = { }
         SaveSymbolRegister.entity_dict['~'] = FakeCloud #<- Пример регистрации класса сущности
         SaveSymbolRegister.entity_dict['F'] = Flower # это цветок (враг)
+

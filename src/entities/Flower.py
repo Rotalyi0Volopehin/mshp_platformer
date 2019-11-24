@@ -7,7 +7,7 @@ from src.entity import Entity
 from src.exceptions import Exceptions
 
 class Flower(Entity):
-    image = pygame.image.load(os.path.join(IMAGES_DIR, 'flower1.xcf'))
+    #image = pygame.image.load(os.path.join(IMAGES_DIR, 'flower1.xcf'))
 
     def __init__(self, game, image, posx, posy):
         super().__init__(game, image, posx, posy)
@@ -30,3 +30,10 @@ class Flower(Entity):
         pass
         #if self.quick_collide_with(Player):   смэрт
         #    Player.death()
+
+    def apply_gravity_force(self, value):
+        self.vy += value
+
+    def __calc_carry(self, value):
+        sign = (value > 0) - (value < 0)
+        return abs(value) % 1 * sign
