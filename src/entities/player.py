@@ -26,20 +26,11 @@ class Player(Entity):
         if event.key == pygame.K_a:
             self.move_left = keydown
         elif event.key == pygame.K_d:
-            self
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_a:
-                self.left = True
-        if event.type == pygame.KEYUP and event.key == pygame.K_a:
-                self.left = False
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_d:
-            self.right = True
-        if event.type == pygame.KEYUP and event.key == pygame.K_d:
-            self.right = False
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            self.up = True
-        if event.type == pygame.KEYUP and event.key == pygame.K_SPACE:
-            self.up = False
-
+            self.move_right = keydown
+        elif event.key == pygame.K_w:
+            self.move_top = keydown
+        elif event.key == pygame.K_s:
+            self.move_bottom = keydown
 
 
 class Player(DrawableObject):
