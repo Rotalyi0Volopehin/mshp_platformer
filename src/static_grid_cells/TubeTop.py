@@ -8,5 +8,5 @@ from src.constants import IMAGES_DIR
 from src.static_grid_cell import StaticGridCell
 
 
-class Tube(Obstacle):
+class TubeTop(Obstacle):
     pass
