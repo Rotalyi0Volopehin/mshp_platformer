@@ -9,4 +9,5 @@ from src.static_grid_cell import StaticGridCell
 
 
 class TubeTop(Obstacle):
-    pass
+    def on_collide(self, collisions):
+        pass
