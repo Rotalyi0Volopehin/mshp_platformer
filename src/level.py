@@ -33,6 +33,7 @@ class Level(DrawableObject):
             lvl_struct_lines[i] = lvl_struct_lines[i].strip("\n\r")
         self.grid = StaticGrid(game, self, lvl_struct_lines, self.images)
         self.entity_set = EntitySet(game, self, lvl_struct_lines, self.images)
+        self.player = None
         self.__collect_rigid_bodies()
 
     def __collect_rigid_bodies(self):
@@ -43,6 +44,8 @@ class Level(DrawableObject):
                     self.rigid_bodies.append(cell)
         for entity in self.entity_set.entities:
             self.rigid_bodies.append(entity)
+            if isinstance(entity, Player):
+                self.player = entity
 
     def width(self):
         return self.grid.width() << 6
@@ -61,6 +64,8 @@ class Level(DrawableObject):
             Exceptions.throw(Exceptions.argument_type)
         self.entity_set.entities.remove(entity)
         self.rigid_bodies.remove(entity)
+        if entity == self.player:
+            self.player = None
 
     def add_new_static_grid_cell(self, cell, locx, locy):
         if not isinstance(cell, StaticGridCell):
@@ -77,7 +82,11 @@ class Level(DrawableObject):
         self.rigid_bodies.append(entity)
 
     def process_draw(self):
-        self.game_object.screen.blit(self.background, self.background.get_rect())
+        bg_rect = self.background.get_rect()
+        if self.player != None:
+            bg_rect.x -= self.player.rect.x
+            bg_rect.y -= self.player.rect.y
+        self.game_object.screen.blit(self.background, bg_rect)
         for rb in self.rigid_bodies:
             rb.process_draw()
 
