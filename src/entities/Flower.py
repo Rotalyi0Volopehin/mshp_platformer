@@ -7,7 +7,7 @@ from src.entity import Entity
 from src.exceptions import Exceptions
 
 class Flower(Entity):
-    image = pygame.image.load(os.path.join(IMAGES_DIR, 'flower.png'))
+    image = pygame.image.load(os.path.join(IMAGES_DIR, 'flower1.xcf'))
 
     def __init__(self, game, image, posx, posy):
         self.startposy = posy
