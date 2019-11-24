@@ -5,7 +5,6 @@ from src.ball import Ball
 from src.board import Board
 from src.constants import Color
 from src.level import Level
-from src.player import Player
 
 
 class Game:
@@ -16,18 +15,12 @@ class Game:
         self.loop_delay = 5
         self.library_init()
         self.game_over = False
-        self.create_game_objects()
         self.levels = [Level(self, "0")]
         self.objects = [self.levels[0]]
         self.current_level_index = 0
 
-
     def current_level(self):
         return self.levels[self.current_level_index]
-
-    def create_game_objects(self):
-        self.objects = []
-        self.hero = Player(self)
 
     def library_init(self):
         if not pygame.display.get_init(): #Инициализация библиотеки
@@ -52,14 +45,12 @@ class Game:
         self.screen.fill(Color.BOLD)  # Заливка цветом
         for item in self.objects:
             item.process_draw()
-        self.hero.process_draw(self.screen)
         pygame.display.flip()  # Double buffering
         pygame.time.wait(5)
 
     def process_logic(self):
         for item in self.objects:
             item.process_logic()
-        self.hero.process_logic()
 
     def process_events(self):
         for event in pygame.event.get():  # Обработка всех событий
@@ -67,4 +58,3 @@ class Game:
                 self.game_over = True
             for item in self.objects:
                 item.process_event(event)
-            self.hero.process_event(event)

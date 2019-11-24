@@ -86,7 +86,7 @@ class Level(DrawableObject):
 
     def process_draw(self):
         bg_rect = self.background.get_rect()
-        if self.player != None:
+        if (self.player != None) and False:
             bg_rect.x -= self.player.rect.x
             bg_rect.y -= self.player.rect.y
         self.game_object.screen.blit(self.background, bg_rect)
