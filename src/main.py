@@ -5,7 +5,9 @@ from src.menu import Menu
 def main():
     menu = Menu()
     menu.show()
-    g = Game()
+    height = menu.height
+    width = menu.width
+    g = Game(width, height)
     g.main_loop()
 
 

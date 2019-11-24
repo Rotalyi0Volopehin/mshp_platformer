@@ -6,7 +6,9 @@ class Menu:
     def __init__(self):
         pygame.init()
         pygame.font.init()
-        self.screen = pygame.display.set_mode([1024, 640])
+        self.width = 1024
+        self.height = 640
+        self.screen = pygame.display.set_mode([self.width,self.height])
         self.menuIsActive = True  # аналог game_over, для закрытия меню
         # далее - переменные, отвечающие за окна (пункты меню)
         # текущим окнам присваивается True
@@ -20,10 +22,16 @@ class Menu:
         self.highscoresText = self.main_font.render("Рекорды", 1, Color.WHITE)
         self.exitText = self.main_font.render("Выход", 1, Color.WHITE)
 
+        self.lowResolText = self.main_font.render("800 x 600", 1, Color.WHITE)
+        self.highResolText = self.main_font.render("1024 x 640", 1, Color.WHITE)
+
         self.newGamePosition = self.newGameText.get_rect(center=[512, 200])
         self.settingsPosition = self.settingsText.get_rect(center=[512, 270])    # инициализация позиций надписей
         self.highscoresPosition = self.highscoresText.get_rect(center=[512, 340])
         self.exitPosition = self.exitText.get_rect(center=[512, 410])
+
+        self.lowResolPosition = self.settingsText.get_rect(center=[552, 270])
+        self.highResolPosition = self.highscoresText.get_rect(center=[512, 340])
 
         self.background = pygame.image.load("images/background.jpg") # здесь можно изменить фон
         self.background_rect = self.background.get_rect()
@@ -56,12 +64,18 @@ class Menu:
     def settings_events(self):
         mouse = pygame.mouse.get_pos()
         self.go_back_hover(mouse)
+        self.lowResol_show()
+        self.highResol_show()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.menuIsActive = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if 425 < mouse[0] < 601 and 491 < mouse[1] < 536:
                     self.go_back_click()
+                elif 361 < mouse[0] < 665 and 250 < mouse[1] < 301:
+                    self.lowResol_click()
+                elif 388 < mouse[0] < 638 and 321 < mouse[1] < 371:
+                    self.highResol_click()
 
     # обработка событий раздела рекордов
     def highscores_events(self):
@@ -86,6 +100,16 @@ class Menu:
     def highscores_click(self):
         self.mainIsActive = False
         self.highscoresIsActive = True
+
+    def lowResol_click(self):
+        self.width = 800
+        self.height = 600
+        self.screen = pygame.display.set_mode([self.width,self.height])
+
+    def highResol_click(self):
+        self.width = 1024
+        self.height = 640
+        self.screen = pygame.display.set_mode([self.width,self.height])
 
     def exit_click(self):
         self.menuIsActive = False
@@ -133,6 +157,12 @@ class Menu:
 
     def settings_show(self):
         self.screen.blit(self.settingsText, self.settingsPosition)
+
+    def lowResol_show(self):
+        self.screen.blit(self.lowResolText, self.lowResolPosition)
+
+    def highResol_show(self):
+        self.screen.blit(self.highResolText, self.highResolPosition)
 
     def highscores_show(self):
         self.screen.blit(self.highscoresText, self.highscoresPosition)
