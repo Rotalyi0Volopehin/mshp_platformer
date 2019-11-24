@@ -1,6 +1,6 @@
 import glob
 import pygame
-
+import copy
 from src.static_grid import StaticGrid
 from src.entity import Entity
 from src.io_tools import IO_Tools
@@ -8,6 +8,8 @@ from src.entity_set import EntitySet
 from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
 from src.static_grid_cell import StaticGridCell
+from src.constants import *
+
 
 # Уровень и информация о нём
 # Каждый уровень в папке levels имеет свою папку, название которой должно быть "level_*" (* - параметр name)
@@ -44,6 +46,8 @@ class Level(DrawableObject):
                     self.rigid_bodies.append(cell)
         for entity in self.entity_set.entities:
             self.rigid_bodies.append(entity)
+        PLT.S = copy.copy(self.rigid_bodies)
+
 
     def width(self):
         return self.grid.width() << 6
