@@ -7,7 +7,7 @@ from src.constants import IMAGES_DIR
 
 
 class Ball(DrawableObject):
-    image = pygame.image.load(os.path.join(IMAGES_DIR, 'basketball.png'))
+    #image = pygame.image.load(os.path.join(IMAGES_DIR, 'basketball.png'))
 
     def __init__(self, game_object):
         super().__init__(game_object)

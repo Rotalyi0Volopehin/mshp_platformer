@@ -5,4 +5,4 @@ class Color:
     BLUE = [0, 0, 255]
 
 
-IMAGES_DIR = 'images'
+IMAGES_DIR = 'levels\level_0\sprites'

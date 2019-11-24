@@ -31,6 +31,7 @@ class Level(DrawableObject):
         lvl_file.close()
         for i in range(len(lvl_struct_lines)):
             lvl_struct_lines[i] = lvl_struct_lines[i].strip("\n\r")
+        print(self.images)
         self.grid = StaticGrid(game, self, lvl_struct_lines, self.images)
         self.entity_set = EntitySet(game, self, lvl_struct_lines, self.images)
         self.__collect_rigid_bodies()
