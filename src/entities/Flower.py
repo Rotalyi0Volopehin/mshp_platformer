@@ -5,6 +5,8 @@ import pygame
 from src.constants import IMAGES_DIR
 from src.entity import Entity
 from src.exceptions import Exceptions
+from src.player import Player
+
 
 class Flower(Entity):
     #image = pygame.image.load(os.path.join(IMAGES_DIR, 'flower1.xcf'))
@@ -28,8 +30,6 @@ class Flower(Entity):
 
     def on_collide(self, collisions):
         pass
-        #if self.quick_collide_with(Player):   смэрт
-        #    Player.death()
 
     def apply_gravity_force(self, value):
         self.vy += value

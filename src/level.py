@@ -49,6 +49,7 @@ class Level(DrawableObject):
         PLT.S = copy.copy(self.rigid_bodies)
 
 
+
     def width(self):
         return self.grid.width() << 6
 
