@@ -29,6 +29,9 @@ class Game:
         self.objects = []
         self.hero = Player(self)
 
+    def create_hero(self):
+        self.hero = Player(self)
+
     def library_init(self):
         if not pygame.display.get_init(): #Инициализация библиотеки
             pygame.display.init()

@@ -21,7 +21,6 @@ class Player(DrawableObject):
         self.yvel = 0  # скорость вертикального перемещения
         self.onGround = False  # На земле ли я?
         self.alive = True  # смэрт?
-        self.xx = 0
 
     def process_logic(self):
             if self.alive:
@@ -49,6 +48,11 @@ class Player(DrawableObject):
                 self.collide_with_platforms(0, self.yvel, PLT.S)
                 self.rect.x += self.xvel
                 self.collide_with_platforms(self.xvel, 0, PLT.S)
+
+            if not self.alive:
+                self.rect.y = 0
+                self.rect.x = 0
+                self.alive = True
 
     def process_draw(self, screen):  # Выводим себя на экран
         screen.blit(self.image, (self.rect.x, self.rect.y))
