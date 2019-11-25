@@ -1,6 +1,7 @@
 import  pygame
 import sys
 from src.constants import Color
+from highscores import Highscore
 
 class Menu:
     def __init__(self):
@@ -13,6 +14,8 @@ class Menu:
         self.mainIsActive = True
         self.settingsIsActive = False
         self.highscoresIsActive = False
+
+        self.highscore = Highscore()
 
         self.main_font = pygame.font.Font('font/RetroGaming.ttf', 46)
         self.newGameText = self.main_font.render("Новая игра", 1, Color.WHITE)
@@ -160,6 +163,7 @@ class Menu:
 
             elif self.highscoresIsActive: # если мы в разделе рекордов
                 self.highscores_events()
+                self.highscore.process_draw(self.screen)
                 self.go_back_show()
 
             pygame.display.flip()
