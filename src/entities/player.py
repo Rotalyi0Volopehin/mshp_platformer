@@ -26,7 +26,11 @@ class Player(Entity):
         if self.move_down and not self.bottom_collision:
             pass
         if not self.bottom_collision and (self.vy < 5):
-            self.apply_gravity_force(1)
+            self.apply_gravity_force(0.5)
+        if abs(self.vx) < 0.2:
+            self.vx = 0
+        else:
+            self.vx *= self.resistance
         #self.move_left = self.move_top = self.move_right = self.move_bottom = False
         self.left_collision = self.top_collision = self.right_collision = self.bottom_collision = False
 
@@ -47,7 +51,7 @@ class Player(Entity):
                 self.rect.x += 1
                 inside = self.collide_with(obstacle).left
             elif pulling_dir == 'v':
-                self.rect.x -= 1
+                self.rect.x += 1
                 inside = self.collide_with(obstacle).top
             else:
                 raise TypeError("<^>v")

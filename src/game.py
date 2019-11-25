@@ -1,8 +1,6 @@
 import sys
 import pygame
 import time
-from src.ball import Ball
-from src.board import Board
 from src.constants import Color
 from src.level import Level
 
