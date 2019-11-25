@@ -101,9 +101,10 @@ class Level(DrawableObject):
                     collisions.append(rb.collide_with(opp_rb))
             if len(collisions) > 0:
                 rb.on_collide(collisions)
-            rb.process_logic()
+        for rb in self.rigid_bodies:
             if isinstance(rb, Entity):
                 rb.apply_velocity()
+            rb.process_logic()
 
     def process_event(self, event):
         for rb in self.rigid_bodies:
