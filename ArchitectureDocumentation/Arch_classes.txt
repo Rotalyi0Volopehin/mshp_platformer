@@ -29,6 +29,7 @@ class Level(DrawableObject):
     self.images #(словарь с именами спрайтов как ключи и спрайтами как значения) Спрайты из директории "levels\level_*\images"
     self.background #(pygame.Surface) Задник
     self.rigid_bodies #(массив RigidBody) Множество всех твёрдых тел уровня
+    self.player #(Player) Указатель на игрока, если он есть
 
 
 class StaticGrid:
@@ -63,7 +64,7 @@ class RigidBody(DrawableObject): #abstract
 Методы:
     def __init__(game, rect) #Конструктор
     def collide_with(other_rigid_body) #(CollisionInfo) Вычисляет коллизии с другим твёрдым телом
-    def quick_collide_with(other_rigid_body) #(bool) Возвращеет то, происходит ли столкновение с другим твёрдым телом
+    def quick_collide_with(other_rigid_body) #(bool) Возвращает то, происходит ли столкновение с другим твёрдым телом
     def on_collide(collisions): #Событие столкновения; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
 Поля:
     self.rect #(pygame.Rect) Хитбокс
