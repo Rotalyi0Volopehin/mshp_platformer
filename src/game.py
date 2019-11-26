@@ -10,7 +10,7 @@ class Game:
         self.width = width
         self.height = height
         self.size = [self.width, self.height]
-        self.loop_delay = 5
+        self.loop_delay = 10
         self.library_init()
         self.game_over = False
         self.levels = [Level(self, "0")]

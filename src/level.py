@@ -95,6 +95,9 @@ class Level(DrawableObject):
 
     def process_logic(self):
         for rb in self.rigid_bodies:
+            if isinstance(rb, Entity):
+                rb.apply_velocity()
+        for rb in self.rigid_bodies:
             collisions = []
             for opp_rb in self.rigid_bodies:
                 if (rb != opp_rb) and rb.quick_collide_with(opp_rb):
@@ -102,8 +105,6 @@ class Level(DrawableObject):
             if len(collisions) > 0:
                 rb.on_collide(collisions)
         for rb in self.rigid_bodies:
-            if isinstance(rb, Entity):
-                rb.apply_velocity()
             rb.process_logic()
 
     def process_event(self, event):
