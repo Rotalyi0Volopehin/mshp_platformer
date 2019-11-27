@@ -6,11 +6,11 @@ from src.static_grid_cells.obstacle import Obstacle
 
 class Player(Entity):
     speed = 0.8
-    jump_force = -1.8
+    jump_force = -1.5
     resistance = 0.7
     resistance_in_air = 0.95
     max_jump_duration = 22
-    fravity_force = 1
+    fravity_force = 0.8
     falling_speed_limit = 10
     ignoring_jump_duration = 5
 
@@ -25,7 +25,7 @@ class Player(Entity):
 
     def process_logic(self):
         self.__renew_prev_rect()
-        if self.rect.y > self.game_object.current_level().height():
+        if self.rect.y > self.game_object.gameplay_scene.current_level().height():
             self.die()
         if self.move_left and not self.left_collision:
             self.vx -= self.speed
@@ -59,7 +59,7 @@ class Player(Entity):
 
     def die(self):
         self.game_object.game_over = True
-        self.game_object.current_level().delete_entity(self)
+        self.game_object.gameplay_scene.current_level().delete_entity(self)
 
     def __renew_prev_rect(self):
         if self.prev_rect != self.rect:
@@ -70,18 +70,6 @@ class Player(Entity):
         self.rect.x = self.prev_rect.x
         self.rect.y = self.prev_rect.y
 
-    def __pull_out(self, pulling_dir):
-        if pulling_dir == '<':
-            self.rect.x &= 192
-        elif pulling_dir == '^':
-            self.rect.y &= 192
-        elif pulling_dir == '>':
-            self.rect.x = (self.rect.x & 192) + 64
-        elif pulling_dir == 'v':
-            self.rect.y = (self.rect.y & 192) + 64
-        else:
-            raise TypeError("<^>v")
-
     def on_collide(self, collisions):
         for collision in collisions:
             if isinstance(collision.opp_rb, Obstacle):
@@ -90,19 +78,19 @@ class Player(Entity):
                     if (self.rect.y & 63) < 58: #hard
                         self.__restore_rect_from_prev()
                         return
-                    self.__pull_out('v')
+                    self.pull_out('v')
                     self.top_collision = True
                 if collision.bottom and (self.vy >= 0) and not self.bottom_collision:
-                    self.__pull_out('^')
+                    self.pull_out('^')
                     self.vy = 0
                     self.bottom_collision = True
                 if (collision.opp_rb.rect.y - self.rect.y) < 60: #if player is not too deep in floor
-                    if collision.left and (self.vx <= 0) and not self.left_collision:
-                        self.__pull_out('>')
+                    if collision.left and (self.vx < 0) and not self.left_collision:
+                        self.pull_out('>')
                         self.vx = 0
                         self.left_collision = True
-                    if collision.right and (self.vx >= 0) and not self.right_collision:
-                        self.__pull_out('<')
+                    if collision.right and (self.vx > 0) and not self.right_collision:
+                        self.pull_out('<')
                         self.vx = 0
                         self.right_collision = True
 

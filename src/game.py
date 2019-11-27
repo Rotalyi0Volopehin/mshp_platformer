@@ -2,7 +2,7 @@ import sys
 import pygame
 import time
 from src.constants import Color
-from src.level import Level
+from src.gameplay_scene import GameplayScene
 
 
 class Game:
@@ -13,12 +13,8 @@ class Game:
         self.loop_delay = 10
         self.library_init()
         self.game_over = False
-        self.levels = [Level(self, "0")]
-        self.objects = [self.levels[0]]
-        self.current_level_index = 0
-
-    def current_level(self):
-        return self.levels[self.current_level_index]
+        self.objects = []
+        self.gameplay_scene = GameplayScene(self)
 
     def library_init(self):
         if not pygame.display.get_init(): #Инициализация библиотеки
