@@ -46,6 +46,7 @@ class Level(DrawableObject):
                     self.rigid_bodies.append(cell)
         for entity in self.entity_set.entities:
             self.rigid_bodies.append(entity)
+        self.rigid_bodies = self.rigid_bodies[::-1]
         PLT.S = copy.copy(self.rigid_bodies)
 
 
@@ -84,6 +85,7 @@ class Level(DrawableObject):
 
     def process_draw(self):
         self.game_object.screen.blit(self.background, self.background.get_rect())
+
         for rb in self.rigid_bodies:
             rb.process_draw()
 
