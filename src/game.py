@@ -2,7 +2,7 @@ import sys
 import pygame
 import time
 from src.constants import Color
-from src.gameplay_scene import GameplayScene
+from src.gameplay_stage import GameplayStage
 
 
 class Game:
@@ -14,7 +14,7 @@ class Game:
         self.library_init()
         self.game_over = False
         self.objects = []
-        self.gameplay_scene = GameplayScene(self)
+        self.gameplay_stage = GameplayStage(self)
 
     def library_init(self):
         if not pygame.display.get_init(): #Инициализация библиотеки

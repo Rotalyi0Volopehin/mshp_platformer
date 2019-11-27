@@ -2,7 +2,7 @@ from src.level import Level
 from src.exceptions import Exceptions
 
 
-class GameplayScene:
+class GameplayStage:
     def __init__(self, game):
         if type(game).__name__ != "Game":
             Exceptions.throw(Exceptions.argument_type)
