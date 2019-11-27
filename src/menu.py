@@ -1,5 +1,4 @@
 import pygame
-import sys
 from src.constants import Color
 
 class Menu:
@@ -7,9 +6,9 @@ class Menu:
         pygame.init()
         pygame.font.init()
         self.screen = pygame.display.set_mode([1024, 640])
-        self.volume = 50
+        self.volume = 5
         pygame.mixer.music.load("button-40.mp3")
-        pygame.mixer.music.set_volume(self.volume / 100)
+        pygame.mixer.music.set_volume(self.volume / 10)
         self.menuIsActive = True  # аналог game_over, для закрытия меню
         # далее - переменные, отвечающие за окна (пункты меню)
         # текущим окнам присваивается True
@@ -27,7 +26,7 @@ class Menu:
         self.volumePosition = self.volumeText.get_rect(center=[300, 200])
         self.plusText = self.main_font.render("+", 1, Color.WHITE)
         self.plusPosition = self.plusText.get_rect(center=[500, 200])
-        self.volumeNumText = self.main_font.render("50", 1, Color.WHITE)
+        self.volumeNumText = self.main_font.render(str(self.volume), 1, Color.WHITE)
         self.volumeNumPosition = self.volumeNumText.get_rect(center=[580, 200])
         self.minusText = self.main_font.render("-", 1, Color.WHITE)
         self.minusPosition = self.minusText.get_rect(center=[670, 200])
@@ -54,13 +53,13 @@ class Menu:
             if event.type == pygame.QUIT:
                 self.menuIsActive = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if 351 < mouse[0] < 673 and 180 < mouse[1] < 231:
+                if self.newGamePosition.left < mouse[0] < self.newGamePosition.right and self.newGamePosition.top < mouse[1] < self.newGamePosition.bottom:
                     self.new_game_click()
-                elif 361 < mouse[0] < 665 and 250 < mouse[1] < 301:
+                elif self.settingsPosition.left < mouse[0] < self.settingsPosition.right and self.settingsPosition.top < mouse[1] < self.settingsPosition.bottom:
                     self.settings_click()
-                elif 388 < mouse[0] < 638 and 321 < mouse[1] < 371:
+                elif self.highscoresPosition.left < mouse[0] < self.highscoresPosition.right and self.highscoresPosition.top < mouse[1] < self.highscoresPosition.bottom:
                     self.highscores_click()
-                elif 421 < mouse[0] < 605 and 391 < mouse[1] < 435:
+                elif self.exitPosition.left < mouse[0] < self.exitPosition.right and self.exitPosition.top < mouse[1] < self.exitPosition.bottom:
                     self.exit_click()
 
 
@@ -74,11 +73,11 @@ class Menu:
             if event.type == pygame.QUIT:
                 self.menuIsActive = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if 425 < mouse[0] < 601 and 491 < mouse[1] < 536:
+                if self.goBackPosition.left < mouse[0] < self.goBackPosition.right and self.goBackPosition.top < mouse[1] < self.goBackPosition.bottom:
                     self.go_back_click()
-                if 482 < mouse[0] < 516 and 185 < mouse[1] < 214:
+                if self.plusPosition.left < mouse[0] < self.plusPosition.right and self.plusPosition.top < mouse[1] < self.plusPosition.bottom:
                     self.plus_click()
-                if 657 < mouse[0] < 683 and 191 < mouse[1] < 206:
+                if self.minusPosition.left < mouse[0] < self.minusPosition.right and self.minusPosition.top < mouse[1] < self.minusPosition.bottom:
                     self.minus_click()
 
     # обработка событий раздела рекордов
@@ -89,7 +88,7 @@ class Menu:
             if event.type == pygame.QUIT:
                 self.menuIsActive = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if 425 < mouse[0] < 601 and 491 < mouse[1] < 536:
+                if self.goBackPosition.left < mouse[0] < self.goBackPosition.right and self.goBackPosition.top < mouse[1] < self.goBackPosition.bottom:
                     self.go_back_click()
 
     # обработка нажатий на кнопки
@@ -111,7 +110,6 @@ class Menu:
     def exit_click(self):
         pygame.mixer.music.play()
         self.menuIsActive = False
-        sys.exit(0)
 
     def go_back_click(self):
         pygame.mixer.music.play()
@@ -120,56 +118,56 @@ class Menu:
         self.mainIsActive = True
 
     def plus_click(self):
-        if self.volume < 100:
+        if self.volume < 10:
             self.volume += 1
-        pygame.mixer.music.set_volume(self.volume / 100)
+        pygame.mixer.music.set_volume(self.volume / 10)
         self.volumeNumText = self.main_font.render(str(self.volume), 1, Color.WHITE)
 
     def minus_click(self):
         if self.volume > 0:
             self.volume -= 1
-        pygame.mixer.music.set_volume(self.volume / 100)
+        pygame.mixer.music.set_volume(self.volume / 10)
         self.volumeNumText = self.main_font.render(str(self.volume), 1, Color.WHITE)
 
     # изменение цвета кнопок при наведении на них
     def new_game_hover(self, mouse):
-        if 351 < mouse[0] < 673 and 180 < mouse[1] < 231:
+        if self.newGamePosition.left < mouse[0] < self.newGamePosition.right and self.newGamePosition.top < mouse[1] < self.newGamePosition.bottom:
             self.newGameText = self.main_font.render("Новая игра", 1, Color.LIGHT_GRAY)
         else:
             self.newGameText = self.main_font.render("Новая игра", 1, Color.WHITE)
 
     def settings_hover(self, mouse):
-        if 361 < mouse[0] < 665 and 250 < mouse[1] < 301:
+        if self.settingsPosition.left < mouse[0] < self.settingsPosition.right and self.settingsPosition.top < mouse[1] < self.settingsPosition.bottom:
             self.settingsText = self.main_font.render("Настройки", 1, Color.LIGHT_GRAY)
         else:
             self.settingsText = self.main_font.render("Настройки", 1, Color.WHITE)
 
     def highscores_hover(self, mouse):
-        if 388 < mouse[0] < 638 and 321 < mouse[1] < 371:
+        if self.highscoresPosition.left < mouse[0] < self.highscoresPosition.right and self.highscoresPosition.top < mouse[1] < self.highscoresPosition.bottom:
             self.highscoresText = self.main_font.render("Рекорды", 1, Color.LIGHT_GRAY)
         else:
             self.highscoresText = self.main_font.render("Рекорды", 1, Color.WHITE)
 
     def exit_hover(self, mouse):
-        if 421 < mouse[0] < 605 and 391 < mouse[1] < 435:
+        if self.exitPosition.left < mouse[0] < self.exitPosition.right and self.exitPosition.top < mouse[1] < self.exitPosition.bottom:
             self.exitText = self.main_font.render("Выход", 1, Color.LIGHT_GRAY)
         else:
             self.exitText = self.main_font.render("Выход", 1, Color.WHITE)
 
     def go_back_hover(self, mouse):
-        if 425 < mouse[0] < 601 and 491 < mouse[1] < 536:
+        if self.goBackPosition.left < mouse[0] < self.goBackPosition.right and self.goBackPosition.top < mouse[1] < self.goBackPosition.bottom:
             self.goBackText = self.main_font.render("Назад", 1, Color.LIGHT_GRAY)
         else:
             self.goBackText = self.main_font.render("Назад", 1, Color.WHITE)
 
     def plus_hover(self, mouse):
-        if 482 < mouse[0] < 516 and 185 < mouse[1] < 214:
+        if self.plusPosition.left < mouse[0] < self.plusPosition.right and self.plusPosition.top < mouse[1] < self.plusPosition.bottom:
             self.plusText = self.main_font.render("+", 1, Color.LIGHT_GRAY)
         else:
             self.plusText = self.main_font.render("+", 1, Color.WHITE)
 
     def minus_hover(self, mouse):
-        if 657 < mouse[0] < 683 and 191 < mouse[1] < 206:
+        if self.minusPosition.left < mouse[0] < self.minusPosition.right and self.minusPosition.top < mouse[1] < self.minusPosition.bottom:
             self.minusText = self.main_font.render("-", 1, Color.LIGHT_GRAY)
         else:
             self.minusText = self.main_font.render("-", 1, Color.WHITE)
