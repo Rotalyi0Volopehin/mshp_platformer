@@ -1,4 +1,5 @@
 ﻿К архитектуре относятся следующие классы:
+- GameplayStage - игровое состояние игры
 - Level - уровень и информация о нём
 - StaticGrid - статические сетка игровых объектов (блоков)
 - EntitySet - множество всех сущностей, используемых на одном уровне
@@ -9,6 +10,17 @@
 - Entity [abstract] - сущность, обладающая позицией, скоростью и спрайтом
 - Obstacle [abstract] - ячейка статической сетки (блок), препятствующий движению игрока
 
+
+class GameplayStage(DrawableObject):
+Методы:
+    def __init__(game) #Конструктор
+    def current_level() #(Level) Возвращает указатель на текущий уровень
+    def process_draw()
+    def process_logic()
+    def process_event(event)
+Поля:
+    self.levels #(массив уровней) Все уровни игры
+    self.current_level_index #(int) Индекс текущего уровня в массиве self.levels
 
 class Level(DrawableObject):
 Методы:
@@ -98,6 +110,7 @@ class Entity(RigidBody): #abstract
     def apply_gravity_force(value) #Применяет ускорение свободного падения value
     def apply_velocity() #Применяет скорость к позиции
     def __calc_carry(value) #Считает остаток от числа
+    def pull_out(self, pulling_dir) #Выталкивает сущность в следующую ячейку по заданному направлению, которое может быть задано символами "<^>v"
 Поля:
     self.image #(pygame.Surface) Спрайт
     self.vx #(real) Скорость по горизонтали

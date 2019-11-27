@@ -13,8 +13,8 @@ class Game:
         self.loop_delay = 10
         self.library_init()
         self.game_over = False
-        self.objects = []
         self.gameplay_stage = GameplayStage(self)
+        self.objects = [self.gameplay_stage]
 
     def library_init(self):
         if not pygame.display.get_init(): #Инициализация библиотеки
