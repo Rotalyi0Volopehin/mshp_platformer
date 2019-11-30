@@ -1,6 +1,6 @@
 import glob
 import pygame
-import copy
+
 from src.static_grid import StaticGrid
 from src.entity import Entity
 from src.io_tools import IO_Tools
@@ -9,7 +9,6 @@ from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
 from src.static_grid_cell import StaticGridCell
 from src.entities.player import Player
-from src.constants import *
 
 
 # Уровень и информация о нём
@@ -38,6 +37,8 @@ class Level(DrawableObject):
         self.entity_set = EntitySet(game, self, lvl_struct_lines, self.images)
         self.player = None
         self.__collect_rigid_bodies()
+        self.__rigid_bodies_to_add = []
+        self.__rigid_bodies_to_delete = []
 
     def __collect_rigid_bodies(self):
         self.rigid_bodies = []
@@ -49,40 +50,64 @@ class Level(DrawableObject):
             self.rigid_bodies.append(entity)
             if isinstance(entity, Player):
                 self.player = entity
+        self.__sort_rigid_bodies()
 
+    def __sort_rigid_bodies(self):
+        self.rigid_bodies.sort(key=lambda elem: elem.drawing_priority())
+
+    @property
     def width(self):
         return self.grid.width() << 6
 
+    @property
     def height(self):
         return self.grid.height() << 6
 
     def delete_static_grid_cell(self, locx, locy):
         cell = self.grid.cells[locy][locx]
         if cell != None:
-            self.grid.cells[locy][locx] = None
-            self.rigid_bodies.remove(cell)
+            self.__rigid_bodies_to_delete.append(cell)
 
     def delete_entity(self, entity):
         if not isinstance(entity, Entity):
             Exceptions.throw(Exceptions.argument_type)
-        self.entity_set.entities.remove(entity)
-        self.rigid_bodies.remove(entity)
-        if entity == self.player:
-            self.player = None
+        self.__rigid_bodies_to_delete.append(entity)
 
-    def add_new_static_grid_cell(self, cell, locx, locy):
+    def __delete_rigid_bodies(self):
+        for rb in self.__rigid_bodies_to_delete:
+            self.rigid_bodies.remove(rb)
+            if isinstance(rb, StaticGridCell):
+                self.grid.cells[rb.locy][rb.locx] = None
+            else:
+                self.entity_set.entities.remove(rb)
+                if rb == self.player:
+                    self.player = None
+        self.__rigid_bodies_to_delete.clear()
+
+    def add_new_static_grid_cell(self, cell):
         if not isinstance(cell, StaticGridCell):
             Exceptions.throw(Exceptions.argument_type)
-        if self.grid.cells[locy][locx] != None:
+        if self.grid.cells[cell.locy][cell.locx] != None:
             Exceptions.throw(Exceptions.invalid_operation, "the specified location already contains a cell")
-        self.grid.cells[locy][locx] = cell
-        self.rigid_bodies.append(cell)
+        self.__rigid_bodies_to_add.append(cell)
 
     def add_new_entity(self, entity):
         if not isinstance(entity, Entity):
             Exceptions.throw(Exceptions.argument_type)
-        self.entity_set.entities.append(entity)
-        self.rigid_bodies.append(entity)
+        self.__rigid_bodies_to_add.append(entity)
+
+    def __add_new_rigid_bodies(self):
+        for rb in self.__rigid_bodies_to_add:
+            self.rigid_bodies.append(rb)
+            if isinstance(rb, StaticGridCell):
+                self.grid.cells[rb.locy][rb.locx] = rb
+            else:
+                self.entity_set.entities.append(rb)
+                if (self.player == rb) and (self.player == None):
+                    self.player = rb
+        if len(self.__rigid_bodies_to_add) > 0:
+            self.__rigid_bodies_to_add.clear()
+            self.__sort_rigid_bodies()
 
     def process_draw(self):
         bg_rect = self.background.get_rect()
@@ -106,6 +131,8 @@ class Level(DrawableObject):
                 rb.on_collide(collisions)
         for rb in self.rigid_bodies:
             rb.process_logic()
+        self.__delete_rigid_bodies()
+        self.__add_new_rigid_bodies()
 
     def process_event(self, event):
         for rb in self.rigid_bodies:

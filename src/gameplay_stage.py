@@ -8,14 +8,15 @@ class GameplayStage(DrawableObject):
         self.levels = [Level(game, "0")]
         self.current_level_index = 0
 
+    @property
     def current_level(self):
         return self.levels[self.current_level_index]
 
     def process_draw(self):
-        self.current_level().process_draw()
+        self.current_level.process_draw()
 
     def process_logic(self):
-        self.current_level().process_logic()
+        self.current_level.process_logic()
 
     def process_event(self, event):
-        self.current_level().process_event(event)
+        self.current_level.process_event(event)

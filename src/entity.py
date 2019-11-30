@@ -46,12 +46,12 @@ class Entity(RigidBody): #abstract
 
     def pull_out(self, pulling_dir):
         if pulling_dir == '<':
-            self.rect.x &= 192
+            self.rect.x &= 0xFFC0
         elif pulling_dir == '^':
-            self.rect.y &= 192
+            self.rect.y &= 0xFFC0
         elif pulling_dir == '>':
-            self.rect.x = (self.rect.x & 192) + 64
+            self.rect.x = (self.rect.x & 0xFFC0) + 64
         elif pulling_dir == 'v':
-            self.rect.y = (self.rect.y & 192) + 64
+            self.rect.y = (self.rect.y & 0xFFC0) + 64
         else:
             Exceptions.throw(Exceptions.argument, "directory must be represented by one of these values \"<^>v\"")

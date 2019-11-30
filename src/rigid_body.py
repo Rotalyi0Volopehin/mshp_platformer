@@ -14,6 +14,9 @@ class RigidBody(DrawableObject): #abstract
             Exceptions.throw(Exceptions.argument, "size of rigid body must be 64x64 pixels")
         self.rect = rect
 
+    def drawing_priority(self):
+        return 0
+
     def collide_with(self, other_rigid_body):
         return CollisionInfo(self, other_rigid_body)
 

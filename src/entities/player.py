@@ -2,6 +2,7 @@ import pygame
 
 from src.entity import Entity
 from src.static_grid_cells.obstacle import Obstacle
+from  src.static_grid_cells.brick_cell import BrickCell
 
 
 class Player(Entity):
@@ -25,7 +26,7 @@ class Player(Entity):
 
     def process_logic(self):
         self.__renew_prev_rect()
-        if self.rect.y > self.game_object.gameplay_stage.current_level().height():
+        if self.rect.y > self.game_object.gameplay_stage.current_level.height:
             self.die()
         if self.move_left and not self.left_collision:
             self.vx -= self.speed
@@ -59,7 +60,7 @@ class Player(Entity):
 
     def die(self):
         self.game_object.game_over = True
-        self.game_object.gameplay_stage.current_level().delete_entity(self)
+        self.game_object.gameplay_stage.current_level.delete_entity(self)
 
     def __renew_prev_rect(self):
         if self.prev_rect != self.rect:
@@ -109,3 +110,6 @@ class Player(Entity):
                 self.game_object.loop_delay = 75
             elif event.key == pygame.K_e:
                 self.game_object.loop_delay = 10
+            elif (event.key == pygame.K_SPACE) and not keydown:
+                level = self.game_object.gameplay_stage.current_level
+                level.add_new_static_grid_cell(BrickCell(self.game_object, level.images["BrickCell"], self.rect.x >> 6, self.rect.y >> 6))
