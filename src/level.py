@@ -87,8 +87,6 @@ class Level(DrawableObject):
     def add_new_static_grid_cell(self, cell):
         if not isinstance(cell, StaticGridCell):
             Exceptions.throw(Exceptions.argument_type)
-        if self.grid.cells[cell.locy][cell.locx] != None:
-            Exceptions.throw(Exceptions.invalid_operation, "the specified location already contains a cell")
         self.__rigid_bodies_to_add.append(cell)
 
     def add_new_entity(self, entity):
@@ -100,6 +98,8 @@ class Level(DrawableObject):
         for rb in self.__rigid_bodies_to_add:
             self.rigid_bodies.append(rb)
             if isinstance(rb, StaticGridCell):
+                if self.grid.cells[rb.locy][rb.locx] != None:
+                    Exceptions.throw(Exceptions.invalid_operation, "the specified location already contains a cell")
                 self.grid.cells[rb.locy][rb.locx] = rb
             else:
                 self.entity_set.entities.append(rb)

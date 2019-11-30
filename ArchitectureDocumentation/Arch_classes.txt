@@ -14,10 +14,11 @@
 class GameplayStage(DrawableObject):
 Методы:
     def __init__(game) #Конструктор
-    def current_level() #(Level) Возвращает указатель на текущий уровень
     def process_draw()
     def process_logic()
     def process_event(event)
+Свойства:
+    def current_level #(Level) Возвращает указатель на текущий уровень
 Поля:
     self.levels #(массив уровней) Все уровни игры
     self.current_level_index #(int) Индекс текущего уровня в массиве self.levels
@@ -26,15 +27,19 @@ class Level(DrawableObject):
 Методы:
     def __init__(game, name) #Этот конструктор подгружает данные уровня из директории "levels\level_*\" (* - параметр name)
     def __collect_rigid_bodies() #Инициализатор поля rigid_bodies
-    def width() #(int) Ширина уровня в пикселях
-    def height() #(int) Высота уровня в пикселях
+    def __sort_rigid_bodies() #Сортировка массива self.rigid_bodies по приоритету отрисовки
     def delete_static_grid_cell(locx, locy) #Правильное удаление ячейки статической сетки (блока) по её положению
     def delete_entity(entity) #Правильное удаление сущности
-    def add_new_static_grid_cell(cell, locx, locy) #Правильное добавление ячейки статической сетки (блока)
+    def __delete_rigid_bodies() #Осуществляет удаление тел под конец цикла обработки
+    def add_new_static_grid_cell(cell) #Правильное добавление ячейки статической сетки (блока)
     def add_new_entity(entity) #Правильное добавление сущности
+    def __add_new_rigid_bodies() #Осуществляет добавление тел под конец цикла обработки
     def process_draw() #Запускает метод process_draw у всех твёрдых тел уровня
     def process_logic() #Запускает метод process_logic у всех твёрдых тел уровня
     def process_event(event) #Запускает метод process_event у всех твёрдых тел уровня
+Свойства:
+    def width #(int) Ширина уровня в пикселях
+    def height #(int) Высота уровня в пикселях
 Поля:
     self.grid = #(StaticGrid) Лежит в game.objects
     self.entity_set #(EntitySet) Лежит в game.objects
@@ -42,13 +47,16 @@ class Level(DrawableObject):
     self.background #(pygame.Surface) Задник
     self.rigid_bodies #(массив RigidBody) Множество всех твёрдых тел уровня
     self.player #(Player) Указатель на игрока, если он есть
+    self.__rigid_bodies_to_add #(массив RigidBody) Множество тел для добавления
+    self.__rigid_bodies_to_delete #(массив RigidBody) Множество тел для удаления
 
 
 class StaticGrid:
 Методы:
     def __init__(game, level, lvl_struct_lines, images) #Этот конструктор загружает расположение ячеек (блоков) из файла "levels\level_*\struct.txt"
-    def width() #(int) Ширина сетки в ячейках (блоках)
-    def height() #(int) Высота сетки в ячейках (блоках)
+Свойства:
+    def width #(int) Ширина сетки в ячейках (блоках)
+    def height #(int) Высота сетки в ячейках (блоках)
 Поля:
     self.level #(Level) Указатель на уровень
     self.cells #(массив массивов ячеек (блоков); cells[строка][столбец]) Сетка ячеек (блоков)
@@ -77,7 +85,8 @@ class RigidBody(DrawableObject): #abstract
     def __init__(game, rect) #Конструктор
     def collide_with(other_rigid_body) #(CollisionInfo) Вычисляет коллизии с другим твёрдым телом
     def quick_collide_with(other_rigid_body) #(bool) Возвращает то, происходит ли столкновение с другим твёрдым телом
-    def on_collide(collisions): #Событие столкновения; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
+    def on_collide(collisions) #Событие столкновения; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
+    def drawing_priority() #(int) Свойство, возвращающее приоритет отрисовки объекта
 Поля:
     self.rect #(pygame.Rect) Хитбокс
 
