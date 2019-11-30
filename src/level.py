@@ -9,6 +9,7 @@ from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
 from src.static_grid_cell import StaticGridCell
 from src.entities.player import Player
+from src.camera import Camera
 from src.constants import *
 
 
@@ -38,6 +39,7 @@ class Level(DrawableObject):
         self.entity_set = EntitySet(game, self, lvl_struct_lines, self.images)
         self.player = None
         self.__collect_rigid_bodies()
+        self.camera = Camera(self.width(), self.height())
 
     def __collect_rigid_bodies(self):
         self.rigid_bodies = []
@@ -89,9 +91,12 @@ class Level(DrawableObject):
         if (self.player != None) and False:
             bg_rect.x -= self.player.rect.x
             bg_rect.y -= self.player.rect.y
+
         self.game_object.screen.blit(self.background, bg_rect)
+        self.camera.update(self.player)
         for rb in self.rigid_bodies:
-            rb.process_draw()
+            rb.process_draw(self.camera.apply(rb))
+
 
     def process_logic(self):
         for rb in self.rigid_bodies:

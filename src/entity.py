@@ -2,6 +2,8 @@
 
 from src.rigid_body import RigidBody
 from src.exceptions import Exceptions
+from src.camera import Camera
+
 
 # Это сущность - игровой объект, обладающий позицией, скоростью и спрайтом
 class Entity(RigidBody): #abstract
@@ -16,8 +18,8 @@ class Entity(RigidBody): #abstract
         self.vx = self.vy = 0
         self.posx_carry = self.posy_carry = 0
 
-    def process_draw(self):
-        self.game_object.screen.blit(self.image, self.rect)
+    def process_draw(self, camera):
+        self.game_object.screen.blit(self.image, camera)
 
     def apply_gravity_force(self, value):
         self.vy += value
