@@ -10,7 +10,7 @@ from src.constants import Color
 
 
 class Game:
-    def __init__(self, width=800, height=600):
+    def __init__(self, width, height):
         self.width = width
         self.height = height
         self.size = [self.width, self.height]
