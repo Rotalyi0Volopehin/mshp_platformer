@@ -1,5 +1,6 @@
 from src.entity import Entity
 from src.static_grid_cells.obstacle import Obstacle
+from src.entities.player import Player
 
 
 # Родительский класс всех NPC
@@ -11,7 +12,8 @@ class NPC(Entity):
         self.on_ground = False
 
     def process_logic(self):
-        self.on_ground = False
+        # self.on_ground = False
+        pass
 
     def on_collide(self, collisions):
         for collision in collisions:
@@ -19,10 +21,10 @@ class NPC(Entity):
             if isinstance(collision.opp_rb, Obstacle):
                 if collision.bottom:
                     self.on_ground = True
-                self.obstacle_collision()
+                self.obstacle_collision(collision)
             # Коллизия с игроком
-            if isinstance(collision.opp_rb, Obstacle):
-                self.player_collision()
+            if isinstance(collision.opp_rb, Player):
+                self.player_collision(collision)
 
     def player_collision(self, collision):
         pass
@@ -34,3 +36,4 @@ class NPC(Entity):
         self.alive = False
         # level = self.game_object.current_level()
         # level.delete_entity(self)
+        # level.delete_static_grid_cell(collision.opp_rb.locx, collision.opp_rb.locy)

@@ -17,6 +17,3 @@ class StaticGridCell(RigidBody): #abstract
         self.image = image
         self.locx = locx
         self.locy = locy
-
-    def process_draw(self):
-        self.game_object.screen.blit(self.image, self.rect)

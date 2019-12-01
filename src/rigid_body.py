@@ -14,6 +14,9 @@ class RigidBody(DrawableObject): #abstract
             Exceptions.throw(Exceptions.argument, "size of rigid body must be 64x64 pixels")
         self.rect = rect
 
+    def drawing_priority(self):
+        return 0
+
     def collide_with(self, other_rigid_body):
         return CollisionInfo(self, other_rigid_body)
 
@@ -24,6 +27,11 @@ class RigidBody(DrawableObject): #abstract
 
     def on_collide(self, collisions): #abstract event
         pass
+
+    def process_draw(self):
+        level = self.game_object.gameplay_stage.current_level
+        rect = self.rect if level.player == None else level.camera.apply(self.rect)
+        self.game_object.screen.blit(self.image, rect)
 
 
 # Это информация о столкновении двух RigidBody (главного и дополнительного)

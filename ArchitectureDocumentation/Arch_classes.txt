@@ -1,0 +1,131 @@
+﻿К архитектуре относятся следующие классы:
+- GameplayStage - игровое состояние игры
+- Level - уровень и информация о нём
+- StaticGrid - статические сетка игровых объектов (блоков)
+- EntitySet - множество всех сущностей, используемых на одном уровне
+- SaveSymbolRegister [static] - регистр соответствия игровых объектов и символов записи (используются в файлах структуры уровней - "struct.txt")
+- RigidBody [abstract] - твёрдое тело с физическими параметрами (коллизией и геометрией)
+- CollisionInfo - информация о столкновении двух RigidBody
+- StaticGridCell [abstract] - ячейка статической сетки (блок)
+- Entity [abstract] - сущность, обладающая позицией, скоростью и спрайтом
+- Obstacle [abstract] - ячейка статической сетки (блок), препятствующий движению игрока
+
+
+class GameplayStage(DrawableObject):
+Методы:
+    def __init__(game) #Конструктор
+    def process_draw()
+    def process_logic()
+    def process_event(event)
+Свойства:
+    def current_level #(Level) Возвращает указатель на текущий уровень
+Поля:
+    self.levels #(массив уровней) Все уровни игры
+    self.current_level_index #(int) Индекс текущего уровня в массиве self.levels
+
+class Level(DrawableObject):
+Методы:
+    def __init__(game, name) #Этот конструктор подгружает данные уровня из директории "levels\level_*\" (* - параметр name)
+    def __collect_rigid_bodies() #Инициализатор поля rigid_bodies
+    def __sort_rigid_bodies() #Сортировка массива self.rigid_bodies по приоритету отрисовки
+    def delete_static_grid_cell(locx, locy) #Правильное удаление ячейки статической сетки (блока) по её положению
+    def delete_entity(entity) #Правильное удаление сущности
+    def __delete_rigid_bodies() #Осуществляет удаление тел под конец цикла обработки
+    def add_new_static_grid_cell(cell) #Правильное добавление ячейки статической сетки (блока)
+    def add_new_entity(entity) #Правильное добавление сущности
+    def __add_new_rigid_bodies() #Осуществляет добавление тел под конец цикла обработки
+    def process_draw() #Запускает метод process_draw у всех твёрдых тел уровня
+    def process_logic() #Запускает метод process_logic у всех твёрдых тел уровня
+    def process_event(event) #Запускает метод process_event у всех твёрдых тел уровня
+Свойства:
+    def width #(int) Ширина уровня в пикселях
+    def height #(int) Высота уровня в пикселях
+Поля:
+    self.grid = #(StaticGrid) Лежит в game.objects
+    self.entity_set #(EntitySet) Лежит в game.objects
+    self.images #(словарь с именами спрайтов как ключи и спрайтами как значения) Спрайты из директории "levels\level_*\images"
+    self.background #(pygame.Surface) Задник
+    self.rigid_bodies #(массив RigidBody) Множество всех твёрдых тел уровня
+    self.player #(Player) Указатель на игрока, если он есть
+    self.__rigid_bodies_to_add #(массив RigidBody) Множество тел для добавления
+    self.__rigid_bodies_to_delete #(массив RigidBody) Множество тел для удаления
+
+
+class StaticGrid:
+Методы:
+    def __init__(game, level, lvl_struct_lines, images) #Этот конструктор загружает расположение ячеек (блоков) из файла "levels\level_*\struct.txt"
+Свойства:
+    def width #(int) Ширина сетки в ячейках (блоках)
+    def height #(int) Высота сетки в ячейках (блоках)
+Поля:
+    self.level #(Level) Указатель на уровень
+    self.cells #(массив массивов ячеек (блоков); cells[строка][столбец]) Сетка ячеек (блоков)
+
+
+class EntitySet:
+Методы:
+    def __init__(game, level, lvl_struct_lines, images) #Этот конструктор загружает расположение сущностей из файла "levels\level_*\struct.txt"
+Поля:
+    self.level #(Level) Указатель на уровень
+    self.entities #(массив сущностей) Множество сущностей
+
+
+class SaveSymbolRegister: #static
+Методы:
+    def init() #Метод инициализации полей
+    def __init_static_grid_cell_dict() #Метод инициализации static_grid_cell_dict; сюда необходимо писать соответствие символов и классов-наследников StaticGridCell
+    def __init_entity_dict() #Метод инициализации entity_dict; сюда необходимо писать соответствие символов и классов-наследников Entity
+Поля:
+    SaveSymbolRegister.static_grid_cell_dict #(словарь с символами как ключи и классами-наследниками StaticGridCell как значения)
+    SaveSymbolRegister.entity_dict #(словарь с символами как ключи и классами-наследниками Entity как значения)
+
+
+class RigidBody(DrawableObject): #abstract
+Методы:
+    def __init__(game, rect) #Конструктор
+    def collide_with(other_rigid_body) #(CollisionInfo) Вычисляет коллизии с другим твёрдым телом
+    def quick_collide_with(other_rigid_body) #(bool) Возвращает то, происходит ли столкновение с другим твёрдым телом
+    def on_collide(collisions) #Событие столкновения; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
+    def drawing_priority() #(int) Свойство, возвращающее приоритет отрисовки объекта
+Поля:
+    self.rect #(pygame.Rect) Хитбокс
+
+
+class CollisionInfo:
+Методы:
+    def __init__(main_rigid_body, opp_rigid_body) #Этот конструктор рассчитывает столкновения главного твёрдого тела с дополнительным
+    def is_collision() #(bool) Возвращает, произошло ли столкновение
+Поля:
+    self.main_rb #(RigidBody) Главное твёрдое тело, относительно которого рассчитывается столкновение
+    self.opp_rb #(RigidBody) Дополнительное твёрдое тело
+    self.left #(bool) Произошло ли столкновение с левой частью главного тела
+    self.top #(bool) Произошло ли столкновение с верхней частью главного тела
+    self.right #(bool) Произошло ли столкновение с правой частью главного тела
+    self.bottom #(bool) Произошло ли столкновение с нижней частью главного тела
+
+
+class StaticGridCell(RigidBody): #abstract
+Методы:
+    def __init__(game, image, locx, locy) #Конструктор
+Поля:
+    self.image #(pygame.Surface) Спрайт
+    self.locx #(int) Положение в статической сетке по горизонтали
+    self.locy #(int) Положение в статической сетке по вертикали
+
+
+class Entity(RigidBody): #abstract
+Методы:
+    def __init__(game, image, posx, posy) #Конструктор
+    def apply_gravity_force(value) #Применяет ускорение свободного падения value
+    def apply_velocity() #Применяет скорость к позиции
+    def __calc_carry(value) #Считает остаток от числа
+    def pull_out(self, pulling_dir) #Выталкивает сущность в следующую ячейку по заданному направлению, которое может быть задано символами "<^>v"
+Поля:
+    self.image #(pygame.Surface) Спрайт
+    self.vx #(real) Скорость по горизонтали
+    self.vy #(real) Скорость по вертикали
+    self.posx_carry #(real) Остаток позиции по горизонтали при apply_velocity
+    self.posy_carry #(real) Остаток позиции по вертикали при apply_velocity
+
+class Obstacle(StaticGridCell): #abstract
+    pass

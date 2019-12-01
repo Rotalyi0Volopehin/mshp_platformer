@@ -1,10 +1,9 @@
 from src.entities.npc import NPC
+from src.constants import Stats
 
 
 # Патрулирующий NPC
 class PatrollingNPC(NPC):
-
-    _temp_gravity = 1
 
     def __init__(self, game, image, posx, posy, speed, distance):
         super().__init__(game, image, posx, posy)
@@ -14,7 +13,7 @@ class PatrollingNPC(NPC):
 
     def process_logic(self):
         super().process_logic()
-        if (self.vx > 0) and (self.rect.right > self.game_object.current_level().width()):
+        if (self.vx > 0) and (self.rect.right >= self.game_object.gameplay_stage.current_level.width - 1):
             self.change_direction()
         elif (self.vx < 0) and (self.rect.x <= 0):
             self.change_direction()
@@ -23,10 +22,9 @@ class PatrollingNPC(NPC):
             self.vy = 0
             self.vx = self.speed
         else:
-            self.vy = self._temp_gravity
+            self.vy = Stats.GRAVITY
             self.vx = 0
 
-        self.apply_velocity()
         self.steps += abs(self.speed)
         if self.steps >= self.distance:
             self.change_direction()
@@ -40,6 +38,8 @@ class PatrollingNPC(NPC):
             self.change_direction()
 
     def change_direction(self):
+        if self.steps < 10:
+            return
         self.speed = -self.speed
         self.steps = 0
 

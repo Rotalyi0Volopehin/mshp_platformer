@@ -1,7 +1,3 @@
-import os
-import pygame
-
-from src.constants import IMAGES_DIR
 from src.entities.patrolling_npc import PatrollingNPC
 
 
@@ -12,6 +8,5 @@ class Mushroom(PatrollingNPC):
     # Дистанция патрулирования
     distance = 100
 
-    def __init__(self, game, posx, posy):
-        image = pygame.image.load(os.path.join(IMAGES_DIR, 'mushroom.png'))
+    def __init__(self, game, image, posx, posy):
         super().__init__(game, image, posx, posy, self.speed, self.distance)

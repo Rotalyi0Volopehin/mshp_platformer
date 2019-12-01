@@ -1,4 +1,4 @@
-from src.entity import Entity
+﻿from src.entity import Entity
 from src.static_grid_cells.obstacle import Obstacle
 
 
@@ -6,11 +6,14 @@ from src.static_grid_cells.obstacle import Obstacle
 class FakeCloud(Entity):
     def __init__(self, game, image, posx, posy):
         super().__init__(game, image, posx, posy)
-        self.vx = 0.125 #Начальная скорость по X
+        self.vx = 0.5 #Начальная скорость по X
         self.collision_left = self.collision_right = False
 
+    def drawing_priority(self):
+        return -1
+
     def process_logic(self):
-        if (self.vx > 0) and ((self.rect.right >= self.game_object.current_level().width() - 1) or self.collision_right):
+        if (self.vx > 0) and ((self.rect.right >= self.game_object.gameplay_stage.current_level.width - 1) or self.collision_right):
             self.vx = -abs(self.vx) #Отражение налево (препятствие справа)
         elif (self.vx < 0) and ((self.rect.x <= 0) or self.collision_left):
             self.vx = abs(self.vx) #Отражение направо (препятствие слева)

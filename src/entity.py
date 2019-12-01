@@ -16,9 +16,6 @@ class Entity(RigidBody): #abstract
         self.vx = self.vy = 0
         self.posx_carry = self.posy_carry = 0
 
-    def process_draw(self):
-        self.game_object.screen.blit(self.image, self.rect)
-
     def apply_gravity_force(self, value):
         self.vy += value
 
@@ -43,3 +40,15 @@ class Entity(RigidBody): #abstract
     def __calc_carry(self, value):
         sign = (value > 0) - (value < 0)
         return abs(value) % 1 * sign
+
+    def pull_out(self, pulling_dir):
+        if pulling_dir == '<':
+            self.rect.x &= 0xFFC0
+        elif pulling_dir == '^':
+            self.rect.y &= 0xFFC0
+        elif pulling_dir == '>':
+            self.rect.x = (self.rect.x & 0xFFC0) + 64
+        elif pulling_dir == 'v':
+            self.rect.y = (self.rect.y & 0xFFC0) + 64
+        else:
+            Exceptions.throw(Exceptions.argument, "directory must be represented by one of these values \"<^>v\"")
