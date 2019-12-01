@@ -112,9 +112,17 @@ class Level(DrawableObject):
             self.__sort_rigid_bodies()
 
     def process_draw(self):
-        self.game_object.screen.blit(self.background, self.background.get_rect())
         if self.player != None:
             self.camera.update(self.player.rect)
+            bg_rect = self.background.get_rect()
+            max = self.width - self.game_object.width
+            if (self.camera.state.x != 0) and (self.camera.state.x != -max):
+                bg_rect.x = (self.player.rect.x - (self.game_object.width >> 1)) * -0.1
+            elif self.camera.state.x == -max:
+                bg_rect.x = max * -0.1
+            self.game_object.screen.blit(self.background, bg_rect)
+        else:
+            self.game_object.screen.blit(self.background, self.background.get_rect())
         for rb in self.rigid_bodies:
             rb.process_draw()
 

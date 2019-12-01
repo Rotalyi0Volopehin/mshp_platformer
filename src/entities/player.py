@@ -7,11 +7,11 @@ from  src.static_grid_cells.brick_cell import BrickCell
 
 class Player(Entity):
     speed = 0.8
-    jump_force = -1.5
+    jump_force = -2
     resistance = 0.7
     resistance_in_air = 0.95
     max_jump_duration = 22
-    fravity_force = 0.8
+    gravity_force = 1.2
     falling_speed_limit = 10
     ignoring_jump_duration = 5
 
@@ -44,7 +44,7 @@ class Player(Entity):
         if self.move_down and not self.bottom_collision:
             pass
         if not self.bottom_collision and (self.vy < self.falling_speed_limit):
-            self.apply_gravity_force(self.fravity_force)
+            self.apply_gravity_force(self.gravity_force)
         if abs(self.vx) < 0.2:
             self.vx = 0
         else:
@@ -107,9 +107,9 @@ class Player(Entity):
             elif event.key == pygame.K_s:
                 self.move_down = keydown
             elif event.key == pygame.K_q:
-                self.game_object.loop_delay = 75
+                self.game_object.loop_delay = 100
             elif event.key == pygame.K_e:
-                self.game_object.loop_delay = 10
+                self.game_object.loop_delay = 20
             elif (event.key == pygame.K_SPACE) and not keydown:
                 level = self.game_object.gameplay_stage.current_level
                 level.add_new_static_grid_cell(BrickCell(self.game_object, level.images["BrickCell"], self.rect.x >> 6, self.rect.y >> 6))

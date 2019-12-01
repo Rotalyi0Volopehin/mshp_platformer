@@ -1,6 +1,7 @@
 import sys
 import pygame
 import time
+
 from src.constants import Color
 from src.gameplay_stage import GameplayStage
 
@@ -10,7 +11,7 @@ class Game:
         self.width = width
         self.height = height
         self.size = [self.width, self.height]
-        self.loop_delay = 10
+        self.loop_delay = 20
         self.library_init()
         self.game_over = False
         self.gameplay_stage = GameplayStage(self)
