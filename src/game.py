@@ -22,7 +22,7 @@ class Game:
         self.objects.append(Board(self))
 
     def library_init(self):
-        pygame.init()  # Инициализация библиотеки
+        pygame.display.init()  # Инициализация библиотеки
         pygame.font.init()
         self.screen = pygame.display.set_mode(self.size)  # Создание окна (установка размера)
 
