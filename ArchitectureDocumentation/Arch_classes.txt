@@ -9,6 +9,7 @@
 - StaticGridCell [abstract] - ячейка статической сетки (блок)
 - Entity [abstract] - сущность, обладающая позицией, скоростью и спрайтом
 - Obstacle [abstract] - ячейка статической сетки (блок), препятствующий движению игрока
+- Camera - камера, устанавливающая зависимость между положением игрока и отступом отрисовки
 
 
 class GameplayStage(DrawableObject):
@@ -49,6 +50,7 @@ class Level(DrawableObject):
     self.player #(Player) Указатель на игрока, если он есть
     self.__rigid_bodies_to_add #(массив RigidBody) Множество тел для добавления
     self.__rigid_bodies_to_delete #(массив RigidBody) Множество тел для удаления
+    self.camera #(Camera) Камера уровня
 
 
 class StaticGrid:
@@ -129,3 +131,16 @@ class Entity(RigidBody): #abstract
 
 class Obstacle(StaticGridCell): #abstract
     pass
+
+class Camera:
+Методы:
+    def __init__(game, width, height, speed=0.1) #Конструктор
+    def apply(rect) #(pygame.Rect) Устанавливает замисимость между положением на уровне и позицией на экране
+    def update(target_rect) #Обновляет настройки камеры
+    def __move_camera(state, x, y) #Обновляет настройки камеры
+Поля:
+    self.game #(Game) Указатель на игру
+    self.width #(int) Ширина уровня
+    self.height #(int) Высота уровня
+    self.speed #(real) Скорость движения камеры
+    self.state #(pygame.Rect) Настройки камеры
