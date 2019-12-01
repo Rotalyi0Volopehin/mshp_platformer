@@ -16,9 +16,6 @@ class Entity(RigidBody): #abstract
         self.vx = self.vy = 0
         self.posx_carry = self.posy_carry = 0
 
-    def process_draw(self):
-        self.game_object.screen.blit(self.image, self.rect)
-
     def apply_gravity_force(self, value):
         self.vy += value
 

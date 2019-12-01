@@ -9,6 +9,7 @@ from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
 from src.static_grid_cell import StaticGridCell
 from src.entities.player import Player
+from src.camera import Camera
 
 
 # Уровень и информация о нём
@@ -39,7 +40,7 @@ class Level(DrawableObject):
         self.__collect_rigid_bodies()
         self.__rigid_bodies_to_add = []
         self.__rigid_bodies_to_delete = []
-        self.camera = Camera(game, self.width(), self.height())
+        self.camera = Camera(game, self.width, self.height)
 
     def __collect_rigid_bodies(self):
         self.rigid_bodies = []
@@ -58,11 +59,11 @@ class Level(DrawableObject):
 
     @property
     def width(self):
-        return self.grid.width() << 6
+        return self.grid.width << 6
 
     @property
     def height(self):
-        return self.grid.height() << 6
+        return self.grid.height << 6
 
     def delete_static_grid_cell(self, locx, locy):
         cell = self.grid.cells[locy][locx]
