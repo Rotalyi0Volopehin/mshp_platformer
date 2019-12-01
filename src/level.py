@@ -1,4 +1,4 @@
-import glob
+﻿import glob
 import pygame
 
 from src.static_grid import StaticGrid
@@ -39,6 +39,7 @@ class Level(DrawableObject):
         self.__collect_rigid_bodies()
         self.__rigid_bodies_to_add = []
         self.__rigid_bodies_to_delete = []
+        self.camera = Camera(game, self.width(), self.height())
 
     def __collect_rigid_bodies(self):
         self.rigid_bodies = []
@@ -110,11 +111,9 @@ class Level(DrawableObject):
             self.__sort_rigid_bodies()
 
     def process_draw(self):
-        bg_rect = self.background.get_rect()
-        if (self.player != None) and False:
-            bg_rect.x -= self.player.rect.x
-            bg_rect.y -= self.player.rect.y
-        self.game_object.screen.blit(self.background, bg_rect)
+        self.game_object.screen.blit(self.background, self.background.get_rect())
+        if self.player != None:
+            self.camera.update(self.player.rect)
         for rb in self.rigid_bodies:
             rb.process_draw()
 
