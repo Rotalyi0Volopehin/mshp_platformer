@@ -114,17 +114,25 @@ class Level(DrawableObject):
     def process_draw(self):
         if self.player != None:
             self.camera.update(self.player.rect)
-            bg_rect = self.background.get_rect()
-            max = self.width - self.game_object.width
-            if (self.camera.state.x != 0) and (self.camera.state.x != -max):
-                bg_rect.x = (self.player.rect.x - (self.game_object.width >> 1)) * -0.1
-            elif self.camera.state.x == -max:
-                bg_rect.x = max * -0.1
-            self.game_object.screen.blit(self.background, bg_rect)
+            self.__draw_background()
         else:
             self.game_object.screen.blit(self.background, self.background.get_rect())
         for rb in self.rigid_bodies:
             rb.process_draw()
+
+    def __draw_background(self, speed=0.2):
+        bg_rect = self.background.get_rect()
+        max = self.width - self.game_object.width
+        if (self.camera.state.x != 0) and (self.camera.state.x != -max):
+            bg_rect.x = ((self.game_object.width >> 1) - self.player.rect.centerx) * speed
+            bg_rect.x %= self.game_object.width
+            self.game_object.screen.blit(self.background, bg_rect)
+            bg_rect.x -= self.game_object.width
+        elif self.camera.state.x == -max:
+            bg_rect.x = max * -speed
+            self.game_object.screen.blit(self.background, bg_rect)
+            bg_rect.x += self.game_object.width
+        self.game_object.screen.blit(self.background, bg_rect)
 
     def process_logic(self):
         for rb in self.rigid_bodies:

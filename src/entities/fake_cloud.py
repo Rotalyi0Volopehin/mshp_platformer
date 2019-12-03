@@ -6,7 +6,7 @@ from src.static_grid_cells.obstacle import Obstacle
 class FakeCloud(Entity):
     def __init__(self, game, image, posx, posy):
         super().__init__(game, image, posx, posy)
-        self.vx = 0.5 #Начальная скорость по X
+        self.vx = 0.75 #Начальная скорость по X
         self.collision_left = self.collision_right = False
 
     def drawing_priority(self):

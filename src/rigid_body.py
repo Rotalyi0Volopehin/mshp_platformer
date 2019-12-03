@@ -31,7 +31,8 @@ class RigidBody(DrawableObject): #abstract
     def process_draw(self):
         level = self.game_object.gameplay_stage.current_level
         rect = self.rect if level.player == None else level.camera.apply(self.rect)
-        self.game_object.screen.blit(self.image, rect)
+        if (rect.right > 0) and (rect.left < self.game_object.width):
+            self.game_object.screen.blit(self.image, rect)
 
 
 # Это информация о столкновении двух RigidBody (главного и дополнительного)
