@@ -28,6 +28,9 @@ class RigidBody(DrawableObject): #abstract
     def on_collide(self, collisions): #abstract event
         pass
 
+    def do_register_collisions(self):
+        return True
+
     def process_draw(self):
         level = self.game_object.gameplay_stage.current_level
         rect = self.rect if level.player == None else level.camera.apply(self.rect)

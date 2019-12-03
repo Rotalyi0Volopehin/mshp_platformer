@@ -139,6 +139,8 @@ class Level(DrawableObject):
             if isinstance(rb, Entity):
                 rb.apply_velocity()
         for rb in self.rigid_bodies:
+            if not rb.do_register_collisions():
+                continue
             collisions = []
             for opp_rb in self.rigid_bodies:
                 if (rb != opp_rb) and rb.quick_collide_with(opp_rb):
