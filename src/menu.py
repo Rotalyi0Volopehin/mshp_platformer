@@ -1,4 +1,5 @@
 import pygame
+import sys
 from src.constants import Color
 from highscores import Highscore
 
@@ -18,6 +19,8 @@ class Menu:
         self.highResolution = True
         self.kx = 1
         self.ky = 1
+        self.quit = False
+        self.m_quit = False
 
         self.highscore = Highscore()
 
@@ -93,9 +96,19 @@ class Menu:
                 if self.goBackPosition.left < mouse[0] < self.goBackPosition.right and self.goBackPosition.top < mouse[1] < self.goBackPosition.bottom:
                     self.go_back_click()
 
+    #Выход на крестик))
+    def sys_exit(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.menuIsActive = False
+                self.m_quit = True
+                self.quit = True
+                sys.exit()
+
     # обработка нажатий на кнопки
     def new_game_click(self):
-        self.menuIsActive = False
+        self.m_quit = True
+
         # начало игры
 
     def settings_click(self):
@@ -129,6 +142,8 @@ class Menu:
 
     def exit_click(self):
         self.menuIsActive = False
+        self.quit = True
+        self.m_quit = True
 
     def go_back_click(self):
         self.settingsIsActive = False
@@ -205,9 +220,8 @@ class Menu:
         self.screen.blit(self.goBackText, self.goBackPosition)
 
     def show(self):
-        while self.menuIsActive:
+        while not self.m_quit:
             self.screen.blit(self.background, self.background_rect)
-
             if self.mainIsActive: # если мы в главном меню
                 self.main_events()
                 self.new_game_show()
@@ -221,9 +235,9 @@ class Menu:
 
             elif self.highscoresIsActive: # если мы в разделе рекордов
                 self.highscores_events()
+                self.highscore.process_event()
                 self.highscore.process_draw(self.screen)
                 self.go_back_show()
-
             pygame.display.flip()
             pygame.time.wait(5)
             pygame.display.update()

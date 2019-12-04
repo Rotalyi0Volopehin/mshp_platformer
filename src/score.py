@@ -18,6 +18,9 @@ class Score(DrawableObject):
     def process_get_score(self, value):
         self.score += value
 
+    def get_score(self):
+        return self.score
+
     def process_draw(self):
         self.game_object.screen.blit(self.ts, [500, 20])
         self.game_object.screen.blit(self.ts2, [510, 50])

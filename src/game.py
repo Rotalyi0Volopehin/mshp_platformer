@@ -7,6 +7,7 @@ from src.time import TimeGame
 from src.coins import Coins
 from src.score import Score
 from src.constants import Color
+from src.highscores import Highscore
 
 
 class Game:
@@ -37,7 +38,9 @@ class Game:
             self.process_events()
             self.process_logic()
             self.process_draw()
-        sys.exit(0)  # TODO: Сделать выход в меню
+        #sys.exit(0)  # TODO: Сделать выход в меню
+        self.write_scores()
+
 
     def process_draw(self):
         self.screen.fill(Color.BLACK)  # Заливка цветом
@@ -56,3 +59,8 @@ class Game:
                 self.game_over = True
             for item in self.objects:
                 item.process_event(event)
+
+    def write_scores(self):
+        self.file = open("scores/highscores.txt", mode='a', encoding='utf-8')
+        self.file.write(str(self.objects[7].get_score()) + '\n') #TODO  object[7] - класс Score (как в марио он обозначен не знаю)
+        self.file.close()
