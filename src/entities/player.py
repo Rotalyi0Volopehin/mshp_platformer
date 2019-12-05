@@ -10,10 +10,10 @@ class Player(Entity):
     jump_force = -2
     resistance = 0.7
     resistance_in_air = 0.95
-    max_jump_duration = 22
+    max_jump_duration = 16
     gravity_force = 1.2
     falling_speed_limit = 15
-    ignoring_jump_duration = 5
+    ignoring_jump_duration = 8
 
     def __init__(self, game, image, posx, posy):
         super().__init__(game, image, posx, posy)
@@ -32,7 +32,7 @@ class Player(Entity):
             self.vx -= self.speed
         if self.move_right and not self.right_collision:
             self.vx += self.speed
-        if self.do_jump:
+        if self.do_jump or ((self.jump_duration >= self.ignoring_jump_duration) and (self.jump_duration < self.max_jump_duration)):
             if not self.top_collision and self.bottom_collision and not self.jumped:
                 self.__speedup_up()
                 self.jumped = True
@@ -54,8 +54,7 @@ class Player(Entity):
         self.left_collision = self.top_collision = self.right_collision = self.bottom_collision = False
 
     def __speedup_up(self):
-        if self.jump_duration > self.ignoring_jump_duration:
-            self.vy += self.jump_force
+        self.vy += self.jump_force
         self.jump_duration -= 1
 
     def die(self):
@@ -112,7 +111,7 @@ class Player(Entity):
                 self.game_object.loop_delay = 25
             elif (event.key == pygame.K_SPACE) and not keydown:
                 level = self.game_object.gameplay_stage.current_level
-                level.add_new_static_grid_cell(BrickCell(self.game_object, level.images["BrickCell"], self.rect.x >> 6, self.rect.y >> 6))
+                level.add_new_static_grid_cell(BrickCell(self.game_object, level.images["BrickCell"], self.rect.centerx // 64, self.rect.centery // 64))
 
     def on_collide_with_dte(self, reverse_collision):
         info = reverse_collision.main_rb.dt_info
@@ -120,5 +119,5 @@ class Player(Entity):
         if (rc.left and info.dt_left) or (rc.top and info.dt_top) or (rc.right and info.dt_right) or (rc.bottom and info.dt_bottom):
             if not self.game_object.gameplay_stage.current_level.will_rigid_body_be_deleted(rc.main_rb):
                 self.die()
-        if rc.top and info.trampoline:
-            self.vy = self.jump_force * 10
+        if rc.top and info.trampoline and (self.vy > self.gravity_force):
+            self.vy = self.jump_force * (self.max_jump_duration - self.ignoring_jump_duration)
