@@ -2,6 +2,5 @@
 
 
 class BrickCell(Obstacle):
-    pass
-#    def __init__(self, game, image, locx, locy):
-#        super().__init__(game, image, locx, locy)
+    def do_register_collisions(self):
+        return False
