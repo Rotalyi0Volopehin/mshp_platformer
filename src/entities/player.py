@@ -59,7 +59,7 @@ class Player(Entity):
         self.jump_duration -= 1
 
     def die(self):
-        self.game_object.game_over = True
+        #self.game_object.game_over = True
         self.game_object.gameplay_stage.current_level.delete_entity(self)
 
     def __renew_prev_rect(self):
@@ -113,3 +113,12 @@ class Player(Entity):
             elif (event.key == pygame.K_SPACE) and not keydown:
                 level = self.game_object.gameplay_stage.current_level
                 level.add_new_static_grid_cell(BrickCell(self.game_object, level.images["BrickCell"], self.rect.x >> 6, self.rect.y >> 6))
+
+    def on_collide_with_dte(self, reverse_collision):
+        info = reverse_collision.main_rb.dt_info
+        rc = reverse_collision
+        if (rc.left and info.dt_left) or (rc.top and info.dt_top) or (rc.right and info.dt_right) or (rc.bottom and info.dt_bottom):
+            if not self.game_object.gameplay_stage.current_level.will_rigid_body_be_deleted(rc.main_rb):
+                self.die()
+        if rc.top and info.trampoline:
+            self.vy = self.jump_force * 10
