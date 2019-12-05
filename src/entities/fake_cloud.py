@@ -1,11 +1,12 @@
 ﻿from src.entities.death_touch_entity import DeathTouchEntity
+from src.entities.death_touch_entity import DeathTouchEntityInfo
 from src.static_grid_cells.obstacle import Obstacle
 
 
 # Облачко, двигающееся вправо-влево, пока не встретит препятствие или край уровня
 class FakeCloud(DeathTouchEntity):
     def __init__(self, game, image, posx, posy):
-        super().__init__(game, image, posx, posy, True, False, True, True, True)
+        super().__init__(game, image, posx, posy, DeathTouchEntityInfo(True, False, True, True, True))
         self.vx = 0.75 #Начальная скорость по X
         self.collision_left = self.collision_right = False
 
