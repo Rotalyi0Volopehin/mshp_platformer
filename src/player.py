@@ -98,7 +98,7 @@ class Player(DrawableObject):
     def collide_with_entity(self, xvel, yvel, platforms):
         for p in platforms:
             if sprite.collide_rect(self, p):  # если есть пересечение платформы с игроком
-
+            #lolol
                 if xvel > 0:  # если движется вправо
                     self.rect.right = p.rect.left  # то не движется вправо
 
