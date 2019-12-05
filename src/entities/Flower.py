@@ -1,22 +1,14 @@
-import os
-from random import randrange
-import pygame
-
-from src.constants import IMAGES_DIR
-from src.entity import Entity
-from src.exceptions import Exceptions
-from src.player import Player
+from src.entities.death_touch_entity import DeathTouchEntity
+from src.entities.death_touch_entity import DeathTouchEntityInfo
 
 
-class Flower(Entity):
+class Flower(DeathTouchEntity):
     #image = pygame.image.load(os.path.join(IMAGES_DIR, 'flower1.xcf'))
 
     def __init__(self, game, image, posx, posy):
-        super().__init__(game, image, posx, posy)
+        super().__init__(game, image, posx, posy, DeathTouchEntityInfo(True, False, True, True, True))
         self.startposy = posy
         self.vy = -1
-        if not (isinstance(image, pygame.Surface) and isinstance(posx, int) and isinstance(posy, int)):
-            Exceptions.throw(Exceptions.argument_type)
 
     def process_logic(self):
         self.rect.y += self.vy

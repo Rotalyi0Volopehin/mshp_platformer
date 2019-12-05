@@ -1,8 +1,8 @@
 import pygame
 
 from src.entity import Entity
-from src.static_grid_cells.obstacle import Obstacle
-from  src.static_grid_cells.brick_cell import BrickCell
+from src.obstacle import Obstacle
+from src.static_grid_cells.brick_cell import BrickCell
 
 
 class Player(Entity):

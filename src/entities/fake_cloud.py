@@ -1,6 +1,6 @@
 ﻿from src.entities.death_touch_entity import DeathTouchEntity
 from src.entities.death_touch_entity import DeathTouchEntityInfo
-from src.static_grid_cells.obstacle import Obstacle
+from src.obstacle import Obstacle
 
 
 # Облачко, двигающееся вправо-влево, пока не встретит препятствие или край уровня; убивает игрока всеми сторонами, кроме верхней

@@ -1,4 +1,4 @@
-﻿from src.static_grid_cells.obstacle import Obstacle
+﻿from src.obstacle import Obstacle
 
 
 class BrickCell(Obstacle):
