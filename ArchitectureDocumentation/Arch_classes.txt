@@ -9,6 +9,8 @@
 - StaticGridCell [abstract] - ячейка статической сетки (блок)
 - Entity [abstract] - сущность, обладающая позицией, скоростью и спрайтом
 - Obstacle [abstract] - ячейка статической сетки (блок), препятствующий движению игрока
+- DeathTouchEntity [abstract] - сущность, убивающая с тычка
+- DeathTouchEntityInfo - информация о сущности, убивающей с тычка
 - Camera - камера, устанавливающая зависимость между положением игрока и отступом отрисовки
 
 
@@ -36,8 +38,10 @@ class Level(DrawableObject):
     def add_new_entity(entity) #Правильное добавление сущности
     def __add_new_rigid_bodies() #Осуществляет добавление тел под конец цикла обработки
     def process_draw() #Запускает метод process_draw у всех твёрдых тел уровня
+    def __draw_background(self, speed=0.2) #Рисует задний фон
     def process_logic() #Запускает метод process_logic у всех твёрдых тел уровня
     def process_event(event) #Запускает метод process_event у всех твёрдых тел уровня
+    def will_rigid_body_be_deleted(rigid_body) #(bool) Возвращает то, будет ли удалено указанное тело
 Свойства:
     def width #(int) Ширина уровня в пикселях
     def height #(int) Высота уровня в пикселях
@@ -89,6 +93,7 @@ class RigidBody(DrawableObject): #abstract
     def quick_collide_with(other_rigid_body) #(bool) Возвращает то, происходит ли столкновение с другим твёрдым телом
     def on_collide(collisions) #Событие столкновения; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
     def drawing_priority() #(int) Свойство, возвращающее приоритет отрисовки объекта
+    def do_register_collisions() #(bool) Свойство, возвращающее то, обрабатывает ли тело столкновения
 Поля:
     self.rect #(pygame.Rect) Хитбокс
 
@@ -132,10 +137,27 @@ class Entity(RigidBody): #abstract
 class Obstacle(StaticGridCell): #abstract
     pass
 
+class DeathTouchEntity(Entity): #abstract
+Методы:
+    def __init__(self, game, image, posx, posy, death_touch_info) #Конструктор
+Поля:
+    self.dt_info #(DeathTouchEntityInfo) Информация об этой сущности, убивающей с тычка
+    def on_collide_with_player(self, collision) #Событие соприкосновения с игроком; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
+
+class DeathTouchEntityInfo:
+Методы:
+    def __init__(self, dt_left, dt_top, dt_right, dt_bottom, trampoline) #Конструктор
+Поля:
+    self.dt_left #(bool) Флаг, означающий то, губительно ли касание левой стороны для игрока
+    self.dt_top #(bool) Флаг, означающий то, губительно ли касание верхней стороны для игрока
+    self.dt_right #(bool) Флаг, означающий то, губительно ли касание правой стороны для игрока
+    self.dt_bottom #(bool) Флаг, означающий то, губительно ли касание нижней стороны для игрока
+    self.trampoline #(bool) Флаг, означающий то, отпрыгнет ли игрок при приземлении на верхнюю часть
+
 class Camera:
 Методы:
     def __init__(game, width, height, speed=0.1) #Конструктор
-    def apply(rect) #(pygame.Rect) Устанавливает замисимость между положением на уровне и позицией на экране
+    def apply(rect) #(pygame.Rect) Устанавливает зависимость между положением на уровне и позицией на экране
     def update(target_rect) #Обновляет настройки камеры
     def __move_camera(state, x, y) #Обновляет настройки камеры
 Поля:
