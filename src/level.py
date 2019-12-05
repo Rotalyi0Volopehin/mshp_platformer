@@ -10,6 +10,8 @@ from src.exceptions import Exceptions
 from src.static_grid_cell import StaticGridCell
 from src.entities.player import Player
 from src.camera import Camera
+from src.entities.death_touch_entity import DeathTouchEntity
+from src.rigid_body import RigidBody
 
 
 # Уровень и информация о нём
@@ -41,6 +43,11 @@ class Level(DrawableObject):
         self.__rigid_bodies_to_add = []
         self.__rigid_bodies_to_delete = []
         self.camera = Camera(game, self.width, self.height)
+
+    def will_rigid_body_be_deleted(self, rigid_body):
+        if not isinstance(rigid_body, RigidBody):
+            Exceptions.throw(Exceptions.argument_type)
+        return rigid_body in self.__rigid_bodies_to_delete
 
     def __collect_rigid_bodies(self):
         self.rigid_bodies = []
@@ -141,10 +148,14 @@ class Level(DrawableObject):
         for rb in self.rigid_bodies:
             if not rb.do_register_collisions():
                 continue
+            dt = isinstance(rb, DeathTouchEntity)
             collisions = []
             for opp_rb in self.rigid_bodies:
                 if (rb != opp_rb) and rb.quick_collide_with(opp_rb):
                     collisions.append(rb.collide_with(opp_rb))
+                    if dt and isinstance(opp_rb, Player):
+                        rb.on_collide_with_player(collisions[-1])
+                        self.player.on_collide_with_dte(collisions[-1])
             if len(collisions) > 0:
                 rb.on_collide(collisions)
         for rb in self.rigid_bodies:
