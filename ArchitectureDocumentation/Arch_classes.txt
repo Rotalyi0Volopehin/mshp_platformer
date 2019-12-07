@@ -17,6 +17,7 @@
 class GameplayStage(DrawableObject):
 Методы:
     def __init__(game) #Конструктор
+    def next_level() #Переключает уровень на следующий или первый, если текущий является последним
     def process_draw()
     def process_logic()
     def process_event(event)
@@ -28,7 +29,7 @@ class GameplayStage(DrawableObject):
 
 class Level(DrawableObject):
 Методы:
-    def __init__(game, name) #Этот конструктор подгружает данные уровня из директории "levels\level_*\" (* - параметр name)
+    def __init__(game, name) #Этот конструктор подгружает данные уровня из директории "levels\{параметр name}\"
     def __collect_rigid_bodies() #Инициализатор поля rigid_bodies
     def __sort_rigid_bodies() #Сортировка массива self.rigid_bodies по приоритету отрисовки
     def delete_static_grid_cell(locx, locy) #Правильное удаление ячейки статической сетки (блока) по её положению

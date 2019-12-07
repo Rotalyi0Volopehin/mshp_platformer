@@ -112,6 +112,8 @@ class Player(Entity):
             elif (event.key == pygame.K_SPACE) and not keydown:
                 level = self.game_object.gameplay_stage.current_level
                 level.add_new_static_grid_cell(BrickCell(self.game_object, level.images["BrickCell"], self.rect.centerx // 64, self.rect.centery // 64))
+            elif (event.key == pygame.K_HOME) and not keydown:
+                self.game_object.gameplay_stage.next_level()
 
     def on_collide_with_dte(self, reverse_collision):
         info = reverse_collision.main_rb.dt_info
