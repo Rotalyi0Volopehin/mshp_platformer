@@ -10,17 +10,19 @@ from src.exceptions import Exceptions
 from src.static_grid_cell import StaticGridCell
 from src.entities.player import Player
 from src.camera import Camera
+from src.entities.death_touch_entity import DeathTouchEntity
+from src.rigid_body import RigidBody
 
 
 # Уровень и информация о нём
-# Каждый уровень в папке levels имеет свою папку, название которой должно быть "level_*" (* - параметр name)
-# Пример создания : Level(game, "0")
+# Каждый уровень в папке levels имеет свою папку
+# Пример создания : Level(game, "level_0")
 class Level(DrawableObject):
     def __init__(self, game, name):
         super().__init__(game)
         self.images = { }
         slash = IO_Tools.sep_slash()
-        lvl_path = "levels{1}level_{0}{1}".format(name, slash)
+        lvl_path = "levels{1}{0}{1}".format(name, slash)
         sprites_dir = "{}sprites{}".format(lvl_path, slash)
         for img_path in glob.glob(sprites_dir + "*.png"):
             image = pygame.image.load(img_path)
@@ -41,6 +43,11 @@ class Level(DrawableObject):
         self.__rigid_bodies_to_add = []
         self.__rigid_bodies_to_delete = []
         self.camera = Camera(game, self.width, self.height)
+
+    def will_rigid_body_be_deleted(self, rigid_body):
+        if not isinstance(rigid_body, RigidBody):
+            Exceptions.throw(Exceptions.argument_type)
+        return rigid_body in self.__rigid_bodies_to_delete
 
     def __collect_rigid_bodies(self):
         self.rigid_bodies = []
@@ -114,27 +121,41 @@ class Level(DrawableObject):
     def process_draw(self):
         if self.player != None:
             self.camera.update(self.player.rect)
-            bg_rect = self.background.get_rect()
-            max = self.width - self.game_object.width
-            if (self.camera.state.x != 0) and (self.camera.state.x != -max):
-                bg_rect.x = (self.player.rect.x - (self.game_object.width >> 1)) * -0.1
-            elif self.camera.state.x == -max:
-                bg_rect.x = max * -0.1
-            self.game_object.screen.blit(self.background, bg_rect)
+            self.__draw_background()
         else:
             self.game_object.screen.blit(self.background, self.background.get_rect())
         for rb in self.rigid_bodies:
             rb.process_draw()
+
+    def __draw_background(self, speed=0.2):
+        bg_rect = self.background.get_rect()
+        max = self.width - self.game_object.width
+        if (self.camera.state.x != 0) and (self.camera.state.x != -max):
+            bg_rect.x = ((self.game_object.width >> 1) - self.player.rect.centerx) * speed
+            bg_rect.x %= self.game_object.width
+            self.game_object.screen.blit(self.background, bg_rect)
+            bg_rect.x -= self.game_object.width
+        elif self.camera.state.x == -max:
+            bg_rect.x = max * -speed
+            self.game_object.screen.blit(self.background, bg_rect)
+            bg_rect.x += self.game_object.width
+        self.game_object.screen.blit(self.background, bg_rect)
 
     def process_logic(self):
         for rb in self.rigid_bodies:
             if isinstance(rb, Entity):
                 rb.apply_velocity()
         for rb in self.rigid_bodies:
+            if not rb.do_register_collisions():
+                continue
+            dt = isinstance(rb, DeathTouchEntity)
             collisions = []
             for opp_rb in self.rigid_bodies:
                 if (rb != opp_rb) and rb.quick_collide_with(opp_rb):
                     collisions.append(rb.collide_with(opp_rb))
+                    if dt and isinstance(opp_rb, Player):
+                        rb.on_collide_with_player(collisions[-1])
+                        self.player.on_collide_with_dte(collisions[-1])
             if len(collisions) > 0:
                 rb.on_collide(collisions)
         for rb in self.rigid_bodies:

@@ -7,11 +7,11 @@ from src.gameplay_stage import GameplayStage
 
 
 class Game:
-    def __init__(self, width=800, height=600):
+    def __init__(self, width=1024, height=640):
         self.width = width
         self.height = height
         self.size = [self.width, self.height]
-        self.loop_delay = 20
+        self.loop_delay = 25
         self.library_init()
         self.game_over = False
         self.gameplay_stage = GameplayStage(self)
@@ -32,16 +32,18 @@ class Game:
             self.process_draw()
             time_elapsed = int((time.time() - start_time) * 1000)
             time_left = self.loop_delay - time_elapsed
+            if time_left < 0:
+                print(time_elapsed, self.loop_delay, sep='/')
+            pygame.display.set_caption("Super Mario [!]" if time_left < 0 else "Super Mario")
             if time_left > 0:
                 pygame.time.wait(time_left)
         sys.exit(0)  # Выход из программы
 
     def process_draw(self):
-        self.screen.fill(Color.BOLD)  # Заливка цветом
+        #self.screen.fill(Color.BOLD)  # Заливка цветом
         for item in self.objects:
             item.process_draw()
         pygame.display.flip()  # Double buffering
-        pygame.time.wait(5)
 
     def process_logic(self):
         for item in self.objects:
