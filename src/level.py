@@ -15,14 +15,14 @@ from src.rigid_body import RigidBody
 
 
 # Уровень и информация о нём
-# Каждый уровень в папке levels имеет свою папку, название которой должно быть "level_*" (* - параметр name)
-# Пример создания : Level(game, "0")
+# Каждый уровень в папке levels имеет свою папку
+# Пример создания : Level(game, "level_0")
 class Level(DrawableObject):
     def __init__(self, game, name):
         super().__init__(game)
         self.images = { }
         slash = IO_Tools.sep_slash()
-        lvl_path = "levels{1}level_{0}{1}".format(name, slash)
+        lvl_path = "levels{1}{0}{1}".format(name, slash)
         sprites_dir = "{}sprites{}".format(lvl_path, slash)
         for img_path in glob.glob(sprites_dir + "*.png"):
             image = pygame.image.load(img_path)
