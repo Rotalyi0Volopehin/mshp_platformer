@@ -20,8 +20,7 @@ class Menu:
         self.settingsIsActive = False
         self.highscoresIsActive = False
         self.highResolution = True
-        self.kx = 1
-        self.ky = 1
+        self.k = [1.0, 1.0]
         self.quit = False
         self.m_quit = False
 
@@ -37,21 +36,23 @@ class Menu:
         self.highResolText = self.main_font.render("1024 x 640", 1, Color.WHITE)
 
         self.volumeText = self.main_font.render("Громкость", 1, Color.WHITE)
-        self.volumePosition = self.volumeText.get_rect(center=[300, 200])
+        self.volumePosition = self.volumeText.get_rect(center=[220, 200])
+        self.resolutionText = self.main_font.render("Разрешение", 1, Color.WHITE)
+        self.resolutionPosition = self.resolutionText.get_rect(center=[220, 390])
         self.plusText = self.main_font.render("+", 1, Color.WHITE)
-        self.plusPosition = self.plusText.get_rect(center=[500, 200])
+        self.plusPosition = self.plusText.get_rect(center=[820, 200])
         self.volumeNumText = self.main_font.render(str(self.volume), 1, Color.WHITE)
-        self.volumeNumPosition = self.volumeNumText.get_rect(center=[580, 200])
+        self.volumeNumPosition = self.volumeNumText.get_rect(center=[730, 200])
         self.minusText = self.main_font.render("-", 1, Color.WHITE)
-        self.minusPosition = self.minusText.get_rect(center=[670, 200])
+        self.minusPosition = self.minusText.get_rect(center=[650, 200])
 
         self.newGamePosition = self.newGameText.get_rect(center=[512, 200])
         self.settingsPosition = self.settingsText.get_rect(center=[512, 270])    # инициализация позиций надписей
         self.highscoresPosition = self.highscoresText.get_rect(center=[512, 340])
         self.exitPosition = self.exitText.get_rect(center=[512, 410])
 
-        self.lowResolPosition = self.settingsText.get_rect(center=[535, 360])
-        self.highResolPosition = self.highscoresText.get_rect(center=[495, 440])
+        self.lowResolPosition = self.lowResolText.get_rect(center=[755, 360])
+        self.highResolPosition = self.highResolText.get_rect(center=[755, 440])
 
         self.background = pygame.image.load("images/background.jpg") # здесь можно изменить фон
         self.background_rect = self.background.get_rect()
@@ -84,10 +85,11 @@ class Menu:
     def settings_events(self):
         mouse = pygame.mouse.get_pos()
         self.go_back_hover(mouse)
-        self.lowResol_show()
-        self.highResol_show()
+
         self.plus_hover(mouse)
         self.minus_hover(mouse)
+        self.lowResol_hover(mouse)
+        self.highResol_hover(mouse)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.menuIsActive = False
@@ -142,8 +144,8 @@ class Menu:
 
     def lowResol_click(self):
         if self.highResolution:
-            self.kx = 0.6734
-            self.ky = 0.9375
+            self.k[0] = 0.6734
+            self.k[1] = 0.9375
             self.width = 800
             self.height = 600
             self.screen = pygame.display.set_mode([self.width, self.height])
@@ -152,8 +154,8 @@ class Menu:
 
     def highResol_click(self):
         if not self.highResolution:
-            self.kx = 1.485
-            self.ky = 1.066666
+            self.k[0] = 1.485
+            self.k[1] = 1.066666
             self.width = 1024
             self.height = 640
             self.screen = pygame.display.set_mode([self.width, self.height])
@@ -174,20 +176,20 @@ class Menu:
         self.mainIsActive = True
 
     def resolution_change(self):
-        self.newGamePosition.x *= self.kx
-        self.newGamePosition.y *= self.ky
-        self.settingsPosition.x *= self.kx
-        self.settingsPosition.y *= self.ky
-        self.highscoresPosition.x *= self.kx
-        self.highscoresPosition.y *= self.ky
-        self.exitPosition.x *= self.kx
-        self.exitPosition.y *= self.ky
-        self.goBackPosition.x *= self.kx
-        self.goBackPosition.y *= self.ky
-        self.lowResolPosition.x *= self.kx
-        self.lowResolPosition.y *= self.ky
-        self.highResolPosition.x *= self.kx
-        self.highResolPosition.y *= self.ky
+        for i in range(1):
+            self.newGamePosition[i] *= self.k[i]
+            self.settingsPosition[i] *= self.k[i]
+            self.highscoresPosition[i] *= self.k[i]
+            self.exitPosition[i] *= self.k[i]
+            self.goBackPosition[i] *= self.k[i]
+            self.lowResolPosition[i] *= self.k[i]
+            self.highResolPosition[i] *= self.k[i]
+            self.resolutionPosition[i] *= self.k[i]
+            self.volumePosition[i] *= self.k[i]
+            self.volumeNumPosition[i] *= self.k[i]
+            self.plusPosition[i] *= self.k[i]
+            self.minusPosition[i] *= self.k[i]
+
 
     def plus_click(self):
         if self.volume < 10:
@@ -244,6 +246,18 @@ class Menu:
         else:
             self.minusText = self.main_font.render("-", 1, Color.WHITE)
 
+    def lowResol_hover(self, mouse):
+        if self.lowResolPosition.left < mouse[0] < self.lowResolPosition.right and self.lowResolPosition.top < mouse[1] < self.lowResolPosition.bottom and self.highResolution:
+            self.lowResolText = self.main_font.render("800 x 600", 1, Color.LIGHT_GRAY)
+        else:
+            self.lowResolText = self.main_font.render("800 x 600", 1, Color.WHITE)
+
+    def highResol_hover(self, mouse):
+        if self.highResolPosition.left < mouse[0] < self.highResolPosition.right and self.highResolPosition.top < mouse[1] < self.highResolPosition.bottom and not self.highResolution:
+            self.highResolText = self.main_font.render("1024 x 640", 1, Color.LIGHT_GRAY)
+        else:
+            self.highResolText = self.main_font.render("1024 x 640", 1, Color.WHITE)
+
     # просто отображалки
     def new_game_show(self):
         self.screen.blit(self.newGameText, self.newGamePosition)
@@ -269,6 +283,9 @@ class Menu:
     def volume_show(self):
         self.screen.blit(self.volumeText, self.volumePosition)
 
+    def resolution_show(self):
+        self.screen.blit(self.resolutionText, self.resolutionPosition)
+
     def plus_show(self):
         self.screen.blit(self.plusText, self.plusPosition)
 
@@ -291,6 +308,9 @@ class Menu:
             elif self.settingsIsActive: # если мы в разделе настроек
                 self.settings_events()
                 self.volume_show()
+                self.resolution_show()
+                self.lowResol_show()
+                self.highResol_show()
                 self.plus_show()
                 self.volume_num_show()
                 self.minus_show()
