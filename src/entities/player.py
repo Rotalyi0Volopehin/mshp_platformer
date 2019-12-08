@@ -124,3 +124,6 @@ class Player(Entity):
                 self.die()
         if rc.top and info.trampoline and (self.vy > self.gravity_force):
             self.vy = self.jump_force * (self.max_jump_duration - self.ignoring_jump_duration)
+
+    def drawing_priority(self):
+        return 12
