@@ -65,7 +65,7 @@ class Game:
     def process_events(self):
         for event in pygame.event.get():  # Обработка всех событий
             if event.type == pygame.QUIT:  # Обработка события выхода
-                self.game_over = True
+                exit()
             for item in self.objects:
                 item.process_event(event)
 

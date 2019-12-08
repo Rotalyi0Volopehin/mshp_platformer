@@ -8,7 +8,9 @@ class GameplayStage(DrawableObject):
     def __init__(self, game):
         super().__init__(game)
         self.levels = []
-        for dir in os.listdir("levels"):
+        dirs = os.listdir("levels")
+        dirs.sort()
+        for dir in dirs:
             self.levels.append(Level(game, dir))
         self.current_level_index = 0
 
