@@ -12,6 +12,7 @@ def main():
             g = Game(width, height)
             g.main_loop()
             menu.m_quit = False
+            menu.quit = g.pr_quit
 
 if __name__ == '__main__':
     main()

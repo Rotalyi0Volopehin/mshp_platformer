@@ -22,6 +22,7 @@ class Game:
         self.gameplay_stage = GameplayStage(self)
         self.objects = [self.gameplay_stage]
         self.create_game_objects()
+        self.pr_quit = False
 
     def create_game_objects(self):
         self.objects.append(TimeGame(self))
@@ -31,7 +32,7 @@ class Game:
         self.objects.append(self.coins)
 
     def library_init(self):
-        if not pygame.display.get_init(): #Инициализация библиотеки
+        if not pygame.display.get_init():  # Инициализация библиотеки
             pygame.display.init()
         pygame.font.init()
         self.screen = pygame.display.set_mode(self.size)  # Создание окна (установка размера)
@@ -53,7 +54,7 @@ class Game:
         self.write_scores()
 
     def process_draw(self):
-        #self.screen.fill(Color.BOLD)  # Заливка цветом
+        # self.screen.fill(Color.BOLD)  # Заливка цветом
         for item in self.objects:
             item.process_draw()
         pygame.display.flip()  # Double buffering
@@ -65,7 +66,12 @@ class Game:
     def process_events(self):
         for event in pygame.event.get():  # Обработка всех событий
             if event.type == pygame.QUIT:  # Обработка события выхода
-                exit()
+                self.game_over = True
+                self.pr_quit = True
+
+            if event.type == pygame.KEYDOWN:  # Обработка события выхода
+                if event.key == pygame.K_ESCAPE:
+                    self.game_over = True
             for item in self.objects:
                 item.process_event(event)
 
@@ -73,3 +79,4 @@ class Game:
         self.file = open("scores{}highscores.txt".format(IO_Tools.sep_slash()), mode='a', encoding='utf-8')
         self.file.write(str(self.score.get_score()) + '\n')
         self.file.close()
+
