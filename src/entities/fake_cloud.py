@@ -11,7 +11,7 @@ class FakeCloud(DeathTouchEntity):
         self.collision_left = self.collision_right = False
 
     def drawing_priority(self):
-        return -1
+        return -2
 
     def process_logic(self):
         if (self.vx > 0) and ((self.rect.right >= self.level.width - 1) or self.collision_right):
