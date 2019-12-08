@@ -14,7 +14,7 @@ class FakeCloud(DeathTouchEntity):
         return -1
 
     def process_logic(self):
-        if (self.vx > 0) and ((self.rect.right >= self.game_object.gameplay_stage.current_level.width - 1) or self.collision_right):
+        if (self.vx > 0) and ((self.rect.right >= self.level.width - 1) or self.collision_right):
             self.vx = -abs(self.vx) #Отражение налево (препятствие справа)
         elif (self.vx < 0) and ((self.rect.x <= 0) or self.collision_left):
             self.vx = abs(self.vx) #Отражение направо (препятствие слева)
@@ -35,4 +35,4 @@ class FakeCloud(DeathTouchEntity):
 
     def on_collide_with_player(self, collision):
         if collision.top:
-            self.game_object.gameplay_stage.current_level.delete_entity(self)
+            self.disappear()

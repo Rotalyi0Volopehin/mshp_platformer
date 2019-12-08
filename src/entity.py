@@ -52,3 +52,6 @@ class Entity(RigidBody): #abstract
             self.rect.y = (self.rect.y & 0xFFC0) + 64
         else:
             Exceptions.throw(Exceptions.argument, "directory must be represented by one of these values \"<^>v\"")
+
+    def disappear(self):
+        self.level.delete_entity(self)

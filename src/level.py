@@ -15,21 +15,24 @@ from src.rigid_body import RigidBody
 
 
 # Уровень и информация о нём
-# Каждый уровень в папке levels имеет свою папку, название которой должно быть "level_*" (* - параметр name)
-# Пример создания : Level(game, "0")
+# Каждый уровень в папке levels имеет свою папку
+# Пример создания : Level(game, "level_0")
 class Level(DrawableObject):
+    active_level = None
+
     def __init__(self, game, name):
+        RigidBody.level_type = Level
+        Level.active_level = self
         super().__init__(game)
         self.images = { }
         slash = IO_Tools.sep_slash()
-        lvl_path = "levels{1}level_{0}{1}".format(name, slash)
+        lvl_path = "levels{1}{0}{1}".format(name, slash)
         sprites_dir = "{}sprites{}".format(lvl_path, slash)
         for img_path in glob.glob(sprites_dir + "*.png"):
             image = pygame.image.load(img_path)
             img_rect = image.get_rect()
-            if (img_rect.width == 64) and (img_rect.height == 64):
-                img_name = img_path[img_path.rfind(slash) + 1 : img_path.rfind('.')]
-                self.images[img_name] = image
+            img_name = img_path[img_path.rfind(slash) + 1: img_path.rfind('.')]
+            self.images[img_name] = image
         self.background = pygame.image.load(lvl_path + "background.png")
         lvl_file = open(lvl_path + "struct.txt")
         lvl_struct_lines = lvl_file.readlines()
@@ -43,6 +46,7 @@ class Level(DrawableObject):
         self.__rigid_bodies_to_add = []
         self.__rigid_bodies_to_delete = []
         self.camera = Camera(game, self.width, self.height)
+        Level.active_level = None
 
     def will_rigid_body_be_deleted(self, rigid_body):
         if not isinstance(rigid_body, RigidBody):
