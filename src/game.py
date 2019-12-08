@@ -1,9 +1,14 @@
-import sys
 import pygame
 import time
 
 from src.constants import Color
 from src.gameplay_stage import GameplayStage
+from src.time import TimeGame
+from src.coins import Coins
+from src.score import Score
+from src.constants import Color
+from src.highscores import Highscore
+from src.io_tools import IO_Tools
 
 
 class Game:
@@ -16,6 +21,14 @@ class Game:
         self.game_over = False
         self.gameplay_stage = GameplayStage(self)
         self.objects = [self.gameplay_stage]
+        self.create_game_objects()
+
+    def create_game_objects(self):
+        self.objects.append(TimeGame(self))
+        self.score = Score(self)
+        self.objects.append(self.score)
+        self.coins = Coins(self)
+        self.objects.append(self.coins)
 
     def library_init(self):
         if not pygame.display.get_init(): #Инициализация библиотеки
@@ -37,7 +50,7 @@ class Game:
             pygame.display.set_caption("Super Mario [!]" if time_left < 0 else "Super Mario")
             if time_left > 0:
                 pygame.time.wait(time_left)
-        sys.exit(0)  # Выход из программы
+        self.write_scores()
 
     def process_draw(self):
         #self.screen.fill(Color.BOLD)  # Заливка цветом
@@ -55,3 +68,8 @@ class Game:
                 self.game_over = True
             for item in self.objects:
                 item.process_event(event)
+
+    def write_scores(self):
+        self.file = open("scores{}highscores.txt".format(IO_Tools.sep_slash()), mode='a', encoding='utf-8')
+        self.file.write(str(self.score.get_score()) + '\n')
+        self.file.close()

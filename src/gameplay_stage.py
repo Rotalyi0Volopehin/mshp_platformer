@@ -19,6 +19,7 @@ class GameplayStage(DrawableObject):
     def next_level(self):
         self.current_level_index += 1
         if self.current_level_index == len(self.levels):
+            self.game_object.game_over = True
             self.current_level_index = 0
 
     def process_draw(self):

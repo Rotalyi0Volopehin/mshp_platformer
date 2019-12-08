@@ -3,6 +3,8 @@ from src.static_grid_cells.brick_cell import BrickCell
 from src.static_grid_cells.castle import CastleEntry
 from src.static_grid_cells.tube import TubeBottom
 from src.static_grid_cells.tube import TubeTop
+from src.static_grid_cells.coin import Coin
+from src.static_grid_cells.question_block import Question
 
 # Импорт классов сущностей
 from src.entities.fake_cloud import FakeCloud
@@ -26,6 +28,8 @@ class SaveSymbolRegister: #static
         SaveSymbolRegister.static_grid_cell_dict['E'] = CastleEntry
         SaveSymbolRegister.static_grid_cell_dict['t'] = TubeBottom
         SaveSymbolRegister.static_grid_cell_dict['T'] = TubeTop
+        SaveSymbolRegister.static_grid_cell_dict['C'] = Coin
+        SaveSymbolRegister.static_grid_cell_dict['?'] = Question
 
     def __init_entity_dict():
         SaveSymbolRegister.entity_dict = { }

@@ -10,6 +10,8 @@ class Color:
     GREEN = [0, 255, 0]
     BLUE = [0, 0, 255]
     BOLD = [88, 88, 88]
+    WHITE = [255, 255, 255]
+    LIGHT_GRAY = [200, 200, 200]
 
 
 class PLT:
