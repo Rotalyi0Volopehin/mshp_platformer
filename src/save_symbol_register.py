@@ -1,6 +1,8 @@
 ﻿# Импорт классов ячеек статической сетки
 from src.static_grid_cells.brick_cell import BrickCell
 from src.static_grid_cells.castle import CastleEntry
+from src.static_grid_cells.tube import TubeBottom
+from src.static_grid_cells.tube import TubeTop
 
 # Импорт классов сущностей
 from src.entities.fake_cloud import FakeCloud
@@ -22,6 +24,8 @@ class SaveSymbolRegister: #static
         SaveSymbolRegister.static_grid_cell_dict = { }
         SaveSymbolRegister.static_grid_cell_dict['B'] = BrickCell #<- Пример регистрации класса ячейки статической сетки (блока)
         SaveSymbolRegister.static_grid_cell_dict['E'] = CastleEntry
+        SaveSymbolRegister.static_grid_cell_dict['t'] = TubeBottom
+        SaveSymbolRegister.static_grid_cell_dict['T'] = TubeTop
 
     def __init_entity_dict():
         SaveSymbolRegister.entity_dict = { }
