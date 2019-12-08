@@ -6,6 +6,8 @@ from src.exceptions import Exceptions
 
 # Это твёрдое тело с физическими параметрами (коллизией и геометрией)
 class RigidBody(DrawableObject): #abstract
+    level_type = None
+
     def __init__(self, game, rect):
         super().__init__(game)
         if not isinstance(rect, pygame.Rect):
@@ -16,7 +18,9 @@ class RigidBody(DrawableObject): #abstract
 
     @property
     def level(self):
-        return self.game_object.gameplay_stage.current_level
+        if RigidBody.level_type.active_level is None:
+            return self.game_object.gameplay_stage.current_level
+        return RigidBody.level_type.active_level
 
     def drawing_priority(self):
         return 0
