@@ -26,12 +26,17 @@ class Player(Entity):
         self.__renew_prev_rect()
         self.__try_to_die = False
         self.__try_to_die_by = None
+        self.dead = False
 
     def process_logic(self):
+        if self.dead:
+            return
         if self.__try_to_die:
             self.__try_to_die = False
             self.__collide_with_dte(self.collide_with(self.__try_to_die_by))
             self.__try_to_die_by = None
+        if self.dead:
+            return
         self.__renew_prev_rect()
         if self.rect.y > self.level.height:
             self.die()
@@ -66,8 +71,13 @@ class Player(Entity):
 
     def die(self):
         #self.game_object.game_over = True
-        self.level.add_new_entity(Animation(self.game_object, self.level.images["Player-death"], self.rect.x, self.rect.y, 30, 0, -1))
-        self.disappear()
+        self.level.add_new_entity(Animation(self.game_object, self.level.images["Player-death"], self.rect.x, self.rect.y, 60, 0, -1))
+        self.dead = True
+        self.vx = self.vy = 0
+
+    def process_draw(self):
+        if not self.dead:
+            super().process_draw()
 
     def __renew_prev_rect(self):
         if self.prev_rect != self.rect:
@@ -79,6 +89,8 @@ class Player(Entity):
         self.rect.y = self.prev_rect.y
 
     def on_collide(self, collisions):
+        if self.dead:
+            return
         for collision in collisions:
             if isinstance(collision.opp_rb, Obstacle):
                 if collision.top and (self.vy <= 0) and not self.top_collision:
@@ -121,6 +133,8 @@ class Player(Entity):
                 self.level.add_new_static_grid_cell(BrickCell(self.game_object, self.level.images["BrickCell"], self.rect.centerx // 64, self.rect.centery // 64))
             elif (event.key == pygame.K_HOME) and not keydown:
                 self.game_object.gameplay_stage.next_level()
+            elif (event.key == pygame.K_END) and not keydown:
+                self.dead = False
 
     def __collide_with_dte(self, collision):
         info = collision.opp_rb.dt_info
@@ -131,6 +145,8 @@ class Player(Entity):
             self.vy = self.jump_force * (self.max_jump_duration - self.ignoring_jump_duration)
 
     def on_collide_with_dte(self, reverse_collision):
+        if self.dead:
+            return
         self.__try_to_die = True
         self.__try_to_die_by = reverse_collision.main_rb
 
