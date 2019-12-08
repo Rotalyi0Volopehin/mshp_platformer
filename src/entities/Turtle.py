@@ -1,7 +1,7 @@
 from src.entities.death_touch_entity import DeathTouchEntity
 from src.entities.death_touch_entity import DeathTouchEntityInfo
 from src.static_grid_cells.obstacle import Obstacle
-
+from src import level
 
 # Черепаха, двигающаяся вправо-влево, пока не встретит препятствие или край уровня; убивает игрока всеми сторонами, кроме верхней
 class Turtle(DeathTouchEntity):
@@ -14,6 +14,7 @@ class Turtle(DeathTouchEntity):
         return -2
 
     def process_logic(self):
+        self.spawn_bllet()
         if (self.vx > 0) and ((self.rect.right >= self.level.width - 1) or self.collision_right):
             self.vx = -abs(self.vx) #Отражение налево (препятствие справа)
         elif (self.vx < 0) and ((self.rect.x <= 0) or self.collision_left):
@@ -36,3 +37,7 @@ class Turtle(DeathTouchEntity):
     def on_collide_with_player(self, collision):
         if collision.top:
             self.disappear()
+
+    def spawn_bllet(self):
+        if (self.rect.centerx >=  level.Player.rect.centerx):
+            print('LOOOOOOOOOOOOOOOOOOOOOOOOOOL')
