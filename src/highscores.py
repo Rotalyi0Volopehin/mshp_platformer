@@ -5,7 +5,7 @@ from src.base_classes import DrawableObject
 
 class Highscore(DrawableObject):
     pygame.font.init()
-    font = pygame.font.Font('font/RetroGaming.ttf', 46)
+    font = pygame.font.Font('../fonts/RetroGaming.ttf', 46)
 
     def __init__(self):
         self.score = 0

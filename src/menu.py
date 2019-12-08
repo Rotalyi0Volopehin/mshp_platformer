@@ -1,5 +1,5 @@
 import pygame
-import sys
+from sys import exit
 from src.constants import Color
 from src.highscores import Highscore
 
@@ -11,7 +11,7 @@ class Menu:
         self.height = 640
         self.screen = pygame.display.set_mode([self.width,self.height])
         self.volume = 5
-        pygame.mixer.music.load("button-40.mp3")
+        pygame.mixer.music.load("../sounds/button-40.mp3")
         pygame.mixer.music.set_volume(self.volume / 10)
         self.menuIsActive = True  # аналог game_over, для закрытия меню
         # далее - переменные, отвечающие за окна (пункты меню)
@@ -26,7 +26,7 @@ class Menu:
 
         self.highscore = Highscore()
 
-        self.main_font = pygame.font.Font('font/RetroGaming.ttf', 46)
+        self.main_font = pygame.font.Font('../fonts/RetroGaming.ttf', 46)
         self.newGameText = self.main_font.render("Новая игра", 1, Color.WHITE)
         self.settingsText = self.main_font.render("Настройки", 1, Color.WHITE) # инициализация надписей
         self.highscoresText = self.main_font.render("Рекорды", 1, Color.WHITE)
@@ -70,6 +70,9 @@ class Menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.menuIsActive = False
+                self.m_quit = True
+                self.quit = True
+                exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.newGamePosition.left < mouse[0] < self.newGamePosition.right and self.newGamePosition.top < mouse[1] < self.newGamePosition.bottom:
                     self.new_game_click()
@@ -85,7 +88,6 @@ class Menu:
     def settings_events(self):
         mouse = pygame.mouse.get_pos()
         self.go_back_hover(mouse)
-
         self.plus_hover(mouse)
         self.minus_hover(mouse)
         self.lowResol_hover(mouse)
@@ -93,6 +95,9 @@ class Menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.menuIsActive = False
+                self.m_quit = True
+                self.quit = True
+                exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.goBackPosition.left < mouse[0] < self.goBackPosition.right and self.goBackPosition.top < mouse[1] < self.goBackPosition.bottom:
                     self.go_back_click()
@@ -112,18 +117,12 @@ class Menu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.menuIsActive = False
+                self.m_quit = True
+                self.quit = True
+                exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.goBackPosition.left < mouse[0] < self.goBackPosition.right and self.goBackPosition.top < mouse[1] < self.goBackPosition.bottom:
                     self.go_back_click()
-
-    #Выход на крестик))
-    def sys_exit(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.menuIsActive = False
-                self.m_quit = True
-                self.quit = True
-                sys.exit()
 
     # обработка нажатий на кнопки
     def new_game_click(self):
@@ -143,6 +142,7 @@ class Menu:
         self.highscoresIsActive = True
 
     def lowResol_click(self):
+        pygame.mixer.music.play()
         if self.highResolution:
             self.k[0] = 0.6734
             self.k[1] = 0.9375
@@ -153,6 +153,7 @@ class Menu:
             self.highResolution = False
 
     def highResol_click(self):
+        pygame.mixer.music.play()
         if not self.highResolution:
             self.k[0] = 1.485
             self.k[1] = 1.066666
@@ -195,12 +196,14 @@ class Menu:
         if self.volume < 10:
             self.volume += 1
         pygame.mixer.music.set_volume(self.volume / 10)
+        pygame.mixer.music.play()
         self.volumeNumText = self.main_font.render(str(self.volume), 1, Color.WHITE)
 
     def minus_click(self):
         if self.volume > 0:
             self.volume -= 1
         pygame.mixer.music.set_volume(self.volume / 10)
+        pygame.mixer.music.play()
         self.volumeNumText = self.main_font.render(str(self.volume), 1, Color.WHITE)
 
     # изменение цвета кнопок при наведении на них
