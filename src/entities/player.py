@@ -26,7 +26,7 @@ class Player(Entity):
 
     def process_logic(self):
         self.__renew_prev_rect()
-        if self.rect.y > self.game_object.gameplay_stage.current_level.height:
+        if self.rect.y > self.level.height:
             self.die()
         if self.move_left and not self.left_collision:
             self.vx -= self.speed
@@ -59,7 +59,7 @@ class Player(Entity):
 
     def die(self):
         #self.game_object.game_over = True
-        self.game_object.gameplay_stage.current_level.delete_entity(self)
+        self.disappear()
 
     def __renew_prev_rect(self):
         if self.prev_rect != self.rect:
@@ -110,8 +110,7 @@ class Player(Entity):
             elif event.key == pygame.K_e:
                 self.game_object.loop_delay = 25
             elif (event.key == pygame.K_SPACE) and not keydown:
-                level = self.game_object.gameplay_stage.current_level
-                level.add_new_static_grid_cell(BrickCell(self.game_object, level.images["BrickCell"], self.rect.centerx // 64, self.rect.centery // 64))
+                self.level.add_new_static_grid_cell(BrickCell(self.game_object, self.level.images["BrickCell"], self.rect.centerx // 64, self.rect.centery // 64))
             elif (event.key == pygame.K_HOME) and not keydown:
                 self.game_object.gameplay_stage.next_level()
 
@@ -119,7 +118,7 @@ class Player(Entity):
         info = reverse_collision.main_rb.dt_info
         rc = reverse_collision
         if (rc.left and info.dt_left) or (rc.top and info.dt_top) or (rc.right and info.dt_right) or (rc.bottom and info.dt_bottom):
-            if not self.game_object.gameplay_stage.current_level.will_rigid_body_be_deleted(rc.main_rb):
+            if not self.level.will_rigid_body_be_deleted(rc.main_rb):
                 self.die()
         if rc.top and info.trampoline and (self.vy > self.gravity_force):
             self.vy = self.jump_force * (self.max_jump_duration - self.ignoring_jump_duration)

@@ -14,6 +14,10 @@ class RigidBody(DrawableObject): #abstract
             Exceptions.throw(Exceptions.argument, "size of rigid body must be 64x64 pixels")
         self.rect = rect
 
+    @property
+    def level(self):
+        return self.game_object.gameplay_stage.current_level
+
     def drawing_priority(self):
         return 0
 
@@ -32,8 +36,8 @@ class RigidBody(DrawableObject): #abstract
         return True
 
     def process_draw(self):
-        level = self.game_object.gameplay_stage.current_level
-        rect = self.rect if level.player == None else level.camera.apply(self.rect)
+        level = self.level
+        rect = self.rect if level.player is None else level.camera.apply(self.rect)
         if (rect.right > 0) and (rect.left < self.game_object.width):
             self.game_object.screen.blit(self.image, rect)
 
