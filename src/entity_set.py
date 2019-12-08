@@ -1,6 +1,8 @@
-﻿from src.entity import Entity
+﻿import copy
+from src.entity import Entity
 from src.save_symbol_register import SaveSymbolRegister
 from src.exceptions import Exceptions
+from src.constants import *
 
 
 # Это множество всех сущностей, используемых на одном уровне
@@ -26,3 +28,4 @@ class EntitySet:
                     if not isinstance(cell, Entity):
                         Exceptions.throw(Exceptions.return_type)
                     self.entities.append(cell)
+        ENT.S = copy.copy(self.entities)

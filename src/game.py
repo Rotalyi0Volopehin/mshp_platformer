@@ -2,39 +2,27 @@ import sys
 import pygame
 import time
 
-from src.ball import Ball
-from src.board import Board
 from src.constants import Color
-from src.level import Level
+from src.gameplay_stage import GameplayStage
 
 
 class Game:
-    def __init__(self, width=800, height=600):
+    def __init__(self, width=1024, height=640):
         self.width = width
         self.height = height
         self.size = [self.width, self.height]
-        self.loop_delay = 5
+        self.loop_delay = 25
         self.library_init()
         self.game_over = False
-        self.objects = []
-        self.levels = [Level(self, "0")]
-        self.objects = [self.levels[0]]
-        self.current_level_index = 0
-        #self.create_game_objects()
-
-    def current_level(self):
-        return self.levels[self.current_level_index]
-
-    def create_game_objects(self):
-        for i in range(5):
-            self.objects.append(Ball(self))
-        self.objects.append(Board(self))
+        self.gameplay_stage = GameplayStage(self)
+        self.objects = [self.gameplay_stage]
 
     def library_init(self):
         if not pygame.display.get_init(): #Инициализация библиотеки
             pygame.display.init()
         pygame.font.init()
         self.screen = pygame.display.set_mode(self.size)  # Создание окна (установка размера)
+        pygame.display.set_caption("Super Mario")  # Пишем в шапку
 
     def main_loop(self):
         while not self.game_over:  # Основной цикл работы программы
@@ -44,12 +32,15 @@ class Game:
             self.process_draw()
             time_elapsed = int((time.time() - start_time) * 1000)
             time_left = self.loop_delay - time_elapsed
+            if time_left < 0:
+                print(time_elapsed, self.loop_delay, sep='/')
+            pygame.display.set_caption("Super Mario [!]" if time_left < 0 else "Super Mario")
             if time_left > 0:
                 pygame.time.wait(time_left)
         sys.exit(0)  # Выход из программы
 
     def process_draw(self):
-        self.screen.fill(Color.BLACK)  # Заливка цветом
+        #self.screen.fill(Color.BOLD)  # Заливка цветом
         for item in self.objects:
             item.process_draw()
         pygame.display.flip()  # Double buffering

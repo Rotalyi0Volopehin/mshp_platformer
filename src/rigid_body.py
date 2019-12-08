@@ -6,6 +6,8 @@ from src.exceptions import Exceptions
 
 # Это твёрдое тело с физическими параметрами (коллизией и геометрией)
 class RigidBody(DrawableObject): #abstract
+    level_type = None
+
     def __init__(self, game, rect):
         super().__init__(game)
         if not isinstance(rect, pygame.Rect):
@@ -13,6 +15,15 @@ class RigidBody(DrawableObject): #abstract
         if (rect.width != 64) or (rect.height != 64):
             Exceptions.throw(Exceptions.argument, "size of rigid body must be 64x64 pixels")
         self.rect = rect
+
+    @property
+    def level(self):
+        if RigidBody.level_type.active_level is None:
+            return self.game_object.gameplay_stage.current_level
+        return RigidBody.level_type.active_level
+
+    def drawing_priority(self):
+        return 0
 
     def collide_with(self, other_rigid_body):
         return CollisionInfo(self, other_rigid_body)
@@ -24,6 +35,15 @@ class RigidBody(DrawableObject): #abstract
 
     def on_collide(self, collisions): #abstract event
         pass
+
+    def do_register_collisions(self):
+        return True
+
+    def process_draw(self):
+        level = self.level
+        rect = self.rect if level.player is None else level.camera.apply(self.rect)
+        if (rect.right > 0) and (rect.left < self.game_object.width):
+            self.game_object.screen.blit(self.image, rect)
 
 
 # Это информация о столкновении двух RigidBody (главного и дополнительного)

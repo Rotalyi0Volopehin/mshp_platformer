@@ -1,16 +1,20 @@
-from src.entity import Entity
+﻿from src.entities.death_touch_entity import DeathTouchEntity
+from src.entities.death_touch_entity import DeathTouchEntityInfo
 from src.static_grid_cells.obstacle import Obstacle
 
 
-# Облачко, двигающееся вправо-влево, пока не встретит препятствие или край уровня
-class FakeCloud(Entity):
+# Облачко, двигающееся вправо-влево, пока не встретит препятствие или край уровня; убивает игрока всеми сторонами, кроме верхней
+class FakeCloud(DeathTouchEntity):
     def __init__(self, game, image, posx, posy):
-        super().__init__(game, image, posx, posy)
-        self.vx = 0.125 #Начальная скорость по X
+        super().__init__(game, image, posx, posy, DeathTouchEntityInfo(True, False, True, True, True))
+        self.vx = 0.75 #Начальная скорость по X
         self.collision_left = self.collision_right = False
 
+    def drawing_priority(self):
+        return -1
+
     def process_logic(self):
-        if (self.vx > 0) and ((self.rect.right >= self.game_object.current_level().width() - 1) or self.collision_right):
+        if (self.vx > 0) and ((self.rect.right >= self.level.width - 1) or self.collision_right):
             self.vx = -abs(self.vx) #Отражение налево (препятствие справа)
         elif (self.vx < 0) and ((self.rect.x <= 0) or self.collision_left):
             self.vx = abs(self.vx) #Отражение направо (препятствие слева)
@@ -28,3 +32,7 @@ class FakeCloud(Entity):
                     #level.delete_static_grid_cell(collision.opp_rb.locx, collision.opp_rb.locy)
                 if self.collision_left and self.collision_right:
                     return
+
+    def on_collide_with_player(self, collision):
+        if collision.top:
+            self.disappear()

@@ -1,4 +1,5 @@
 ﻿К архитектуре относятся следующие классы:
+- GameplayStage - игровое состояние игры
 - Level - уровень и информация о нём
 - StaticGrid - статические сетка игровых объектов (блоков)
 - EntitySet - множество всех сущностей, используемых на одном уровне
@@ -8,34 +9,62 @@
 - StaticGridCell [abstract] - ячейка статической сетки (блок)
 - Entity [abstract] - сущность, обладающая позицией, скоростью и спрайтом
 - Obstacle [abstract] - ячейка статической сетки (блок), препятствующий движению игрока
+- DeathTouchEntity [abstract] - сущность, убивающая с тычка
+- Animation - анимация, которая может показаться на несколько итераций, двигаться с указанной скоростью и исчезнуть
+- DeathTouchEntityInfo - информация о сущности, убивающей с тычка
+- Camera - камера, устанавливающая зависимость между положением игрока и отступом отрисовки
 
+
+class GameplayStage(DrawableObject):
+Методы:
+    def __init__(game) #Конструктор
+    def next_level() #Переключает уровень на следующий или первый, если текущий является последним
+    def process_draw()
+    def process_logic()
+    def process_event(event)
+Свойства:
+    def current_level #(Level) Возвращает указатель на текущий уровень
+Поля:
+    self.levels #(массив уровней) Все уровни игры
+    self.current_level_index #(int) Индекс текущего уровня в массиве self.levels
 
 class Level(DrawableObject):
 Методы:
-    def __init__(game, name) #Этот конструктор подгружает данные уровня из директории "levels\level_*\" (* - параметр name)
+    def __init__(game, name) #Этот конструктор подгружает данные уровня из директории "levels\{параметр name}\"
     def __collect_rigid_bodies() #Инициализатор поля rigid_bodies
-    def width() #(int) Ширина уровня в пикселях
-    def height() #(int) Высота уровня в пикселях
+    def __sort_rigid_bodies() #Сортировка массива self.rigid_bodies по приоритету отрисовки
     def delete_static_grid_cell(locx, locy) #Правильное удаление ячейки статической сетки (блока) по её положению
     def delete_entity(entity) #Правильное удаление сущности
-    def add_new_static_grid_cell(cell, locx, locy) #Правильное добавление ячейки статической сетки (блока)
+    def __delete_rigid_bodies() #Осуществляет удаление тел под конец цикла обработки
+    def add_new_static_grid_cell(cell) #Правильное добавление ячейки статической сетки (блока)
     def add_new_entity(entity) #Правильное добавление сущности
+    def __add_new_rigid_bodies() #Осуществляет добавление тел под конец цикла обработки
     def process_draw() #Запускает метод process_draw у всех твёрдых тел уровня
+    def __draw_background(self, speed=0.2) #Рисует задний фон
     def process_logic() #Запускает метод process_logic у всех твёрдых тел уровня
     def process_event(event) #Запускает метод process_event у всех твёрдых тел уровня
+    def will_rigid_body_be_deleted(rigid_body) #(bool) Возвращает то, будет ли удалено указанное тело
+Свойства:
+    def width #(int) Ширина уровня в пикселях
+    def height #(int) Высота уровня в пикселях
 Поля:
     self.grid = #(StaticGrid) Лежит в game.objects
     self.entity_set #(EntitySet) Лежит в game.objects
     self.images #(словарь с именами спрайтов как ключи и спрайтами как значения) Спрайты из директории "levels\level_*\images"
     self.background #(pygame.Surface) Задник
     self.rigid_bodies #(массив RigidBody) Множество всех твёрдых тел уровня
+    self.player #(Player) Указатель на игрока, если он есть
+    self.__rigid_bodies_to_add #(массив RigidBody) Множество тел для добавления
+    self.__rigid_bodies_to_delete #(массив RigidBody) Множество тел для удаления
+    self.camera #(Camera) Камера уровня
 
 
 class StaticGrid:
 Методы:
     def __init__(game, level, lvl_struct_lines, images) #Этот конструктор загружает расположение ячеек (блоков) из файла "levels\level_*\struct.txt"
-    def width() #(int) Ширина сетки в ячейках (блоках)
-    def height() #(int) Высота сетки в ячейках (блоках)
+Свойства:
+    def width #(int) Ширина сетки в ячейках (блоках)
+    def height #(int) Высота сетки в ячейках (блоках)
 Поля:
     self.level #(Level) Указатель на уровень
     self.cells #(массив массивов ячеек (блоков); cells[строка][столбец]) Сетка ячеек (блоков)
@@ -63,8 +92,12 @@ class RigidBody(DrawableObject): #abstract
 Методы:
     def __init__(game, rect) #Конструктор
     def collide_with(other_rigid_body) #(CollisionInfo) Вычисляет коллизии с другим твёрдым телом
-    def quick_collide_with(other_rigid_body) #(bool) Возвращеет то, происходит ли столкновение с другим твёрдым телом
-    def on_collide(collisions): #Событие столкновения; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
+    def quick_collide_with(other_rigid_body) #(bool) Возвращает то, происходит ли столкновение с другим твёрдым телом
+    def on_collide(collisions) #Событие столкновения; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
+    def drawing_priority() #(int) Свойство, возвращающее приоритет отрисовки объекта
+    def do_register_collisions() #(bool) Свойство, возвращающее то, обрабатывает ли тело столкновения
+Свойства:
+    def level #(Level) Краткая форма "self.game_object.gameplay_stage.current_level"
 Поля:
     self.rect #(pygame.Rect) Хитбокс
 
@@ -85,6 +118,7 @@ class CollisionInfo:
 class StaticGridCell(RigidBody): #abstract
 Методы:
     def __init__(game, image, locx, locy) #Конструктор
+    def disappear() #Удаляет ячейку статической сетки (блок)
 Поля:
     self.image #(pygame.Surface) Спрайт
     self.locx #(int) Положение в статической сетке по горизонтали
@@ -97,6 +131,8 @@ class Entity(RigidBody): #abstract
     def apply_gravity_force(value) #Применяет ускорение свободного падения value
     def apply_velocity() #Применяет скорость к позиции
     def __calc_carry(value) #Считает остаток от числа
+    def pull_out(self, pulling_dir) #Выталкивает сущность в следующую ячейку по заданному направлению, которое может быть задано символами "<^>v"
+    def disappear() #Удаляет сущность
 Поля:
     self.image #(pygame.Surface) Спрайт
     self.vx #(real) Скорость по горизонтали
@@ -106,3 +142,37 @@ class Entity(RigidBody): #abstract
 
 class Obstacle(StaticGridCell): #abstract
     pass
+
+class DeathTouchEntity(Entity): #abstract
+Методы:
+    def __init__(self, game, image, posx, posy, death_touch_info) #Конструктор
+Поля:
+    self.dt_info #(DeathTouchEntityInfo) Информация об этой сущности, убивающей с тычка
+    def on_collide_with_player(self, collision) #Событие соприкосновения с игроком; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
+
+class Animation(Entity):
+Методы:
+    def __init__(game, image, posx, posy, lifetime, vx, vy) #Конструктор, создающий анимация со скоростью vx, vy и длительностью lifetime
+
+class DeathTouchEntityInfo:
+Методы:
+    def __init__(self, dt_left, dt_top, dt_right, dt_bottom, trampoline) #Конструктор
+Поля:
+    self.dt_left #(bool) Флаг, означающий то, губительно ли касание левой стороны для игрока
+    self.dt_top #(bool) Флаг, означающий то, губительно ли касание верхней стороны для игрока
+    self.dt_right #(bool) Флаг, означающий то, губительно ли касание правой стороны для игрока
+    self.dt_bottom #(bool) Флаг, означающий то, губительно ли касание нижней стороны для игрока
+    self.trampoline #(bool) Флаг, означающий то, отпрыгнет ли игрок при приземлении на верхнюю часть
+
+class Camera:
+Методы:
+    def __init__(game, width, height, speed=0.1) #Конструктор
+    def apply(rect) #(pygame.Rect) Устанавливает зависимость между положением на уровне и позицией на экране
+    def update(target_rect) #Обновляет настройки камеры
+    def __move_camera(state, x, y) #Обновляет настройки камеры
+Поля:
+    self.game #(Game) Указатель на игру
+    self.width #(int) Ширина уровня
+    self.height #(int) Высота уровня
+    self.speed #(real) Скорость движения камеры
+    self.state #(pygame.Rect) Настройки камеры

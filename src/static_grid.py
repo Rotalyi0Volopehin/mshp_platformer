@@ -29,8 +29,10 @@ class StaticGrid:
                 else:
                     self.cells[iy].append(None)
 
+    @property
     def width(self):
         return len(self.cells[0])
 
+    @property
     def height(self):
         return len(self.cells)

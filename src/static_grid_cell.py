@@ -1,6 +1,5 @@
 ﻿import pygame
 
-from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
 from src.rigid_body import RigidBody
 
@@ -18,5 +17,5 @@ class StaticGridCell(RigidBody): #abstract
         self.locx = locx
         self.locy = locy
 
-    def process_draw(self):
-        self.game_object.screen.blit(self.image, self.rect)
+    def disappear(self):
+        self.level.delete_static_grid_cell(self)
