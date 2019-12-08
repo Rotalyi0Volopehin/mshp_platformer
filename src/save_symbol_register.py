@@ -21,7 +21,6 @@ class SaveSymbolRegister: #static
         SaveSymbolRegister.static_grid_cell_dict = { }
         SaveSymbolRegister.static_grid_cell_dict['B'] = BrickCell #<- Пример регистрации класса ячейки статической сетки (блока)
         SaveSymbolRegister.static_grid_cell_dict['?'] = Question
-
     def __init_entity_dict():
         SaveSymbolRegister.entity_dict = { }
         SaveSymbolRegister.entity_dict['~'] = FakeCloud #<- Пример регистрации класса сущности
