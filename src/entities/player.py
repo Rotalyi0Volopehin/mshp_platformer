@@ -24,8 +24,19 @@ class Player(Entity):
         self.jump_duration = self.max_jump_duration
         self.prev_rect = pygame.Rect(0, 0, 64, 64)
         self.__renew_prev_rect()
+        self.__try_to_die = False
+        self.__try_to_die_by = None
+        self.dead = False
 
     def process_logic(self):
+        if self.dead:
+            return
+        if self.__try_to_die:
+            self.__try_to_die = False
+            self.__collide_with_dte(self.collide_with(self.__try_to_die_by))
+            self.__try_to_die_by = None
+        if self.dead:
+            return
         self.__renew_prev_rect()
         if self.rect.y > self.level.height:
             self.die()
@@ -60,8 +71,13 @@ class Player(Entity):
 
     def die(self):
         #self.game_object.game_over = True
-        self.level.add_new_entity(Animation(self.game_object, self.level.images["Player-death"], self.rect.x, self.rect.y, 30, 0, -1))
-        self.disappear()
+        self.level.add_new_entity(Animation(self.game_object, self.level.images["Player-death"], self.rect.x, self.rect.y, 60, 0, -1))
+        self.dead = True
+        self.vx = self.vy = 0
+
+    def process_draw(self):
+        if not self.dead:
+            super().process_draw()
 
     def __renew_prev_rect(self):
         if self.prev_rect != self.rect:
@@ -73,6 +89,8 @@ class Player(Entity):
         self.rect.y = self.prev_rect.y
 
     def on_collide(self, collisions):
+        if self.dead:
+            return
         for collision in collisions:
             if isinstance(collision.opp_rb, Obstacle):
                 if collision.top and (self.vy <= 0) and not self.top_collision:
@@ -115,15 +133,22 @@ class Player(Entity):
                 self.level.add_new_static_grid_cell(BrickCell(self.game_object, self.level.images["BrickCell"], self.rect.centerx // 64, self.rect.centery // 64))
             elif (event.key == pygame.K_HOME) and not keydown:
                 self.game_object.gameplay_stage.next_level()
+            elif (event.key == pygame.K_END) and not keydown:
+                self.dead = False
+
+    def __collide_with_dte(self, collision):
+        info = collision.opp_rb.dt_info
+        if (collision.right and info.dt_left) or (collision.bottom and info.dt_top) or (collision.left and info.dt_right) or (collision.top and info.dt_bottom):
+            if not self.level.will_rigid_body_be_deleted(collision.opp_rb):
+                self.die()
+        if collision.bottom and info.trampoline and (self.vy > self.gravity_force):
+            self.vy = self.jump_force * (self.max_jump_duration - self.ignoring_jump_duration)
 
     def on_collide_with_dte(self, reverse_collision):
-        info = reverse_collision.main_rb.dt_info
-        rc = reverse_collision
-        if (rc.left and info.dt_left) or (rc.top and info.dt_top) or (rc.right and info.dt_right) or (rc.bottom and info.dt_bottom):
-            if not self.level.will_rigid_body_be_deleted(rc.main_rb):
-                self.die()
-        if rc.top and info.trampoline and (self.vy > self.gravity_force):
-            self.vy = self.jump_force * (self.max_jump_duration - self.ignoring_jump_duration)
+        if self.dead:
+            return
+        self.__try_to_die = True
+        self.__try_to_die_by = reverse_collision.main_rb
 
     def drawing_priority(self):
         return 12

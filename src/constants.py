@@ -25,7 +25,7 @@ class Stats:
     WIDTH = 64
     HEIGHT = 64
     JUMP_POWER = 10
-    GRAVITY = 0.35  # Сила, которая будет тянуть нас вниз
+    GRAVITY = 1.2  # Сила, которая будет тянуть нас вниз
 
 
 class Display:
