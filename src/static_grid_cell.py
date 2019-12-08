@@ -18,4 +18,4 @@ class StaticGridCell(RigidBody): #abstract
         self.locy = locy
 
     def disappear(self):
-        self.level.delete_static_grid_cell(self)
+        self.level.delete_static_grid_cell(self.locx, self.locy)
