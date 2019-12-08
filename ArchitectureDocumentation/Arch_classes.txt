@@ -10,6 +10,7 @@
 - Entity [abstract] - сущность, обладающая позицией, скоростью и спрайтом
 - Obstacle [abstract] - ячейка статической сетки (блок), препятствующий движению игрока
 - DeathTouchEntity [abstract] - сущность, убивающая с тычка
+- Animation - анимация, которая может показаться на несколько итераций, двигаться с указанной скоростью и исчезнуть
 - DeathTouchEntityInfo - информация о сущности, убивающей с тычка
 - Camera - камера, устанавливающая зависимость между положением игрока и отступом отрисовки
 
@@ -17,6 +18,7 @@
 class GameplayStage(DrawableObject):
 Методы:
     def __init__(game) #Конструктор
+    def next_level() #Переключает уровень на следующий или первый, если текущий является последним
     def process_draw()
     def process_logic()
     def process_event(event)
@@ -28,7 +30,7 @@ class GameplayStage(DrawableObject):
 
 class Level(DrawableObject):
 Методы:
-    def __init__(game, name) #Этот конструктор подгружает данные уровня из директории "levels\level_*\" (* - параметр name)
+    def __init__(game, name) #Этот конструктор подгружает данные уровня из директории "levels\{параметр name}\"
     def __collect_rigid_bodies() #Инициализатор поля rigid_bodies
     def __sort_rigid_bodies() #Сортировка массива self.rigid_bodies по приоритету отрисовки
     def delete_static_grid_cell(locx, locy) #Правильное удаление ячейки статической сетки (блока) по её положению
@@ -94,6 +96,8 @@ class RigidBody(DrawableObject): #abstract
     def on_collide(collisions) #Событие столкновения; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
     def drawing_priority() #(int) Свойство, возвращающее приоритет отрисовки объекта
     def do_register_collisions() #(bool) Свойство, возвращающее то, обрабатывает ли тело столкновения
+Свойства:
+    def level #(Level) Краткая форма "self.game_object.gameplay_stage.current_level"
 Поля:
     self.rect #(pygame.Rect) Хитбокс
 
@@ -114,6 +118,7 @@ class CollisionInfo:
 class StaticGridCell(RigidBody): #abstract
 Методы:
     def __init__(game, image, locx, locy) #Конструктор
+    def disappear() #Удаляет ячейку статической сетки (блок)
 Поля:
     self.image #(pygame.Surface) Спрайт
     self.locx #(int) Положение в статической сетке по горизонтали
@@ -127,6 +132,7 @@ class Entity(RigidBody): #abstract
     def apply_velocity() #Применяет скорость к позиции
     def __calc_carry(value) #Считает остаток от числа
     def pull_out(self, pulling_dir) #Выталкивает сущность в следующую ячейку по заданному направлению, которое может быть задано символами "<^>v"
+    def disappear() #Удаляет сущность
 Поля:
     self.image #(pygame.Surface) Спрайт
     self.vx #(real) Скорость по горизонтали
@@ -143,6 +149,10 @@ class DeathTouchEntity(Entity): #abstract
 Поля:
     self.dt_info #(DeathTouchEntityInfo) Информация об этой сущности, убивающей с тычка
     def on_collide_with_player(self, collision) #Событие соприкосновения с игроком; НЕ ВЫЗЫВАТЬ САМОСТОЯТЕЛЬНО
+
+class Animation(Entity):
+Методы:
+    def __init__(game, image, posx, posy, lifetime, vx, vy) #Конструктор, создающий анимация со скоростью vx, vy и длительностью lifetime
 
 class DeathTouchEntityInfo:
 Методы:
