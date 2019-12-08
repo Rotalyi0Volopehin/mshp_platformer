@@ -2,7 +2,8 @@ import pygame
 
 from src.entity import Entity
 from src.static_grid_cells.obstacle import Obstacle
-from  src.static_grid_cells.brick_cell import BrickCell
+from src.static_grid_cells.brick_cell import BrickCell
+from src.entities.animation import Animation
 
 
 class Player(Entity):
@@ -59,6 +60,7 @@ class Player(Entity):
 
     def die(self):
         #self.game_object.game_over = True
+        self.level.add_new_entity(Animation(self.game_object, self.level.images["Player-death"], self.rect.x, self.rect.y, 30, 0, -1))
         self.disappear()
 
     def __renew_prev_rect(self):
