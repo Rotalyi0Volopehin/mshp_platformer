@@ -1,9 +1,9 @@
-from src.static_grid_cells.obstacle import Obstacle
+from src.static_grid_cells.brick_cell import BrickCell
 
 
-class TubeBottom(Obstacle):
+class TubeBottom(BrickCell):
     pass
 
 
-class TubeTop(Obstacle):
+class TubeTop(BrickCell):
     pass
