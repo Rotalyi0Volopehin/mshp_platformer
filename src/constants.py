@@ -9,6 +9,7 @@ class Color:
     RED = [255, 0, 0]
     GREEN = [0, 255, 0]
     BLUE = [0, 0, 255]
+<<<<<<< HEAD
     BOLD = [88, 88, 88]
 
 
@@ -26,6 +27,10 @@ class Stats:
     HEIGHT = 64
     JUMP_POWER = 10
     GRAVITY = 1.2  # Сила, которая будет тянуть нас вниз
+=======
+    WHITE = [255, 255, 255]
+    LIGHT_GRAY = [200, 200, 200]
+>>>>>>> origin/UI
 
 
 class Display:
