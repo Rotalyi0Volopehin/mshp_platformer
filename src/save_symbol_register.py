@@ -1,4 +1,6 @@
 ﻿# Импорт классов ячеек статической сетки
+from src.entities.Princess import Princess
+from src.entities.Turtle import Turtle
 from src.static_grid_cells.brick_cell import BrickCell
 from src.static_grid_cells.castle import CastleEntry
 from src.static_grid_cells.tube import TubeBottom
@@ -33,3 +35,5 @@ class SaveSymbolRegister: #static
         SaveSymbolRegister.entity_dict['P'] = Player
         SaveSymbolRegister.entity_dict['F'] = Flower
         SaveSymbolRegister.entity_dict['M'] = Mushroom
+        SaveSymbolRegister.entity_dict['U'] = Turtle
+        SaveSymbolRegister.entity_dict['G'] = Princess

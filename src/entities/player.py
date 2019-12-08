@@ -73,6 +73,7 @@ class Player(Entity):
         #self.game_object.game_over = True
         self.level.add_new_entity(Animation(self.game_object, self.level.images["Player-death"], self.rect.x, self.rect.y, 60, 0, -1))
         self.dead = True
+        print('Dead')
         self.vx = self.vy = 0
 
     def process_draw(self):
