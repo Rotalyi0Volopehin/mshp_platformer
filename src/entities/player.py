@@ -100,7 +100,7 @@ class Player(Entity):
                         return
                     self.pull_out('v')
                     self.top_collision = True
-                if collision.bottom and (self.vy >= 0) and not self.bottom_collision:
+                if collision.bottom and (self.vy >= 0) and not self.bottom_collision and self.__no_stick_check(collision.opp_rb):
                     self.pull_out('^')
                     self.vy = 0
                     self.bottom_collision = True
@@ -113,6 +113,11 @@ class Player(Entity):
                         self.pull_out('<')
                         self.vx = 0
                         self.right_collision = True
+
+    def __no_stick_check(self, obstacle):
+        if obstacle.locy == 0:
+            return True
+        return not isinstance(self.level.grid.cells[obstacle.locy - 1][obstacle.locx], Obstacle)
 
     def process_event(self, event):
         keydown = event.type == pygame.KEYDOWN
