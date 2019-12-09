@@ -1,7 +1,6 @@
 import pygame
 import time
 
-from src.constants import Color
 from src.gameplay_stage import GameplayStage
 from src.time import TimeGame
 from src.coins import Coins

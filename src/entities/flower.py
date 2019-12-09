@@ -14,3 +14,7 @@ class Flower(DeathTouchEntity):
 
     def drawing_priority(self):
         return -1
+
+    def process_draw(self):
+        if self.rect.y - self.startposy < 64:
+            super().process_draw()

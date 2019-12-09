@@ -30,10 +30,9 @@ class Level(DrawableObject):
         sprites_dir = "{}sprites{}".format(lvl_path, slash)
         for img_path in glob.glob(sprites_dir + "*.png"):
             image = pygame.image.load(img_path)
-            img_rect = image.get_rect()
             img_name = img_path[img_path.rfind(slash) + 1: img_path.rfind('.')]
             self.images[img_name] = image
-        self.background = pygame.image.load(lvl_path + "background.png")
+        self.__load_background(lvl_path)
         lvl_file = open(lvl_path + "struct.txt")
         lvl_struct_lines = lvl_file.readlines()
         lvl_file.close()
@@ -47,6 +46,21 @@ class Level(DrawableObject):
         self.__rigid_bodies_to_delete = []
         self.camera = Camera(game, self.width, self.height)
         Level.active_level = None
+
+    def __load_background(self, lvl_path):
+        bg_low = pygame.image.load(lvl_path + "background_low.png")
+        bg_high = pygame.image.load(lvl_path + "background_high.png")
+        bg_rect = bg_low.get_rect()
+        self.background_even = pygame.Surface((bg_rect.width * 3, bg_rect.height))
+        self.background_odd = pygame.Surface((bg_rect.width * 3, bg_rect.height))
+        self.background_even.blit(bg_low, bg_rect)
+        self.background_odd.blit(bg_high, bg_rect)
+        bg_rect.x += bg_rect.width
+        self.background_even.blit(bg_high, bg_rect)
+        self.background_odd.blit(bg_low, bg_rect)
+        bg_rect.x += bg_rect.width
+        self.background_even.blit(bg_low, bg_rect)
+        self.background_odd.blit(bg_high, bg_rect)
 
     def will_rigid_body_be_deleted(self, rigid_body):
         if not isinstance(rigid_body, RigidBody):
@@ -127,28 +141,42 @@ class Level(DrawableObject):
             self.camera.update(self.player.rect)
             self.__draw_background()
         else:
-            self.game_object.screen.blit(self.background, self.background.get_rect())
+            self.game_object.screen.blit(self.background_even, self.background_even.get_rect())
         for rb in self.rigid_bodies:
             rb.process_draw()
 
     def __draw_background(self, speed=0.2):
-        bg_rect = self.background.get_rect()
         max = self.width - self.game_object.width
         if (self.camera.state.x != 0) and (self.camera.state.x != -max):
-            bg_rect.x = ((self.game_object.width >> 1) - self.player.rect.centerx) * speed
-            bg_rect.x %= self.game_object.width
-            self.game_object.screen.blit(self.background, bg_rect)
-            bg_rect.x -= self.game_object.width
+            self.__draw_background_using_row(self.player.rect.centerx, speed)
         elif self.camera.state.x == -max:
-            bg_rect.x = max * -speed
-            self.game_object.screen.blit(self.background, bg_rect)
-            bg_rect.x += self.game_object.width
-        self.game_object.screen.blit(self.background, bg_rect)
+            self.__draw_background_using_row(max + (self.game_object.width >> 1), speed)
+        else:
+            self.__draw_background_using_row(self.game_object.width >> 1, speed)
+
+    def __draw_background_using_row(self, posx, speed):
+        half_w = self.game_object.width >> 1
+        bg_rect = self.background_even.get_rect()
+        bg_rect.x = (half_w - posx) * speed
+        even = ((bg_rect.x // half_w) & 1) == 0
+        bg = self.background_even if even else self.background_odd
+        bg_rect.x = (bg_rect.x % half_w) - half_w
+        self.game_object.screen.blit(bg, bg_rect)
 
     def process_logic(self):
+        self.__process_applying_velocity()
+        self.__process_collisions()
+        for rb in self.rigid_bodies:
+            rb.process_logic()
+        self.__delete_rigid_bodies()
+        self.__add_new_rigid_bodies()
+
+    def __process_applying_velocity(self):
         for rb in self.rigid_bodies:
             if isinstance(rb, Entity):
                 rb.apply_velocity()
+
+    def __process_collisions(self):
         for rb in self.rigid_bodies:
             if not rb.do_register_collisions():
                 continue
@@ -162,10 +190,6 @@ class Level(DrawableObject):
                         self.player.on_collide_with_dte(collisions[-1])
             if len(collisions) > 0:
                 rb.on_collide(collisions)
-        for rb in self.rigid_bodies:
-            rb.process_logic()
-        self.__delete_rigid_bodies()
-        self.__add_new_rigid_bodies()
 
     def process_event(self, event):
         for rb in self.rigid_bodies:
