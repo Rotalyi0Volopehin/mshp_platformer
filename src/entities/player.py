@@ -27,9 +27,13 @@ class Player(Entity):
         self.__try_to_die = False
         self.__try_to_die_by = None
         self.dead = False
+        self.death_animation = None
 
     def process_logic(self):
         if self.dead:
+            if self.death_animation.lifetime == 0:
+                self.disappear()
+                self.game_object.game_over = True
             return
         if self.__try_to_die:
             self.__try_to_die = False
@@ -71,7 +75,8 @@ class Player(Entity):
 
     def die(self):
         #self.game_object.game_over = True
-        self.level.add_new_entity(Animation(self.game_object, self.level.images["Player-death"], self.rect.x, self.rect.y, 60, 0, -1))
+        self.death_animation = Animation(self.game_object, self.level.images["Player-death"], self.rect.x, self.rect.y, 60, 0, -1)
+        self.level.add_new_entity(self.death_animation)
         self.dead = True
         self.vx = self.vy = 0
 

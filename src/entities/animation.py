@@ -13,3 +13,6 @@ class Animation(Entity):
         self.lifetime -= 1
         if self.lifetime <= 0:
             self.disappear()
+
+    def do_register_collisions(self):
+        return False
