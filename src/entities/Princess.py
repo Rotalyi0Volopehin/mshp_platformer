@@ -3,7 +3,7 @@ from src.entities.death_touch_entity import DeathTouchEntityInfo
 from src.entity import Entity
 from src.static_grid_cells.obstacle import Obstacle
 from src.constants import Stats
-
+from src.entities.player import Player
 
 class Princess(Entity):
     # Скорость перемещения
@@ -26,6 +26,11 @@ class Princess(Entity):
     def on_collide(self, collisions):
         for collision in collisions:
             # Коллизия с препятствием
+            if isinstance(collision.opp_rb, Player):
+                #CUTSCENE
+                
+                pass
+
             if isinstance(collision.opp_rb, Obstacle):
                 if collision.bottom:
                     self.on_ground = True
@@ -33,14 +38,16 @@ class Princess(Entity):
                 if collision.left or collision.right:
                     self.change_direction()
 
-    def on_collide_with_player(self, collision):
-        if collision.left or collision.right:
-            self.change_direction()
-
-
     def process_logic(self):
+        def sign(x):
+            if x > 0:
+                return 1
+            elif x < 0:
+                return -1
+            else:
+                return 0
+        self.speed = 5*-sign(self.rect.centerx-self.level.player.rect.x)
+
 
         self.vx = self.speed
         self.steps += abs(self.speed)
-        if self.steps >= self.distance:
-            self.change_direction()

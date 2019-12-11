@@ -3,8 +3,10 @@
 from src.rigid_body import RigidBody
 from src.exceptions import Exceptions
 
+
 # Это сущность - игровой объект, обладающий позицией, скоростью и спрайтом
-class Entity(RigidBody): #abstract
+
+class Entity(RigidBody):  # abstract
     def __init__(self, game, image, posx, posy):
         if not (isinstance(image, pygame.Surface) and isinstance(posx, int) and isinstance(posy, int)):
             Exceptions.throw(Exceptions.argument_type)
