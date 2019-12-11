@@ -17,12 +17,6 @@ class Princess(Entity):
         self.on_ground = False
         self.bottom_collision = False
 
-    def change_direction(self):
-        if self.steps < 10:
-            return
-        self.speed = -self.speed
-        self.steps = 0
-
     def on_collide(self, collisions):
         for collision in collisions:
             # Коллизия с препятствием
@@ -35,8 +29,6 @@ class Princess(Entity):
                 if collision.bottom:
                     self.on_ground = True
                     self.bottom_collision = True
-                if collision.left or collision.right:
-                    self.change_direction()
 
     def process_logic(self):
         def sign(x):
@@ -47,7 +39,5 @@ class Princess(Entity):
             else:
                 return 0
         self.speed = 5*-sign(self.rect.centerx-self.level.player.rect.x)
-
-
         self.vx = self.speed
         self.steps += abs(self.speed)
