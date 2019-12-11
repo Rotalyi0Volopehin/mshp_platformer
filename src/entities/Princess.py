@@ -21,9 +21,9 @@ class Princess(Entity):
         for collision in collisions:
             # Коллизия с препятствием
             if isinstance(collision.opp_rb, Player):
-                #CUTSCENE
-
-                pass
+                if self.level.boss.alive == False:
+                    #TODO: ДОБАВЬТЕ ТУТ КОНЦОВКУ
+                    pass
 
             if isinstance(collision.opp_rb, Obstacle):
                 if collision.bottom:

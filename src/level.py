@@ -1,6 +1,7 @@
 ﻿import glob
 import pygame
 
+from src.entities.Turtle import Turtle
 from src.static_grid import StaticGrid
 from src.entity import Entity
 from src.io_tools import IO_Tools
@@ -42,6 +43,7 @@ class Level(DrawableObject):
         self.grid = StaticGrid(game, self, lvl_struct_lines, self.images)
         self.entity_set = EntitySet(game, self, lvl_struct_lines, self.images)
         self.player = None
+        self.boss = None
         self.__collect_rigid_bodies()
         self.__rigid_bodies_to_add = []
         self.__rigid_bodies_to_delete = []
@@ -63,6 +65,8 @@ class Level(DrawableObject):
             self.rigid_bodies.append(entity)
             if isinstance(entity, Player):
                 self.player = entity
+            if isinstance(entity, Turtle):
+                self.boss = entity
         self.__sort_rigid_bodies()
 
     def __sort_rigid_bodies(self):
