@@ -28,7 +28,7 @@ class Princess(Entity):
             # Коллизия с препятствием
             if isinstance(collision.opp_rb, Player):
                 #CUTSCENE
-                
+
                 pass
 
             if isinstance(collision.opp_rb, Obstacle):
