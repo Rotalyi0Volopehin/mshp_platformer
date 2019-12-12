@@ -4,11 +4,12 @@ from src.menu import Menu
 
 def main():
     menu = Menu()
-    height = menu.height
-    width = menu.width
+
     while not menu.quit:
         menu.show()
         if not menu.quit:
+            height = menu.height
+            width = menu.width
             g = Game(width, height)
             g.main_loop()
             menu.m_quit = False

@@ -300,6 +300,7 @@ class Menu:
         self.screen.blit(self.minusText, self.minusPosition)
 
     def show(self):
+        self.screen = pygame.display.set_mode([self.width,self.height])
         while not self.m_quit:
             self.screen.blit(self.background, self.background_rect)
             if self.mainIsActive: # если мы в главном меню
