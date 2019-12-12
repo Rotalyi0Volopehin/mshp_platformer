@@ -19,33 +19,45 @@ from src.rigid_body import RigidBody
 # Пример создания : Level(game, "level_0")
 class Level(DrawableObject):
     active_level = None
+    __prev_level = None
 
     def __init__(self, game, name):
         RigidBody.level_type = Level
         Level.active_level = self
         super().__init__(game)
-        self.images = { }
         slash = IO_Tools.sep_slash()
-        lvl_path = "levels{1}{0}{1}".format(name, slash)
-        sprites_dir = "{}sprites{}".format(lvl_path, slash)
+        self.__level_path = "levels{1}{0}{1}".format(name, slash)
+        self.__load_sprites()
+        self.restart()
+        Level.active_level = None
+        Level.__prev_level = self
+
+    def __load_sprites(self):
+        self.images = { }
+        if Level.__prev_level != None:
+            for sprite_name in Level.__prev_level.images:
+                self.images[sprite_name] = Level.__prev_level.images[sprite_name]
+        slash = IO_Tools.sep_slash()
+        sprites_dir = "{}sprites{}".format(self.__level_path, slash)
         for img_path in glob.glob(sprites_dir + "*.png"):
             image = pygame.image.load(img_path)
             img_name = img_path[img_path.rfind(slash) + 1: img_path.rfind('.')]
             self.images[img_name] = image
-        self.__load_background(lvl_path)
-        lvl_file = open(lvl_path + "struct.txt")
+        self.__load_background(self.__level_path)
+
+    def restart(self):
+        lvl_file = open(self.__level_path + "struct.txt")
         lvl_struct_lines = lvl_file.readlines()
         lvl_file.close()
         for i in range(len(lvl_struct_lines)):
             lvl_struct_lines[i] = lvl_struct_lines[i].strip("\n\r")
-        self.grid = StaticGrid(game, self, lvl_struct_lines, self.images)
-        self.entity_set = EntitySet(game, self, lvl_struct_lines, self.images)
+        self.grid = StaticGrid(self.game_object, self, lvl_struct_lines, self.images)
+        self.entity_set = EntitySet(self.game_object, self, lvl_struct_lines, self.images)
         self.player = None
         self.__collect_rigid_bodies()
         self.__rigid_bodies_to_add = []
         self.__rigid_bodies_to_delete = []
-        self.camera = Camera(game, self.width, self.height)
-        Level.active_level = None
+        self.camera = Camera(self.game_object, self.width, self.height)
 
     def __load_background(self, lvl_path):
         bg_low = pygame.image.load(lvl_path + "background_low.png")

@@ -18,6 +18,8 @@ class Player(Entity):
 
     def __init__(self, game, image, posx, posy):
         super().__init__(game, image, posx, posy)
+        self.image_left = pygame.transform.flip(self.image, True, False)
+        self.image_right = self.image
         self.move_left = self.do_jump = self.move_right = self.move_down = False
         self.left_collision = self.top_collision = self.right_collision = self.bottom_collision = False
         self.jumped = False
@@ -82,6 +84,8 @@ class Player(Entity):
 
     def process_draw(self):
         if not self.dead:
+            if self.vx != 0:
+                self.image = self.image_left if self.vx < 0 else self.image_right
             super().process_draw()
 
     def __renew_prev_rect(self):
@@ -105,10 +109,11 @@ class Player(Entity):
                         return
                     self.pull_out('v')
                     self.top_collision = True
-                if collision.bottom and (self.vy >= 0) and not self.bottom_collision and self.__no_stick_check(collision.opp_rb):
-                    self.pull_out('^')
-                    self.vy = 0
-                    self.bottom_collision = True
+                if collision.bottom and (self.vy >= 0) and not self.bottom_collision and ((collision.opp_rb.rect.y - self.rect.bottom) < 4):
+                    if self.__no_stick_check(collision.opp_rb) and self.__no_stand_on_air_check():
+                        self.pull_out('^')
+                        self.vy = 0
+                        self.bottom_collision = True
                 if (collision.opp_rb.rect.y - self.rect.y) < 60: #if player is not too deep in floor
                     if collision.left and (self.vx < 0) and not self.left_collision:
                         self.pull_out('>')
@@ -120,9 +125,20 @@ class Player(Entity):
                         self.right_collision = True
 
     def __no_stick_check(self, obstacle):
-        if obstacle.locy == 0:
+        if (obstacle.locy == 0) or (obstacle.locy > len(self.level.grid.cells)):
             return True
         return not isinstance(self.level.grid.cells[obstacle.locy - 1][obstacle.locx], Obstacle)
+
+    def __no_stand_on_air_check(self):
+        modx = self.rect.centerx & 63
+        if (modx <= 28) or (modx >= 36):
+            return True
+        locx = self.rect.centerx // 64
+        locy = self.rect.centery // 64
+        level = self.level
+        if (locx < 0) or (locy < 0) or (locx >= level.grid.width) or (locy >= level.grid.height - 1):
+            return True
+        return level.grid.cells[locy + 1][locx] != None
 
     def process_event(self, event):
         keydown = event.type == pygame.KEYDOWN
@@ -144,7 +160,7 @@ class Player(Entity):
             elif (event.key == pygame.K_HOME) and not keydown:
                 self.game_object.gameplay_stage.next_level()
             elif (event.key == pygame.K_END) and not keydown:
-                self.dead = False
+                self.level.restart()
 
     def __collide_with_dte(self, collision):
         info = collision.opp_rb.dt_info
