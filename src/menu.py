@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 from src.constants import Color
 from src.highscores import Highscore
+from src.io_tools import IO_Tools
 
 class Menu:
     def __init__(self):
@@ -11,7 +12,7 @@ class Menu:
         self.height = 640
         self.screen = pygame.display.set_mode([self.width,self.height])
         self.volume = 5
-        pygame.mixer.music.load("../sounds/button-40.mp3")
+        pygame.mixer.music.load("..{0}sounds{0}button-40.mp3".format(IO_Tools.sep_slash()))
         pygame.mixer.music.set_volume(self.volume / 10)
         self.menuIsActive = True  # аналог game_over, для закрытия меню
         # далее - переменные, отвечающие за окна (пункты меню)
@@ -54,7 +55,7 @@ class Menu:
         self.lowResolPosition = self.lowResolText.get_rect(center=[755, 360])
         self.highResolPosition = self.highResolText.get_rect(center=[755, 440])
 
-        self.background = pygame.image.load("images/background.jpg") # здесь можно изменить фон
+        self.background = pygame.image.load("images{}background.jpg".format(IO_Tools.sep_slash())) # здесь можно изменить фон
         self.background_rect = self.background.get_rect()
 
         self.goBackText = self.main_font.render("Назад", 1, Color.WHITE)
@@ -299,6 +300,7 @@ class Menu:
         self.screen.blit(self.minusText, self.minusPosition)
 
     def show(self):
+        self.screen = pygame.display.set_mode([self.width,self.height])
         while not self.m_quit:
             self.screen.blit(self.background, self.background_rect)
             if self.mainIsActive: # если мы в главном меню

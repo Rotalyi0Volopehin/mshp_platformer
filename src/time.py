@@ -11,7 +11,7 @@ class TimeGame(DrawableObject):
 
     def __init__(self, game):
         super().__init__(game)
-        self.start_time = 10
+        self.start_time = 300
         self.game_object = game
         self.start_ticks = pygame.time.get_ticks()
         self.seconds = 0

@@ -17,4 +17,6 @@ class Coins(DrawableObject):
         self.game_object.screen.blit(self.coin_output2, [350, 50])
 
     def process_change_coins(self, value):
+
         self.coin_amount += value
+        self.coin_output2 = self.font.render('{:3}'.format(self.coin_amount), True, [255, 255, 255])

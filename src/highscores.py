@@ -1,15 +1,17 @@
-import os
+
 import pygame
+
 from src.base_classes import DrawableObject
+from src.io_tools import IO_Tools
 
 
 class Highscore(DrawableObject):
     pygame.font.init()
-    font = pygame.font.Font('../fonts/RetroGaming.ttf', 46)
+    font = pygame.font.Font('..{0}fonts{0}RetroGaming.ttf'.format(IO_Tools.sep_slash()), 46)
 
     def __init__(self):
         self.score = 0
-        self.file = open("scores/highscores.txt", mode='r', encoding='utf-8')
+        self.file = open("scores{}highscores.txt".format(IO_Tools.sep_slash()), mode='r', encoding='utf-8')
         self.scores = []
         self.int_sc = []
         self.count = 0
@@ -23,7 +25,7 @@ class Highscore(DrawableObject):
 
     def process_event(self):
         self.score = 0
-        self.file = open("scores/highscores.txt", mode='r', encoding='utf-8')
+        self.file = open("scores{}highscores.txt".format(IO_Tools.sep_slash()), mode='r', encoding='utf-8')
         self.scores = []
         self.int_sc = []
         self.count = 0
