@@ -14,7 +14,7 @@ class Life(DrawableObject):
         self.y = 35
         self.shift_x = 50
 
-    def process_change_coins(self, value):  #TODO при смерти игрока передать в value 1
+    def process_change_lifes(self, value):  #TODO при смерти игрока передать в value 1 (или количество жизней, но убрать минус строчкой ниже)
         self.lifes -= value
 
 
