@@ -8,6 +8,7 @@ from src.score import Score
 from src.constants import Color
 from src.highscores import Highscore
 from src.io_tools import IO_Tools
+from src.lifes import Life
 
 
 class Game:
@@ -29,6 +30,8 @@ class Game:
         self.objects.append(self.score)
         self.coins = Coins(self)
         self.objects.append(self.coins)
+        self.lifes = Life(self)
+        self.objects.append(self.lifes)
 
     def library_init(self):
         if not pygame.display.get_init():  # Инициализация библиотеки
@@ -51,6 +54,8 @@ class Game:
             if time_left > 0:
                 pygame.time.wait(time_left)
         self.write_scores()
+
+
 
     def process_draw(self):
         # self.screen.fill(Color.BOLD)  # Заливка цветом
