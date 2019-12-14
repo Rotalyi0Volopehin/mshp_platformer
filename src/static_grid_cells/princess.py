@@ -13,3 +13,6 @@ class Princess(StaticGridCell):
             self.rect.x += 64
             super().process_draw()
             self.rect.x -= 64
+
+    def do_register_collisions(self):
+        return False

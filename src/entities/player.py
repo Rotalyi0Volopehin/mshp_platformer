@@ -21,7 +21,7 @@ class Player(Entity):
         super().__init__(game, image, posx, posy)
         self.image_left = pygame.transform.flip(self.image, True, False)
         self.image_right = self.image
-        self.move_left = self.do_jump = self.move_right = self.move_down = False
+        self.move_left = self.do_jump = self.move_right = False
         self.left_collision = self.top_collision = self.right_collision = self.bottom_collision = False
         self.jumped = False
         self.jump_duration = self.max_jump_duration
@@ -60,8 +60,6 @@ class Player(Entity):
         else:
             self.jumped = False
             self.jump_duration = self.max_jump_duration
-        if self.move_down and not self.bottom_collision:
-            pass
         if not self.bottom_collision and (self.vy < self.falling_speed_limit):
             self.apply_gravity_force(Stats.GRAVITY)
         if abs(self.vx) < 0.2:
@@ -69,7 +67,6 @@ class Player(Entity):
         else:
             res = self.resistance if self.bottom_collision else self.resistance_in_air
             self.vx *= res
-        #self.move_left = self.move_top = self.move_right = self.move_bottom = False
         self.left_collision = self.top_collision = self.right_collision = self.bottom_collision = False
 
     def __speedup_up(self):
@@ -77,7 +74,6 @@ class Player(Entity):
         self.jump_duration -= 1
 
     def die(self):
-        #self.game_object.game_over = True
         self.death_animation = Animation(self.game_object, self.level.images["Player-death"], self.rect.x, self.rect.y, 60, 0, -1)
         self.level.add_new_entity(self.death_animation)
         self.dead = True
@@ -150,8 +146,6 @@ class Player(Entity):
                 self.move_right = keydown
             elif event.key == pygame.K_w:
                 self.do_jump = keydown
-            elif event.key == pygame.K_s:
-                self.move_down = keydown
             elif event.key == pygame.K_q:
                 self.game_object.loop_delay = 100
             elif event.key == pygame.K_e:
