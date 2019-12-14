@@ -16,6 +16,7 @@ class Turtle(DeathTouchEntity):
         self.collision_left = self.collision_right = False
         self.dmg_cooldown = self.cooldown = 0
         self.hp = 3
+        self.level.boss = None
         self.fake = True
         images = self.level.images
         self.hp_images_left = [images["Turtle-halfdead"], images["Turtle-injured"], images["Turtle"]]
@@ -26,8 +27,10 @@ class Turtle(DeathTouchEntity):
 
     def process_logic(self):
         level = self.level
+        print(self.level.boss)
         if self.fake:
             if (level.player != None) and (level.player.rect.x > self.rect.x - (Turtle.range >> 1)):
+                self.level.boss = 2
                 self.fake = False
                 self.vx = -1
             return
@@ -66,6 +69,7 @@ class Turtle(DeathTouchEntity):
                 self.image = self.level.images["Turtle-halfdead"]
             else:
                 self.level.add_new_entity(Animation(self.game_object, self.level.images["Turtle-death"], self.rect.x, self.rect.y, 120, 0, 4))
+                self.level.boss = None
                 self.disappear()
 
     def __try_take_damage(self):

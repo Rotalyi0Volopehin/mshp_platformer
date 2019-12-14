@@ -8,6 +8,7 @@ from src.score import Score
 from src.constants import Color
 from src.highscores import Highscore
 from src.io_tools import IO_Tools
+from src.BossAttention import Label
 
 
 class Game:
@@ -20,13 +21,15 @@ class Game:
         self.game_over = False
         self.gameplay_stage = GameplayStage(self)
         self.objects = [self.gameplay_stage]
+
         self.create_game_objects()
         self.pr_quit = False
 
     def create_game_objects(self):
         self.objects.append(TimeGame(self))
         self.score = Score(self)
-        self.objects.append(self.score)
+        self.BossAttention = Label(self)
+        self.objects.append(self.BossAttention)
         self.coins = Coins(self)
         self.objects.append(self.coins)
 

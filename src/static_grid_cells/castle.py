@@ -17,7 +17,7 @@ class CastleEntry(StaticGridCell):
 
     def process_logic(self):
         level = self.level
-        if (level.player != None) and self.quick_collide_with(level.player):
+        if (level.player != None) and self.quick_collide_with(level.player) and (level.boss == None):
             self.game_object.gameplay_stage.next_level()
 
     def process_draw(self):

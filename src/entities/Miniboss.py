@@ -1,7 +1,13 @@
 from src.entities.death_touch_entity import DeathTouchEntity
 from src.entities.death_touch_entity import DeathTouchEntityInfo
+from src.static_grid_cells.coin import Coin
 from src.static_grid_cells.obstacle import Obstacle
-from src.entities.shell import Shell
+from src.entities.minishell import Shell
+from src.entities.player import Player
+from src.static_grid_cells.obstacle import Obstacle
+from src.entities.animation import Animation
+from src.static_grid_cells.brick_cell import BrickCell
+
 import pygame
 
 
@@ -12,10 +18,12 @@ class Miniboss(DeathTouchEntity):
 
     def __init__(self, game, image, posx, posy):
         super().__init__(game, image, posx, posy, DeathTouchEntityInfo(True, False, True, True, True))
+        self.dead = False
         self.collision_left = self.collision_right = False
         self.dmg_cooldown = self.cooldown = 0
         self.hp = 3
         self.vx = -1
+        self.level.boss = 2
         images = self.level.images
         self.hp_images_left = [images["Turtlebroke2"], images["Turtlebroke"], images["Miniboss"]]
         self.hp_images_right = []
@@ -24,6 +32,9 @@ class Miniboss(DeathTouchEntity):
         self.image = images["Miniboss"]
 
     def process_logic(self):
+        print(self.level.boss)
+        if not self.dead:
+            self.level.boss = 2
         level = self.level
         if self.dmg_cooldown > 0:
             self.dmg_cooldown -= 1
@@ -58,8 +69,16 @@ class Miniboss(DeathTouchEntity):
             elif self.hp == 1:
                 self.image = self.level.images["Turtlebroke2"]
             else:
-                #shell = Shell(self.game_object, self.level.images["Shell"], self.rect.x, self.rect.y - 32, 240, -5)
-                #self.level.add_new_entity(shell)
+                self.level.add_new_entity(Animation(self.game_object, self.level.images["Coin"], self.rect.x, self.rect.y, 20, 0, -3))
+                self.game_object.coins.process_change_coins(1)
+                self.level.add_new_entity(
+                    Animation(self.game_object, self.level.images["Coin"], self.rect.x, self.rect.y, 20, -2, -3))
+                self.game_object.coins.process_change_coins(1)
+                self.level.add_new_entity(
+                    Animation(self.game_object, self.level.images["Coin"], self.rect.x, self.rect.y, 20, 2, -3))
+                self.game_object.coins.process_change_coins(1)
+                self.level.boss = None
+                self.dead = True
                 self.disappear()
 
     def __try_take_damage(self):
@@ -70,10 +89,11 @@ class Miniboss(DeathTouchEntity):
 
     def try_spawn_shells(self):
         if self.level.player.rect.x + Miniboss.range >= self.rect.centerx >= self.level.player.rect.x - Miniboss.range:
+
             self.cooldown = 42
-            shell = Shell(self.game_object, self.level.images["Shell"], self.rect.x, self.rect.y - 64, 240, -5)
+            shell = Shell(self.game_object, self.level.images["Shell"], self.rect.x, self.rect.y - 32, 240)
             shell.vy = -1
             self.level.add_new_entity(shell)
-            shell = Shell(self.game_object, self.level.images["Shell"], self.rect.x, self.rect.y - 64, 240, 5)
+            shell = Shell(self.game_object, self.level.images["Shell"], self.rect.x, self.rect.y - 32, 240)
             shell.vy = -1
             self.level.add_new_entity(shell)
