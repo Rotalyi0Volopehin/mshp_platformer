@@ -1,8 +1,11 @@
+import random
+
 from src.game import Game
 from src.menu import Menu
 
 
 def main():
+    random.seed()
     menu = Menu()
     height = menu.height
     width = menu.width
