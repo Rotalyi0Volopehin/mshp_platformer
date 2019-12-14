@@ -8,6 +8,7 @@ from src.score import Score
 from src.constants import Color
 from src.highscores import Highscore
 from src.io_tools import IO_Tools
+from src.lifes_stage import LifesStage
 
 
 class Game:
@@ -18,10 +19,12 @@ class Game:
         self.loop_delay = 25
         self.library_init()
         self.game_over = False
+        self.gameplay_stage = None
         self.gameplay_stage = GameplayStage(self)
         self.objects = [self.gameplay_stage]
         self.create_game_objects()
         self.pr_quit = False
+        self.display_player_lifes()
 
     def create_game_objects(self):
         self.objects.append(TimeGame(self))
@@ -39,6 +42,10 @@ class Game:
 
     def main_loop(self):
         while not self.game_over:  # Основной цикл работы программы
+            if self.__display_player_lifes_time > 0:
+                self.__display_player_lifes_time -= 1
+                if self.__display_player_lifes_time == 0:
+                    self.gameplay_stage.pause = False
             start_time = time.time()
             self.process_events()
             self.process_logic()
@@ -67,12 +74,18 @@ class Game:
             if event.type == pygame.QUIT:  # Обработка события выхода
                 self.game_over = True
                 self.pr_quit = True
-
-            if event.type == pygame.KEYDOWN:  # Обработка события выхода
+            if event.type == pygame.KEYUP:  # Обработка события выхода
                 if event.key == pygame.K_ESCAPE:
                     self.game_over = True
+                elif (event.key == pygame.K_SPACE) and (self.__display_player_lifes_time == 0):
+                    self.gameplay_stage.toggle_pause()
             for item in self.objects:
                 item.process_event(event)
+
+    def display_player_lifes(self):
+        self.__display_player_lifes_time = 80
+        self.gameplay_stage.pause = True
+        LifesStage.draw(self, self.gameplay_stage.player_lifes)
 
     def write_scores(self):
         self.file = open("scores{}highscores.txt".format(IO_Tools.sep_slash()), mode='a', encoding='utf-8')
