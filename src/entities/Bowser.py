@@ -37,6 +37,7 @@ class Turtle(DeathTouchEntity):
             self.cooldown -= 1
         else:
             self.try_spawn_shells()
+
         if (self.vx > 0) and ((self.rect.right >= level.width - 1) or self.collision_right):
             self.vx = -abs(self.vx)
         elif (self.vx < 0) and ((self.rect.x <= 0) or self.collision_left):
