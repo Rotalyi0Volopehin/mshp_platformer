@@ -12,7 +12,7 @@ from src.entities.fake_cloud import FakeCloud
 from src.entities.player import Player
 from src.entities.flower import Flower
 from src.entities.mushroom import Mushroom
-from src.entities.turtle import Turtle
+from src.entities.Bowser import Turtle
 
 
 # Это регистр соответствия игровых объектов и символов записи (используются в файлах структуры уровней - "struct.txt")

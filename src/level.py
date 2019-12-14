@@ -12,7 +12,7 @@ from src.entities.player import Player
 from src.camera import Camera
 from src.entities.death_touch_entity import DeathTouchEntity
 from src.rigid_body import RigidBody
-from src.entities.turtle import Turtle
+from src.entities.Bowser import Turtle
 
 
 # Уровень и информация о нём

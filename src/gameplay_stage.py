@@ -12,7 +12,7 @@ class GameplayStage(DrawableObject):
         dirs.sort()
         for dir in dirs:
             self.levels.append(Level(game, dir))
-        self.current_level_index = 0
+        self.current_level_index = 3
 
     @property
     def current_level(self):

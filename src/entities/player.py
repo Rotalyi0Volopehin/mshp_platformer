@@ -5,7 +5,7 @@ from src.static_grid_cells.obstacle import Obstacle
 from src.static_grid_cells.brick_cell import BrickCell
 from src.entities.animation import Animation
 from src.constants import Stats
-from src.entities.turtle import Turtle
+from src.entities.Bowser import Turtle
 
 
 class Player(Entity):
