@@ -32,7 +32,7 @@ class Miniboss(DeathTouchEntity):
         self.image = images["Miniboss"]
 
     def process_logic(self):
-        print(self.level.boss)
+
         if not self.dead:
             self.level.boss = 2
         level = self.level

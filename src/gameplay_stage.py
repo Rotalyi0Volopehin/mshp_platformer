@@ -18,7 +18,7 @@ class GameplayStage(DrawableObject):
         dirs.sort()
         for dir in dirs:
             self.levels.append(Level(self.game_object, dir))
-        self.current_level_index = 1
+        self.current_level_index = 0
 
     def toggle_pause(self):
         self.pause = not self.pause

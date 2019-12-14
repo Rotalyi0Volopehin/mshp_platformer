@@ -27,7 +27,6 @@ class Turtle(DeathTouchEntity):
 
     def process_logic(self):
         level = self.level
-        print(self.level.boss)
         if self.fake:
             if (level.player != None) and (level.player.rect.x > self.rect.x - (Turtle.range >> 1)):
                 self.level.boss = 2
