@@ -36,7 +36,12 @@ class Player(Entity):
         if self.dead:
             if self.death_animation.lifetime == 0:
                 self.disappear()
-                self.game_object.game_over = True
+                if self.game_object.gameplay_stage.player_lifes > 0:
+                    self.game_object.gameplay_stage.player_lifes -= 1
+                    self.level.restart()
+                else:
+                    self.game_object.gameplay_stage.player_lifes = 2
+                    self.game_object.game_over = True
             return
         if self.__try_to_die:
             self.__try_to_die = False
@@ -150,7 +155,7 @@ class Player(Entity):
                 self.game_object.loop_delay = 100
             elif event.key == pygame.K_e:
                 self.game_object.loop_delay = 25
-            elif (event.key == pygame.K_SPACE) and not keydown:
+            elif (event.key == pygame.K_v) and not keydown:
                 self.level.add_new_static_grid_cell(BrickCell(self.game_object, self.level.images["BrickCell"], self.rect.centerx // 64, self.rect.centery // 64))
             elif (event.key == pygame.K_HOME) and not keydown:
                 self.game_object.gameplay_stage.next_level()

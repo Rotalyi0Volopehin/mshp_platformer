@@ -2,6 +2,7 @@ import os
 import pygame
 
 from src.base_classes import DrawableObject
+from src.constants import Color
 
 
 class Score(DrawableObject):
@@ -12,8 +13,8 @@ class Score(DrawableObject):
         self.font = pygame.font.SysFont('Comic Sans Ms', 45, True)
         self.text = 'Score'
         self.text2 = '{:0>4}'.format(self.score)
-        self.ts = self.font.render(self.text, True, [255,255,255])
-        self.ts2 = self.font.render(self.text2, True, [255,255,255])
+        self.ts = self.font.render(self.text, True, Color.WHITE)
+        self.ts2 = self.font.render(self.text2, True, Color.WHITE)
 
     def process_get_score(self, value):
         self.score += value

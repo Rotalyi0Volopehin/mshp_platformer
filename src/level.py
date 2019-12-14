@@ -59,6 +59,8 @@ class Level(DrawableObject):
         self.__rigid_bodies_to_add = []
         self.__rigid_bodies_to_delete = []
         self.camera = Camera(self.game_object, self.width, self.height)
+        if Level.active_level is None:
+            self.game_object.display_player_lifes()
 
     def __load_background(self, lvl_path):
         bg_low = pygame.image.load(lvl_path + "background_low.png")
