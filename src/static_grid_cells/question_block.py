@@ -18,3 +18,4 @@ class Question(Obstacle):
         level.add_new_entity(Animation(self.game_object, level.images["Coin"], self.rect.x, self.rect.y, 20, 0, -3))
         level.add_new_static_grid_cell(BrickCell(self.game_object, level.images["BrickCell"], self.locx, self.locy))
         self.game_object.coins.process_change_coins(1)
+        self.game_object.score.process_get_score(100)

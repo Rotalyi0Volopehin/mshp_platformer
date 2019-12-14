@@ -17,6 +17,7 @@ class Score(DrawableObject):
 
     def process_get_score(self, value):
         self.score += value
+        self.ts2 = self.font.render('{:0>4}'.format(self.score), True, [255, 255, 255])
 
     def get_score(self):
         return self.score

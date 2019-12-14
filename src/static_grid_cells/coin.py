@@ -8,3 +8,4 @@ class Coin(StaticGridCell):
             if isinstance(collision.opp_rb, Player):
                 self.disappear()
                 self.game_object.coins.process_change_coins(1)
+                self.game_object.score.process_get_score(100)
