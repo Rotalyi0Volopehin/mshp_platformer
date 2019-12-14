@@ -4,6 +4,8 @@ from src.entity import Entity
 from src.static_grid_cells.obstacle import Obstacle
 from src.static_grid_cells.brick_cell import BrickCell
 from src.entities.animation import Animation
+from src.constants import Stats
+from src.entities.turtle import Turtle
 
 
 class Player(Entity):
@@ -12,7 +14,6 @@ class Player(Entity):
     resistance = 0.7
     resistance_in_air = 0.95
     max_jump_duration = 16
-    gravity_force = 1.2
     falling_speed_limit = 15
     ignoring_jump_duration = 8
 
@@ -62,7 +63,7 @@ class Player(Entity):
         if self.move_down and not self.bottom_collision:
             pass
         if not self.bottom_collision and (self.vy < self.falling_speed_limit):
-            self.apply_gravity_force(self.gravity_force)
+            self.apply_gravity_force(Stats.GRAVITY)
         if abs(self.vx) < 0.2:
             self.vx = 0
         else:
@@ -131,7 +132,7 @@ class Player(Entity):
 
     def __no_stand_on_air_check(self):
         modx = self.rect.centerx & 63
-        if (modx <= 28) or (modx >= 36):
+        if (modx < 28) or (modx > 36):
             return True
         locx = self.rect.centerx // 64
         locy = self.rect.centery // 64
@@ -163,11 +164,12 @@ class Player(Entity):
                 self.level.restart()
 
     def __collide_with_dte(self, collision):
-        info = collision.opp_rb.dt_info
+        dte = collision.opp_rb
+        info = dte.dt_info
         if (collision.right and info.dt_left) or (collision.bottom and info.dt_top) or (collision.left and info.dt_right) or (collision.top and info.dt_bottom):
-            if not self.level.will_rigid_body_be_deleted(collision.opp_rb):
+            if not (self.level.will_rigid_body_be_deleted(dte) or (isinstance(dte, Turtle) and (dte.dmg_cooldown > 0))):
                 self.die()
-        if collision.bottom and info.trampoline and (self.vy > self.gravity_force):
+        if collision.bottom and info.trampoline and (self.vy > Stats.GRAVITY):
             self.vy = self.jump_force * (self.max_jump_duration - self.ignoring_jump_duration)
 
     def on_collide_with_dte(self, reverse_collision):

@@ -12,8 +12,12 @@ class CastleEntry(StaticGridCell):
         self.castle_rect.bottom = self.rect.bottom
         self.castle_rect.centerx = self.rect.centerx
 
-    def collide_with(self, other_rigid_body):
-        if isinstance(other_rigid_body, Player):
+    def do_register_collisions(self):
+        return False
+
+    def process_logic(self):
+        level = self.level
+        if (level.player != None) and self.quick_collide_with(level.player):
             self.game_object.gameplay_stage.next_level()
 
     def process_draw(self):

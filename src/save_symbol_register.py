@@ -5,12 +5,14 @@ from src.static_grid_cells.tube import TubeBottom
 from src.static_grid_cells.tube import TubeTop
 from src.static_grid_cells.coin import Coin
 from src.static_grid_cells.question_block import Question
+from src.static_grid_cells.princess import Princess
 
 # Импорт классов сущностей
 from src.entities.fake_cloud import FakeCloud
 from src.entities.player import Player
 from src.entities.flower import Flower
 from src.entities.mushroom import Mushroom
+from src.entities.turtle import Turtle
 
 
 # Это регистр соответствия игровых объектов и символов записи (используются в файлах структуры уровней - "struct.txt")
@@ -30,6 +32,7 @@ class SaveSymbolRegister: #static
         SaveSymbolRegister.static_grid_cell_dict['T'] = TubeTop
         SaveSymbolRegister.static_grid_cell_dict['C'] = Coin
         SaveSymbolRegister.static_grid_cell_dict['?'] = Question
+        SaveSymbolRegister.static_grid_cell_dict['V'] = Princess
 
     def __init_entity_dict():
         SaveSymbolRegister.entity_dict = { }
@@ -37,3 +40,4 @@ class SaveSymbolRegister: #static
         SaveSymbolRegister.entity_dict['P'] = Player
         SaveSymbolRegister.entity_dict['F'] = Flower
         SaveSymbolRegister.entity_dict['M'] = Mushroom
+        SaveSymbolRegister.entity_dict['S'] = Turtle

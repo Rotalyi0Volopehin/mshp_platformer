@@ -12,6 +12,7 @@ from src.entities.player import Player
 from src.camera import Camera
 from src.entities.death_touch_entity import DeathTouchEntity
 from src.rigid_body import RigidBody
+from src.entities.turtle import Turtle
 
 
 # Уровень и информация о нём
@@ -53,7 +54,7 @@ class Level(DrawableObject):
             lvl_struct_lines[i] = lvl_struct_lines[i].strip("\n\r")
         self.grid = StaticGrid(self.game_object, self, lvl_struct_lines, self.images)
         self.entity_set = EntitySet(self.game_object, self, lvl_struct_lines, self.images)
-        self.player = None
+        self.boss = self.player = None
         self.__collect_rigid_bodies()
         self.__rigid_bodies_to_add = []
         self.__rigid_bodies_to_delete = []
@@ -89,6 +90,8 @@ class Level(DrawableObject):
             self.rigid_bodies.append(entity)
             if isinstance(entity, Player):
                 self.player = entity
+            elif isinstance(entity, Turtle):
+                self.boss = entity
         self.__sort_rigid_bodies()
 
     def __sort_rigid_bodies(self):
@@ -121,6 +124,8 @@ class Level(DrawableObject):
                 self.entity_set.entities.remove(rb)
                 if rb == self.player:
                     self.player = None
+                elif rb == self.boss:
+                    self.boss = None
         self.__rigid_bodies_to_delete.clear()
 
     def add_new_static_grid_cell(self, cell):
@@ -142,8 +147,10 @@ class Level(DrawableObject):
                 self.grid.cells[rb.locy][rb.locx] = rb
             else:
                 self.entity_set.entities.append(rb)
-                if (self.player == rb) and (self.player == None):
+                if isinstance(rb, Player) and (self.player is None):
                     self.player = rb
+                elif isinstance(rb, Turtle) and (self.boss is None):
+                    self.boss = rb
         if len(self.__rigid_bodies_to_add) > 0:
             self.__rigid_bodies_to_add.clear()
             self.__sort_rigid_bodies()
@@ -197,7 +204,7 @@ class Level(DrawableObject):
             for opp_rb in self.rigid_bodies:
                 if (rb != opp_rb) and rb.quick_collide_with(opp_rb):
                     collisions.append(rb.collide_with(opp_rb))
-                    if dt and isinstance(opp_rb, Player):
+                    if dt and isinstance(opp_rb, Player) and not opp_rb.dead:
                         rb.on_collide_with_player(collisions[-1])
                         self.player.on_collide_with_dte(collisions[-1])
             if len(collisions) > 0:
