@@ -1,14 +1,13 @@
-import pygame
-
 from src.entities.death_touch_entity import DeathTouchEntity
 from src.entities.death_touch_entity import DeathTouchEntityInfo
 from src.static_grid_cells.obstacle import Obstacle
 from src.entities.shell import Shell
-from src.entities.animation import Animation
+import pygame
 
 
-# Это босс
-class Turtle(DeathTouchEntity):
+# Черепаха, двигающаяся вправо-влево, пока не встретит препятствие или край уровня; убивает игрока всеми сторонами, кроме верхней
+
+class Miniboss(DeathTouchEntity):
     range = 512
 
     def __init__(self, game, image, posx, posy):
@@ -16,21 +15,16 @@ class Turtle(DeathTouchEntity):
         self.collision_left = self.collision_right = False
         self.dmg_cooldown = self.cooldown = 0
         self.hp = 3
-        self.fake = True
+        self.vx = -1
         images = self.level.images
-        self.hp_images_left = [images["Turtle-halfdead"], images["Turtle-injured"], images["Turtle"]]
+        self.hp_images_left = [images["Turtlebroke2"], images["Turtlebroke"], images["Miniboss"]]
         self.hp_images_right = []
         for img_left in self.hp_images_left:
             self.hp_images_right.append(pygame.transform.flip(img_left, True, False))
-        self.image = images["Princess"]
+        self.image = images["Miniboss"]
 
     def process_logic(self):
         level = self.level
-        if self.fake:
-            if (level.player != None) and (level.player.rect.x > self.rect.x - (Turtle.range >> 1)):
-                self.fake = False
-                self.vx = -1
-            return
         if self.dmg_cooldown > 0:
             self.dmg_cooldown -= 1
         if self.cooldown > 0:
@@ -45,8 +39,7 @@ class Turtle(DeathTouchEntity):
         self.collision_left = self.collision_right = False
 
     def process_draw(self):
-        if not self.fake and (self.vx != 0):
-            self.image = (self.hp_images_left if self.vx < 0 else self.hp_images_right)[self.hp - 1]
+        self.image = (self.hp_images_left if self.vx < 0 else self.hp_images_right)[self.hp - 1]
         super().process_draw()
 
     def on_collide(self, collisions):
@@ -61,11 +54,12 @@ class Turtle(DeathTouchEntity):
         if collision.top and self.__try_take_damage():
             self.hp -= 1
             if self.hp == 2:
-                self.image = self.level.images["Turtle-injured"]
+                self.image = self.level.images["Turtlebroke"]
             elif self.hp == 1:
-                self.image = self.level.images["Turtle-halfdead"]
+                self.image = self.level.images["Turtlebroke2"]
             else:
-                self.level.add_new_entity(Animation(self.game_object, self.level.images["Turtle-death"], self.rect.x, self.rect.y, 120, 0, 4))
+                #shell = Shell(self.game_object, self.level.images["Shell"], self.rect.x, self.rect.y - 32, 240, -5)
+                #self.level.add_new_entity(shell)
                 self.disappear()
 
     def __try_take_damage(self):
@@ -75,11 +69,11 @@ class Turtle(DeathTouchEntity):
         return False
 
     def try_spawn_shells(self):
-        if self.level.player.rect.x + Turtle.range >= self.rect.centerx >= self.level.player.rect.x - Turtle.range:
+        if self.level.player.rect.x + Miniboss.range >= self.rect.centerx >= self.level.player.rect.x - Miniboss.range:
             self.cooldown = 42
             shell = Shell(self.game_object, self.level.images["Shell"], self.rect.x, self.rect.y - 64, 240, -5)
-            shell.vy = -10
+            shell.vy = -1
             self.level.add_new_entity(shell)
             shell = Shell(self.game_object, self.level.images["Shell"], self.rect.x, self.rect.y - 64, 240, 5)
-            shell.vy = -10
+            shell.vy = -1
             self.level.add_new_entity(shell)
