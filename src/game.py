@@ -32,6 +32,7 @@ class Game:
     def create_game_objects(self):
         self.objects.append(TimeGame(self))
         self.score = Score(self)
+        self.objects.append(self.Score)
         self.BossAttention = Label(self)
         self.objects.append(self.BossAttention)
         self.coins = Coins(self)

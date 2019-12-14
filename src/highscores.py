@@ -19,8 +19,7 @@ class Highscore(DrawableObject):
             f = i.split()
             ts = self.font.render(f[0], False, (255, 255, 255))
             self.scores.append(ts)
-            print(f[0])
-            #self.int_sc.append(int(f[0]))
+            self.int_sc.append(int(f[0]))
         self.file.close()
 
     def process_event(self):
