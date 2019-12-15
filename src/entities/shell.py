@@ -12,6 +12,7 @@ class Shell(DeathTouchEntity):
         self.vx = speed
         self.bottom_collision = False
         self.lifetime = lifetime
+        self.boss_summon = self.level.boss != None
 
     def on_collide(self, collisions):
         for collision in collisions:
@@ -27,7 +28,7 @@ class Shell(DeathTouchEntity):
 
     def process_logic(self):
         level = self.level
-        if level.boss is None:
+        if self.boss_summon and (level.boss is None):
             self.disappear()
         self.lifetime -= 1
         if self.lifetime < 0:

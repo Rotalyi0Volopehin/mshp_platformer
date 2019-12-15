@@ -86,7 +86,7 @@ class Player(Entity):
         self.jump_duration -= 1
 
     def die(self):
-        self.death_animation = Animation(self.game_object, self.level.images["Player-death"], self.rect.x, self.rect.y, 60, 0, -1)
+        self.death_animation = Animation(self.game_object, self.level.images["PlayerGhost"], self.rect.x, self.rect.y, 60, 0, -1)
         self.level.add_new_entity(self.death_animation)
         self.dead = True
         self.vx = self.vy = 0

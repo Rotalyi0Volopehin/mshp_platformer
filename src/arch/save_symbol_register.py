@@ -6,6 +6,7 @@ from src.static_grid_cells.tube import TubeTop
 from src.static_grid_cells.coin import Coin
 from src.static_grid_cells.question_block import Question
 from src.static_grid_cells.princess import Princess
+from src.static_grid_cells.player_ghost import PlayerGhost
 
 # Импорт классов сущностей
 from src.entities.fake_cloud import FakeCloud
@@ -33,6 +34,7 @@ class SaveSymbolRegister: #static
         SaveSymbolRegister.static_grid_cell_dict['C'] = Coin
         SaveSymbolRegister.static_grid_cell_dict['?'] = Question
         SaveSymbolRegister.static_grid_cell_dict['V'] = Princess
+        SaveSymbolRegister.static_grid_cell_dict['G'] = PlayerGhost
 
     def __init_entity_dict():
         SaveSymbolRegister.entity_dict = { }

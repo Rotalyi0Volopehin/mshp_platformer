@@ -8,8 +8,8 @@ class LifesStage:
     def draw(game, lifes):
         #draw Mario
         level = game.gameplay_stage.current_level
-        mario_image = level.images["Player"]
-        game.screen.fill(Color.BLACK)
+        mario_image = level.images["PlayerGhost"]
+        game.screen.fill((24, 12, 12))
         mario_rect = mario_image.get_rect()
         mario_rect.centerx = (game.width >> 1) - 48
         mario_rect.centery = game.height >> 1
