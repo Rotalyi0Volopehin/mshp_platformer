@@ -22,6 +22,7 @@ class Highscore:
                 continue
             self.scores.append(int(line.strip()))
         file.close()
+        #self.scores.sort(reverse=True)
 
     def process_render(self):
         self.render = pygame.Surface((100, 320))
@@ -47,7 +48,7 @@ class Highscore:
                 return
             self.scores.pop(-1)
         self.scores.append(score)
-        self.scores.sort()
+        self.scores.sort(reverse=True)
         self.process_render()
 
     def save(self):
