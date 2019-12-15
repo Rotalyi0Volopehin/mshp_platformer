@@ -38,7 +38,7 @@ class Coins(DrawableObject):
         self.coins += value
         SFX_Player.play_sound("Coin")
         self.refresh()
-        self.game_object.score.process_get_score(value * 5)
+        self.game_object.score.process_get_score(value * 80)
 
     def refresh(self):
         self.data = self.font.render('{:3}'.format(self.coins), False, Color.WHITE)

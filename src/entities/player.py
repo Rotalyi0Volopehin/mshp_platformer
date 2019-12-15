@@ -190,6 +190,8 @@ class Player(Entity):
             self.game_object.gameplay_stage.restart_level()
         elif code == "~zerog":
             Player.gravity_force = 0 if Player.gravity_force > 0 else Stats.GRAVITY
+        elif code == "~emit":
+            self.game_object.time.reset()
         else:
             print("No such cheat code!")
 

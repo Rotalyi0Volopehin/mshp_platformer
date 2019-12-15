@@ -34,6 +34,9 @@ class TimeGame(DrawableObject):
     def refresh(self):
         self.data = self.font.render(str(self.start_time - self.seconds), False, Color.WHITE)
 
+    def reset(self):
+        self.start_ticks = pygame.time.get_ticks()
+
     def process_logic(self):
         if self.game_object.gameplay_stage.pause:
             return
