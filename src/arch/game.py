@@ -8,6 +8,7 @@ from src.score import Score
 from src.lifes_stage import LifesStage
 from src.arch.sfx_player import SFX_Player
 from src.highscores import Highscore
+from src.pause_stage import PauseStage
 
 
 class Game:
@@ -18,6 +19,7 @@ class Game:
             pygame.display.init()
         pygame.font.init()
         SFX_Player.load()
+        PauseStage.init()
 
     def __init__(self, width=1024, height=640):
         self.width = width
@@ -35,7 +37,8 @@ class Game:
         self.display_player_lifes()
 
     def create_game_objects(self):
-        self.objects.append(TimeGame(self))
+        self.time = TimeGame(self)
+        self.objects.append(self.time)
         self.score = Score(self)
         self.objects.append(self.score)
         self.coins = Coins(self)
@@ -82,6 +85,10 @@ class Game:
                     self.game_over = True
                 elif (event.key == pygame.K_SPACE) and (self.__display_player_lifes_time == 0):
                     self.gameplay_stage.toggle_pause()
+                    if self.gameplay_stage.pause:
+                        PauseStage.draw(self.screen)
+                    else:
+                        self.time.unpause()
             for item in self.objects:
                 item.process_event(event)
 

@@ -26,10 +26,17 @@ class TimeGame(DrawableObject):
             self.game_object.screen.blit(self.data, self.data_rect)
             self.game_object.screen.blit(self.caption, self.caption_rect)
 
+    def unpause(self):
+        seconds = (pygame.time.get_ticks() - self.start_ticks) // 1000
+        delta = seconds - self.seconds
+        self.start_ticks += delta * 1000
+
     def refresh(self):
         self.data = self.font.render(str(self.start_time - self.seconds), False, Color.WHITE)
 
     def process_logic(self):
+        if self.game_object.gameplay_stage.pause:
+            return
         seconds = (pygame.time.get_ticks() - self.start_ticks) // 1000
         if self.seconds == seconds:
             return
