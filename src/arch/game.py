@@ -58,6 +58,7 @@ class Game:
             pygame.display.set_caption("Super Mario [!]" if time_left < 0 else "Super Mario")
             if time_left > 0:
                 pygame.time.wait(time_left)
+        self.gameplay_stage.current_level.stop_bgm()
         self.write_scores()
 
     def process_draw(self):

@@ -1,5 +1,6 @@
 ﻿import glob
 import pygame
+import os.path
 
 from src.arch.static_grid import StaticGrid
 from src.arch.entity import Entity
@@ -13,6 +14,7 @@ from src.arch.camera import Camera
 from src.entities.death_touch_entity import DeathTouchEntity
 from src.arch.rigid_body import RigidBody
 from src.entities.turtle import Turtle
+from src.arch.sfx_player import SFX_Player
 
 
 # Уровень и информация о нём
@@ -31,8 +33,16 @@ class Level(DrawableObject):
         self.__level_path = "levels{1}{0}{1}".format(name, slash)
         self.__load_sprites()
         self.restart()
+        self.__load_bgm()
         Level.active_level = None
         Level.__prev_level = self
+
+    def __load_bgm(self):
+        self.bgm = None
+        bgm_path = self.__level_path + "bgm.wav"
+        if os.path.isfile(bgm_path):
+            self.bgm = pygame.mixer.Sound(bgm_path)
+            self.bgm.set_volume(SFX_Player.volume)
 
     def __load_sprites(self):
         self.images = { }
@@ -46,6 +56,14 @@ class Level(DrawableObject):
             img_name = img_path[img_path.rfind(slash) + 1: img_path.rfind('.')]
             self.images[img_name] = image
         self.__load_background(self.__level_path)
+
+    def play_bgm(self):
+        if self.bgm != None:
+            self.bgm.play(loops=-1)
+
+    def stop_bgm(self):
+        if self.bgm != None:
+            self.bgm.stop()
 
     def restart(self):
         lvl_file = open(self.__level_path + "struct.txt")
