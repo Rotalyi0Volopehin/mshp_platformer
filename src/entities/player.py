@@ -5,7 +5,7 @@ from src.static_grid_cells.obstacle import Obstacle
 from src.static_grid_cells.brick_cell import BrickCell
 from src.entities.animation import Animation
 from src.constants import Stats
-from src.entities.Bowser import Turtle
+from src.entities.turtle import Turtle
 
 
 class Player(Entity):
@@ -16,6 +16,10 @@ class Player(Entity):
     max_jump_duration = 16
     falling_speed_limit = 15
     ignoring_jump_duration = 8
+    gravity_force = Stats.GRAVITY
+
+    __ghost = False
+    __can_die = True
 
     def __init__(self, game, image, posx, posy):
         super().__init__(game, image, posx, posy)
@@ -27,10 +31,8 @@ class Player(Entity):
         self.jump_duration = self.max_jump_duration
         self.prev_rect = pygame.Rect(0, 0, 64, 64)
         self.__renew_prev_rect()
-        self.__try_to_die = False
-        self.__try_to_die_by = None
-        self.dead = False
-        self.death_animation = None
+        self.dead = self.__try_to_die = False
+        self.death_animation = self.__try_to_die_by = None
 
     def process_logic(self):
         if self.dead:
@@ -47,8 +49,12 @@ class Player(Entity):
             self.__try_to_die = False
             self.__collide_with_dte(self.collide_with(self.__try_to_die_by))
             self.__try_to_die_by = None
-        if self.dead:
-            return
+        if (self.rect.x < 0) and (self.vx < 0):
+            self.vx = 0
+            self.rect.x = 0
+        elif (self.rect.right >= self.level.width) and (self.vx > 0):
+            self.vx = 0
+            self.rect.right = self.level.width - 1
         self.__renew_prev_rect()
         if self.rect.y > self.level.height:
             self.die()
@@ -66,7 +72,7 @@ class Player(Entity):
             self.jumped = False
             self.jump_duration = self.max_jump_duration
         if not self.bottom_collision and (self.vy < self.falling_speed_limit):
-            self.apply_gravity_force(Stats.GRAVITY)
+            self.apply_gravity_force(Player.gravity_force)
         if abs(self.vx) < 0.2:
             self.vx = 0
         else:
@@ -116,7 +122,7 @@ class Player(Entity):
                         self.pull_out('^')
                         self.vy = 0
                         self.bottom_collision = True
-                if (collision.opp_rb.rect.y - self.rect.y) < 60: #if player is not too deep in floor
+                if ((collision.opp_rb.rect.y - self.rect.y) < 60) and not Player.__ghost: #if player is not too deep in floor
                     if collision.left and (self.vx < 0) and not self.left_collision:
                         self.pull_out('>')
                         self.vx = 0
@@ -144,6 +150,7 @@ class Player(Entity):
 
     def process_event(self, event):
         keydown = event.type == pygame.KEYDOWN
+        keyup = event.type == pygame.KEYUP
         if keydown or (event.type == pygame.KEYUP):
             if event.key == pygame.K_a:
                 self.move_left = keydown
@@ -151,22 +158,44 @@ class Player(Entity):
                 self.move_right = keydown
             elif event.key == pygame.K_w:
                 self.do_jump = keydown
-            elif event.key == pygame.K_q:
-                self.game_object.loop_delay = 100
-            elif event.key == pygame.K_e:
-                self.game_object.loop_delay = 25
-            elif (event.key == pygame.K_v) and not keydown:
-                self.level.add_new_static_grid_cell(BrickCell(self.game_object, self.level.images["BrickCell"], self.rect.centerx // 64, self.rect.centery // 64))
-            elif (event.key == pygame.K_HOME) and not keydown:
-                self.game_object.gameplay_stage.next_level()
-            elif (event.key == pygame.K_END) and not keydown:
-                self.level.restart()
+            elif (event.key == pygame.K_END) and keyup:
+                self.cheat("~restart")
+            elif (event.key == pygame.K_HOME) and keyup:
+                self.cheat("~nextlvl")
+            elif (event.key == pygame.K_KP_ENTER) and keyup:
+                self.cheat(input())
+
+    def cheat(self, code):
+        if code == "iddqd":
+            Player.__can_die = not Player.__can_die
+        elif code == "idclip":
+            Player.__ghost = not Player.__ghost
+        elif code == "~life":
+            self.game_object.gameplay_stage.player_lifes += 1
+        elif code == "~brick":
+            self.level.add_new_static_grid_cell(BrickCell(self.game_object, self.level.images["BrickCell"], self.rect.centerx // 64, self.rect.centery // 64))
+        elif code == "~slower":
+            if self.game_object.loop_delay < 1000:
+                self.game_object.loop_delay <<= 1
+        elif code == "~faster":
+            if self.game_object.loop_delay > 1:
+                self.game_object.loop_delay >>= 1
+        elif code == "~norm":
+            self.game_object.loop_delay = 25
+        elif code == "~nextlvl":
+            self.game_object.gameplay_stage.next_level()
+        elif code == "~restart":
+            self.level.restart()
+        elif code == "~zerog":
+            Player.gravity_force = 0 if Player.gravity_force > 0 else Stats.GRAVITY
+        else:
+            print("No such cheat code!")
 
     def __collide_with_dte(self, collision):
         dte = collision.opp_rb
         info = dte.dt_info
         if (collision.right and info.dt_left) or (collision.bottom and info.dt_top) or (collision.left and info.dt_right) or (collision.top and info.dt_bottom):
-            if not (self.level.will_rigid_body_be_deleted(dte) or (isinstance(dte, Turtle) and (dte.dmg_cooldown > 0))):
+            if not (self.level.will_rigid_body_be_deleted(dte) or (isinstance(dte, Turtle) and (dte.dmg_cooldown > 0))) and Player.__can_die:
                 self.die()
         if collision.bottom and info.trampoline and (self.vy > Stats.GRAVITY):
             self.vy = self.jump_force * (self.max_jump_duration - self.ignoring_jump_duration)

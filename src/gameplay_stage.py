@@ -18,11 +18,9 @@ class GameplayStage(DrawableObject):
         dirs.sort()
         for dir in dirs:
             self.levels.append(Level(self.game_object, dir))
-        self.current_level_index = 0
 
     def toggle_pause(self):
         self.pause = not self.pause
-
 
     @property
     def current_level(self):
@@ -32,6 +30,7 @@ class GameplayStage(DrawableObject):
         self.current_level_index += 1
         if self.current_level_index == len(self.levels):
             self.game_object.game_over = True
+            self.current_level_index = 0
 
     def process_draw(self):
         if not self.pause:

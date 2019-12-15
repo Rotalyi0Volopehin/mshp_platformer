@@ -1,7 +1,4 @@
-import pygame
-
 from src.static_grid_cell import StaticGridCell
-from src.entities.player import Player
 
 
 class CastleEntry(StaticGridCell):
@@ -17,13 +14,14 @@ class CastleEntry(StaticGridCell):
 
     def process_logic(self):
         level = self.level
-        if (level.player != None) and self.quick_collide_with(level.player) and (level.boss == None):
+        if (level.player != None) and self.quick_collide_with(level.player):
             self.game_object.gameplay_stage.next_level()
 
     def process_draw(self):
         super().process_draw()
         castle_rect = self.level.camera.apply(self.castle_rect)
-        self.game_object.screen.blit(self.castle_image, castle_rect)
+        if (castle_rect.right > 0) and (castle_rect.left < self.game_object.width):
+            self.game_object.screen.blit(self.castle_image, castle_rect)
 
     def drawing_priority(self):
         return 11

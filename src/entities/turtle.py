@@ -10,13 +10,13 @@ from src.entities.animation import Animation
 # Это босс
 class Turtle(DeathTouchEntity):
     range = 512
+    speed = 1
 
     def __init__(self, game, image, posx, posy):
         super().__init__(game, image, posx, posy, DeathTouchEntityInfo(True, False, True, True, True))
         self.collision_left = self.collision_right = False
         self.dmg_cooldown = self.cooldown = 0
         self.hp = 3
-        self.level.boss = None
         self.fake = True
         images = self.level.images
         self.hp_images_left = [images["Turtle-halfdead"], images["Turtle-injured"], images["Turtle"]]
@@ -24,14 +24,14 @@ class Turtle(DeathTouchEntity):
         for img_left in self.hp_images_left:
             self.hp_images_right.append(pygame.transform.flip(img_left, True, False))
         self.image = images["Princess"]
+        self.speedup = False
 
     def process_logic(self):
         level = self.level
         if self.fake:
             if (level.player != None) and (level.player.rect.x > self.rect.x - (Turtle.range >> 1)):
-                self.level.boss = 2
                 self.fake = False
-                self.vx = -1
+                self.vx = -Turtle.speed
             return
         if self.dmg_cooldown > 0:
             self.dmg_cooldown -= 1
@@ -39,12 +39,34 @@ class Turtle(DeathTouchEntity):
             self.cooldown -= 1
         else:
             self.try_spawn_shells()
-
         if (self.vx > 0) and ((self.rect.right >= level.width - 1) or self.collision_right):
             self.vx = -abs(self.vx)
         elif (self.vx < 0) and ((self.rect.x <= 0) or self.collision_left):
             self.vx = abs(self.vx)
+        self.direct()
         self.collision_left = self.collision_right = False
+
+    def direct(self):
+        player = self.level.player
+        if player is None:
+            return
+        dist = abs(self.rect.x - player.rect.x)
+        if (dist > 96):
+            self.__try_direct_on_player()
+        else:
+            speedup_ = self.speedup
+            self.speedup = dist < 64
+            if not speedup_ and self.speedup:
+                self.vx = Turtle.speed << 2
+                self.__try_direct_on_player()
+                self.vx = -self.vx
+            elif speedup_ and not self.speedup:
+                self.vx = Turtle.speed if self.vx > 0 else -Turtle.speed
+
+    def __try_direct_on_player(self):
+        player = self.level.player
+        if (((self.rect.x < player.rect.x) and (self.vx < 0)) or ((self.rect.x > player.rect.x) and (self.vx > 0))):
+            self.vx = -self.vx
 
     def process_draw(self):
         if not self.fake and (self.vx != 0):
@@ -62,13 +84,8 @@ class Turtle(DeathTouchEntity):
     def on_collide_with_player(self, collision):
         if collision.top and self.__try_take_damage():
             self.hp -= 1
-            if self.hp == 2:
-                self.image = self.level.images["Turtle-injured"]
-            elif self.hp == 1:
-                self.image = self.level.images["Turtle-halfdead"]
-            else:
+            if self.hp == 0:
                 self.level.add_new_entity(Animation(self.game_object, self.level.images["Turtle-death"], self.rect.x, self.rect.y, 120, 0, 4))
-                self.level.boss = None
                 self.disappear()
 
     def __try_take_damage(self):

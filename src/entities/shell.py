@@ -1,4 +1,3 @@
-
 from src.entities.death_touch_entity import DeathTouchEntity
 from src.entities.death_touch_entity import DeathTouchEntityInfo
 from src.static_grid_cells.obstacle import Obstacle
@@ -42,5 +41,3 @@ class Shell(DeathTouchEntity):
             self.vy = 0
         elif self.vy < self.falling_speed_limit:
             self.apply_gravity_force(Stats.GRAVITY)
-
-

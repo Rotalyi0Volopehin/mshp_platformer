@@ -9,8 +9,6 @@ from src.constants import Color
 from src.highscores import Highscore
 from src.io_tools import IO_Tools
 from src.lifes_stage import LifesStage
-from src.BossAttention import Label
-
 
 
 class Game:
@@ -24,7 +22,6 @@ class Game:
         self.gameplay_stage = None
         self.gameplay_stage = GameplayStage(self)
         self.objects = [self.gameplay_stage]
-
         self.create_game_objects()
         self.pr_quit = False
         self.display_player_lifes()
@@ -33,8 +30,6 @@ class Game:
         self.objects.append(TimeGame(self))
         self.score = Score(self)
         self.objects.append(self.score)
-        self.BossAttention = Label(self)
-        self.objects.append(self.BossAttention)
         self.coins = Coins(self)
         self.objects.append(self.coins)
 
