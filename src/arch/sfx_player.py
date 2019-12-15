@@ -12,7 +12,7 @@ class SFX_Player:
     def load():
         SFX_Player.sounds = { }
         slash = IO_Tools.sep_slash()
-        for sound_path in glob.glob("sounds{0}sfx{0}*.wav".format(slash)):
+        for sound_path in glob.glob("sfx{}*.wav".format(slash)):
             sound_name = sound_path[sound_path.rfind(slash) + 1: sound_path.rfind('.')]
             SFX_Player.sounds[sound_name] = pygame.mixer.Sound(sound_path)
 
