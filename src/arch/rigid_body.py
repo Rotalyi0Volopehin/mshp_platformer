@@ -15,12 +15,11 @@ class RigidBody(DrawableObject): #abstract
         if (rect.width != 64) or (rect.height != 64):
             Exceptions.throw(Exceptions.argument, "size of rigid body must be 64x64 pixels")
         self.rect = rect
+        self.__level = self.game_object.gameplay_stage.current_level if RigidBody.level_type.active_level is None else RigidBody.level_type.active_level
 
     @property
     def level(self):
-        if RigidBody.level_type.active_level is None:
-            return self.game_object.gameplay_stage.current_level
-        return RigidBody.level_type.active_level
+        return self.__level
 
     def drawing_priority(self):
         return 0

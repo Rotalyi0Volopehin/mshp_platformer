@@ -7,15 +7,25 @@ from src.coins import Coins
 from src.score import Score
 from src.io_tools import IO_Tools
 from src.lifes_stage import LifesStage
+from src.arch.sfx_player import SFX_Player
 
 
 class Game:
+    @staticmethod
+    def library_init():
+        pygame.mixer.init(22050, -16, 2, 64)
+        if not pygame.display.get_init():  # Инициализация библиотеки
+            pygame.display.init()
+        pygame.font.init()
+        SFX_Player.load()
+
     def __init__(self, width=1024, height=640):
         self.width = width
         self.height = height
         self.size = [self.width, self.height]
         self.loop_delay = 25
-        self.library_init()
+        self.screen = pygame.display.set_mode(self.size)  # Создание окна (установка размера)
+        pygame.display.set_caption("Super Mario")  # Пишем в шапку
         self.game_over = False
         self.gameplay_stage = None
         self.gameplay_stage = GameplayStage(self)
@@ -30,13 +40,6 @@ class Game:
         self.objects.append(self.score)
         self.coins = Coins(self)
         self.objects.append(self.coins)
-
-    def library_init(self):
-        if not pygame.display.get_init():  # Инициализация библиотеки
-            pygame.display.init()
-        pygame.font.init()
-        self.screen = pygame.display.set_mode(self.size)  # Создание окна (установка размера)
-        pygame.display.set_caption("Super Mario")  # Пишем в шапку
 
     def main_loop(self):
         while not self.game_over:  # Основной цикл работы программы

@@ -1,5 +1,6 @@
 from src.arch.static_grid_cell import StaticGridCell
 from src.entities.animation import Animation
+from src.arch.sfx_player import SFX_Player
 
 
 class Princess(StaticGridCell):
@@ -13,6 +14,7 @@ class Princess(StaticGridCell):
             if (self.thanks is None) and self.quick_collide_with(level.player):
                 self.thanks = Animation(self.game_object, level.images["Thanks"], self.rect.x - 64, self.rect.y - 64, 120, 0, 0)
                 level.add_new_entity(self.thanks)
+                SFX_Player.play_sound("Victory")
             elif (self.thanks != None) and (self.thanks.lifetime == 0):
                 self.game_object.gameplay_stage.next_level()
 

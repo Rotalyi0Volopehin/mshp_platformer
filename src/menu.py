@@ -3,17 +3,14 @@ import pygame
 from src.constants import Color
 from src.highscores import Highscore
 from src.io_tools import IO_Tools
+from src.arch.sfx_player import SFX_Player
 
 class Menu:
     def __init__(self):
-        pygame.init()
-        pygame.font.init()
         self.width = 1024
         self.height = 640
         self.screen = pygame.display.set_mode([self.width,self.height])
         self.volume = 5
-        pygame.mixer.music.load("..{0}sounds{0}button-40.mp3".format(IO_Tools.sep_slash()))
-        pygame.mixer.music.set_volume(self.volume / 10)
         self.menuIsActive = True  # аналог game_over, для закрытия меню
         # далее - переменные, отвечающие за окна (пункты меню)
         # текущим окнам присваивается True
@@ -60,6 +57,9 @@ class Menu:
 
         self.goBackText = self.main_font.render("Назад", 1, Color.WHITE)
         self.goBackPosition = self.goBackText.get_rect(center=[512, 510])
+
+    def play_beep(self):
+        SFX_Player.play_sound("Beep")
 
     # обработка событий главного окна (главного меню)
     def main_events(self):
@@ -127,25 +127,25 @@ class Menu:
 
     # обработка нажатий на кнопки
     def new_game_click(self):
-        pygame.mixer.music.play()
+        self.play_beep()
         self.menuIsActive = False
         self.m_quit = True
         # начало игры
 
     def settings_click(self):
-        pygame.mixer.music.play()
+        self.play_beep()
         self.mainIsActive = False
         self.settingsIsActive = True
 
     def highscores_click(self):
-        pygame.mixer.music.play()
+        self.play_beep()
         self.mainIsActive = False
         self.highscoresIsActive = True
 
     def lowResol_click(self):
         if not self.highResolution:
             return
-        pygame.mixer.music.play()
+        self.play_beep()
         self.highResolution = False
         return
         self.k[0] = 0.6734
@@ -159,7 +159,7 @@ class Menu:
     def highResol_click(self):
         if self.highResolution:
             return
-        pygame.mixer.music.play()
+        self.play_beep()
         self.highResolution = True
         return
         self.k[0] = 1.485
@@ -172,13 +172,13 @@ class Menu:
 
 
     def exit_click(self):
-        pygame.mixer.music.play()
+        self.play_beep()
         self.menuIsActive = False
         self.quit = True
         self.m_quit = True
 
     def go_back_click(self):
-        pygame.mixer.music.play()
+        self.play_beep()
         self.settingsIsActive = False
         self.highscoresIsActive = False
         self.mainIsActive = True
@@ -202,16 +202,18 @@ class Menu:
     def plus_click(self):
         if self.volume < 10:
             self.volume += 1
-        pygame.mixer.music.set_volume(self.volume / 10)
-        pygame.mixer.music.play()
-        self.volumeNumText = self.main_font.render(str(self.volume), 1, Color.WHITE)
+            SFX_Player.volume = self.volume / 10
+            pygame.mixer.music.set_volume(self.volume / 10)
+            self.play_beep()
+            self.volumeNumText = self.main_font.render(str(self.volume), 1, Color.WHITE)
 
     def minus_click(self):
         if self.volume > 0:
             self.volume -= 1
-        pygame.mixer.music.set_volume(self.volume / 10)
-        pygame.mixer.music.play()
-        self.volumeNumText = self.main_font.render(str(self.volume), 1, Color.WHITE)
+            SFX_Player.volume = self.volume / 10
+            pygame.mixer.music.set_volume(self.volume / 10)
+            self.play_beep()
+            self.volumeNumText = self.main_font.render(str(self.volume), 1, Color.WHITE)
 
     # изменение цвета кнопок при наведении на них
     def new_game_hover(self, mouse):

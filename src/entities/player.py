@@ -6,6 +6,7 @@ from src.static_grid_cells.brick_cell import BrickCell
 from src.entities.animation import Animation
 from src.constants import Stats
 from src.entities.turtle import Turtle
+from src.arch.sfx_player import SFX_Player
 
 
 class Player(Entity):
@@ -40,7 +41,7 @@ class Player(Entity):
                 self.disappear()
                 if self.game_object.gameplay_stage.player_lifes > 0:
                     self.game_object.gameplay_stage.player_lifes -= 1
-                    self.level.restart()
+                    self.game_object.gameplay_stage.restart_level()
                 else:
                     self.game_object.gameplay_stage.player_lifes = 2
                     self.game_object.game_over = True
@@ -89,6 +90,7 @@ class Player(Entity):
         self.level.add_new_entity(self.death_animation)
         self.dead = True
         self.vx = self.vy = 0
+        SFX_Player.play_sound("Death")
 
     def process_draw(self):
         if not self.dead:
@@ -185,7 +187,7 @@ class Player(Entity):
         elif code == "~nextlvl":
             self.game_object.gameplay_stage.next_level()
         elif code == "~restart":
-            self.level.restart()
+            self.game_object.gameplay_stage.restart_level()
         elif code == "~zerog":
             Player.gravity_force = 0 if Player.gravity_force > 0 else Stats.GRAVITY
         else:

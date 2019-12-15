@@ -6,6 +6,7 @@ from src.menu import Menu
 
 def main():
     random.seed()
+    Game.library_init()
     menu = Menu()
     height = menu.height
     width = menu.width

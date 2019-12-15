@@ -7,7 +7,7 @@ from src.constants import Color
 class Score(DrawableObject):
     def __init__(self, game_object):
         super().__init__(game_object)
-        self.score = 0
+        self.score_at_level_start = self.score = 0
         self.font = pygame.font.SysFont("Consolas", 45, True)
         self.caption = self.font.render('Score', True, Color.WHITE)
         self.refresh()
@@ -17,6 +17,14 @@ class Score(DrawableObject):
         self.caption_rect = self.caption.get_rect()
         self.caption_rect.x = 500
         self.data_rect.y = 50
+
+    def next_level(self):
+        self.score_at_level_start = self.score
+
+    def restart_level(self):
+        if self.score != self.score_at_level_start:
+            self.score = self.score_at_level_start
+            self.refresh()
 
     def process_get_score(self, value):
         self.score += value

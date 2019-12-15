@@ -26,8 +26,15 @@ class GameplayStage(DrawableObject):
     def current_level(self):
         return self.levels[self.current_level_index]
 
+    def restart_level(self):
+        self.game_object.coins.restart_level()
+        self.game_object.score.restart_level()
+        self.current_level.restart()
+
     def next_level(self):
         self.current_level_index += 1
+        self.game_object.coins.next_level()
+        self.game_object.score.next_level()
         if self.current_level_index == len(self.levels):
             self.game_object.game_over = True
             self.current_level_index = 0
