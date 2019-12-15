@@ -1,81 +1,58 @@
-import os
 import pygame
-from src.base_classes import DrawableObject
+
+from src.io_tools import IO_Tools
+from src.constants import Color
 
 
-class Highscore(DrawableObject):
-    pygame.font.init()
-    font = pygame.font.Font('../fonts/RetroGaming.ttf', 46)
+class Highscore:
+    highscore = None
 
     def __init__(self):
+        Highscore.highscore = self
         self.score = 0
-        self.file = open("scores/highscores.txt", mode='r', encoding='utf-8')
+        self.font = pygame.font.Font('..{0}fonts{0}RetroGaming.ttf'.format(IO_Tools.sep_slash()), 24)
+        self.load()
+        self.process_render()
+
+    def load(self):
         self.scores = []
-        self.int_sc = []
-        self.count = 0
-        for i in self.file:
-            self.count += 1
-            f = i.split()
-            ts = self.font.render(f[0], False, (255, 255, 255))
-            self.scores.append(ts)
-            self.int_sc.append(int(f[0]))
-        self.file.close()
+        file = open("scores{}highscores.txt".format(IO_Tools.sep_slash()), 'r', encoding='utf-8')
+        for line in file:
+            if len(line) == 0:
+                continue
+            self.scores.append(int(line.strip()))
+        file.close()
+        #self.scores.sort(reverse=True)
 
-    def process_event(self):
-        self.score = 0
-        self.file = open("scores/highscores.txt", mode='r', encoding='utf-8')
-        self.scores = []
-        self.int_sc = []
-        self.count = 0
-        for i in self.file:
-            self.count += 1
-            f = i.split()
-            ts = self.font.render(f[0], False, (255, 255, 255))
-            self.scores.append(ts)
-            self.int_sc.append(int(f[0]))
-        self.file.close()
+    def process_render(self):
+        self.render = pygame.Surface((100, 320))
+        self.render.fill((96, 150, 255))
+        for i in range(len(self.scores)):
+            score = self.scores[i]
+            score_img = self.font.render(str(score), False, Color.WHITE)
+            rect = score_img.get_rect()
+            rect.centerx = 50
+            rect.y = i * 30 + 10
+            self.render.blit(score_img, rect)
 
-    def process_draw(self, screen):
-        ts = self.font.render("Рекорды: ", False, (255, 255, 255))
-        screen.blit(ts, (400, 10))
-        self.pos_x = 470
-        self.pos_y = 30
-        self.int_sc = sorted(self.int_sc, reverse=True)
-        if self.count < 8:
-            a = 0
-            for item in self.int_sc:
-                if (a == 0):
-                    self.pos_y += 50
-                    a += 1
-                    screen.blit(self.font.render(str(item), False, (255, 255, 0)), (self.pos_x, self.pos_y))
-                elif (a == 1):
-                    self.pos_y += 50
-                    a += 1
-                    screen.blit(self.font.render(str(item), False, (192, 192, 192)), (self.pos_x, self.pos_y))
-                elif (a == 2):
-                    self.pos_y += 50
-                    a += 1
-                    screen.blit(self.font.render(str(item), False, (177, 86, 15)), (self.pos_x, self.pos_y))
-                else:
-                    self.pos_y += 50
-                    screen.blit(self.font.render(str(item), False, (255, 255, 255)), (self.pos_x, self.pos_y))
-        else:
-            a = 0
-            for i in range(0, 8):
-                item = self.int_sc[i]
-                if (a == 0):
-                    self.pos_y += 50
-                    a += 1
-                    screen.blit(self.font.render(str(item), False, (255, 255, 0)), (self.pos_x, self.pos_y))
-                elif (a == 1):
-                    self.pos_y += 50
-                    a += 1
-                    screen.blit(self.font.render(str(item), False, (192, 192, 192)), (self.pos_x, self.pos_y))
-                elif (a == 2):
-                    self.pos_y += 50
-                    a += 1
-                    screen.blit(self.font.render(str(item), False, (177, 86, 15)), (self.pos_x, self.pos_y))
-                else:
-                    self.pos_y += 50
-                    screen.blit(self.font.render(str(item), False, (255, 255, 255)), (self.pos_x, self.pos_y))
+    def draw(self, screen):
+        rect = self.render.get_rect()
+        screen_rect = screen.get_rect()
+        rect.centerx = screen_rect.width >> 1
+        rect.centery = screen_rect.height >> 1
+        screen.blit(self.render, rect)
 
+    def add_score(self, score):
+        if len(self.scores) == 10:
+            if (score <= self.scores[-1]) and (len(self.scores) == 10):
+                return
+            self.scores.pop(-1)
+        self.scores.append(score)
+        self.scores.sort(reverse=True)
+        self.process_render()
+
+    def save(self):
+        file = open("scores{}highscores.txt".format(IO_Tools.sep_slash()), 'w', encoding='utf-8')
+        for score in self.scores:
+            file.write(str(score) + '\n')
+        file.close()

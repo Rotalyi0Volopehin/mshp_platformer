@@ -1,4 +1,4 @@
-from src.entity import Entity
+from src.arch.entity import Entity
 
 
 # Это анимация, которая может показаться на lifetime итераций, двигаться с указанной скоростью и исчезать
@@ -13,3 +13,6 @@ class Animation(Entity):
         self.lifetime -= 1
         if self.lifetime <= 0:
             self.disappear()
+
+    def do_register_collisions(self):
+        return False

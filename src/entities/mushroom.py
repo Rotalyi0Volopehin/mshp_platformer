@@ -34,7 +34,8 @@ class Mushroom(DeathTouchEntity):
 
     def on_collide_with_player(self, collision):
         if collision.top:
-            self.game_object.gameplay_stage.current_level.delete_entity(self)
+            self.disappear()
+            self.game_object.score.process_get_score(2)
 
     def process_logic(self):
         if (self.vx > 0) and (self.rect.right >= self.game_object.gameplay_stage.current_level.width - 1):
@@ -51,7 +52,6 @@ class Mushroom(DeathTouchEntity):
         else:
             self.vy = Stats.GRAVITY
             self.vx = 0
-
         self.steps += abs(self.speed)
         if self.steps >= self.distance:
             self.change_direction()

@@ -5,12 +5,13 @@ ICON_DIR = os.path.dirname(__file__)  # Полный путь к каталог�
 
 
 class Color:
-    BLACK = [0, 0, 0]
-    RED = [255, 0, 0]
-    GREEN = [0, 255, 0]
-    BLUE = [0, 0, 255]
-<<<<<<< HEAD
-    BOLD = [88, 88, 88]
+    BLACK = (0, 0, 0)
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+    BOLD = (88, 88, 88)
+    WHITE = (255, 255, 255)
+    LIGHT_GRAY = (200, 200, 200)
 
 
 class PLT:
@@ -27,10 +28,6 @@ class Stats:
     HEIGHT = 64
     JUMP_POWER = 10
     GRAVITY = 1.2  # Сила, которая будет тянуть нас вниз
-=======
-    WHITE = [255, 255, 255]
-    LIGHT_GRAY = [200, 200, 200]
->>>>>>> origin/UI
 
 
 class Display:

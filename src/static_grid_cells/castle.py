@@ -1,10 +1,7 @@
-import pygame
-
-from src.static_grid_cells.brick_cell import Obstacle
-from src.entities.player import Player
+from src.arch.static_grid_cell import StaticGridCell
 
 
-class CastleEntry(Obstacle):
+class CastleEntry(StaticGridCell):
     def __init__(self, game, image, locx, locy):
         super().__init__(game, image, locx, locy)
         self.castle_image = self.level.images["Castle"]
@@ -12,14 +9,19 @@ class CastleEntry(Obstacle):
         self.castle_rect.bottom = self.rect.bottom
         self.castle_rect.centerx = self.rect.centerx
 
-    def collide_with(self, other_rigid_body):
-        if isinstance(other_rigid_body, Player):
+    def do_register_collisions(self):
+        return False
+
+    def process_logic(self):
+        level = self.level
+        if (level.player != None) and self.quick_collide_with(level.player):
             self.game_object.gameplay_stage.next_level()
 
     def process_draw(self):
         super().process_draw()
         castle_rect = self.level.camera.apply(self.castle_rect)
-        self.game_object.screen.blit(self.castle_image, castle_rect)
+        if (castle_rect.right > 0) and (castle_rect.left < self.game_object.width):
+            self.game_object.screen.blit(self.castle_image, castle_rect)
 
     def drawing_priority(self):
         return 11

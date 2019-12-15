@@ -1,10 +1,14 @@
+import random
+
 from src.entities.player import Player
-from src.static_grid_cell import StaticGridCell
+from src.static_grid_cells.obstacle import Obstacle
 from src.entities.animation import Animation
 from src.static_grid_cells.brick_cell import BrickCell
+from src.entities.shell import Shell
+from src.static_grid_cells.player_ghost import PlayerGhost
 
 
-class Question(StaticGridCell):
+class Question(Obstacle):
     def on_collide(self, collisions):
         for collision in collisions:
             if isinstance(collision.opp_rb, Player):
@@ -13,7 +17,30 @@ class Question(StaticGridCell):
                 return
 
     def summon(self):
-        level = self.level
         self.disappear()
-        level.add_new_entity(Animation(self.game_object, level.images["Coin"], self.rect.x, self.rect.y, 20, 0, -3))
-        level.add_new_static_grid_cell(BrickCell(self.game_object, level.images["BrickCell"], self.locx, self.locy))
+        key = random.getrandbits(4)
+        if key == 0:
+            self.summon_ghost()
+        elif key < 8:
+            self.summon_shells()
+        else:
+            self.summon_coin()
+        self.level.add_new_static_grid_cell(BrickCell(self.game_object, self.level.images["BrickCell"], self.locx, self.locy))
+        self.game_object.coins.process_change_coins(1)
+
+    def summon_shells(self):
+        shell = Shell(self.game_object, self.level.images["Shell"], self.rect.x, self.rect.y - 64, 240, -5)
+        shell.vy = -10
+        self.level.add_new_entity(shell)
+        shell = Shell(self.game_object, self.level.images["Shell"], self.rect.x, self.rect.y - 64, 240, 5)
+        shell.vy = -10
+        self.level.add_new_entity(shell)
+
+    def summon_coin(self):
+        self.level.add_new_entity(Animation(self.game_object, self.level.images["Coin"], self.rect.x, self.rect.y, 20, 0, -3))
+
+    def summon_ghost(self):
+        if self.locy == 0:
+            return
+        ghost = PlayerGhost(self.game_object, self.level.images["PlayerGhost"], self.locx, self.locy - 1)
+        self.level.add_new_static_grid_cell(ghost)
