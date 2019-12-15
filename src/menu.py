@@ -1,5 +1,5 @@
 import pygame
-from sys import exit
+
 from src.constants import Color
 from src.highscores import Highscore
 from src.io_tools import IO_Tools
@@ -27,13 +27,13 @@ class Menu:
 
         self.highscore = Highscore()
 
-        self.main_font = pygame.font.Font('../fonts/RetroGaming.ttf', 46)
+        self.main_font = pygame.font.Font("..{0}fonts{0}RetroGaming.ttf".format(IO_Tools.sep_slash()), 46)
         self.newGameText = self.main_font.render("Новая игра", 1, Color.WHITE)
         self.settingsText = self.main_font.render("Настройки", 1, Color.WHITE) # инициализация надписей
         self.highscoresText = self.main_font.render("Рекорды", 1, Color.WHITE)
         self.exitText = self.main_font.render("Выход", 1, Color.WHITE)
 
-        self.lowResolText = self.main_font.render("800 x 600", 1, Color.WHITE)
+        self.lowResolText = self.main_font.render("1024 x 640", 1, Color.WHITE)
         self.highResolText = self.main_font.render("1024 x 640", 1, Color.WHITE)
 
         self.volumeText = self.main_font.render("Громкость", 1, Color.WHITE)
@@ -143,26 +143,32 @@ class Menu:
         self.highscoresIsActive = True
 
     def lowResol_click(self):
+        if not self.highResolution:
+            return
         pygame.mixer.music.play()
-        if self.highResolution:
-            self.k[0] = 0.6734
-            self.k[1] = 0.9375
-            self.width = 800
-            self.height = 600
-            self.screen = pygame.display.set_mode([self.width, self.height])
-            self.resolution_change()
-            self.highResolution = False
+        self.highResolution = False
+        return
+        self.k[0] = 0.6734
+        self.k[1] = 0.9375
+        self.width = 600
+        self.height = 800
+        self.screen = pygame.display.set_mode([self.width, self.height])
+        self.resolution_change()
+        self.highResolution = False
 
     def highResol_click(self):
+        if self.highResolution:
+            return
         pygame.mixer.music.play()
-        if not self.highResolution:
-            self.k[0] = 1.485
-            self.k[1] = 1.066666
-            self.width = 1024
-            self.height = 640
-            self.screen = pygame.display.set_mode([self.width, self.height])
-            self.resolution_change()
-            self.highResolution = True
+        self.highResolution = True
+        return
+        self.k[0] = 1.485
+        self.k[1] = 1.066666
+        self.width = 1024
+        self.height = 640
+        self.screen = pygame.display.set_mode([self.width, self.height])
+        self.resolution_change()
+        self.highResolution = True
 
 
     def exit_click(self):
@@ -252,9 +258,9 @@ class Menu:
 
     def lowResol_hover(self, mouse):
         if self.lowResolPosition.left < mouse[0] < self.lowResolPosition.right and self.lowResolPosition.top < mouse[1] < self.lowResolPosition.bottom and self.highResolution:
-            self.lowResolText = self.main_font.render("800 x 600", 1, Color.LIGHT_GRAY)
+            self.lowResolText = self.main_font.render("1024 x 640", 1, Color.LIGHT_GRAY)
         else:
-            self.lowResolText = self.main_font.render("800 x 600", 1, Color.WHITE)
+            self.lowResolText = self.main_font.render("1024 x 640", 1, Color.WHITE)
 
     def highResol_hover(self, mouse):
         if self.highResolPosition.left < mouse[0] < self.highResolPosition.right and self.highResolPosition.top < mouse[1] < self.highResolPosition.bottom and not self.highResolution:

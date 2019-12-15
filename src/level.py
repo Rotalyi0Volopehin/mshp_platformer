@@ -26,6 +26,7 @@ class Level(DrawableObject):
         RigidBody.level_type = Level
         Level.active_level = self
         super().__init__(game)
+        self.name = name
         slash = IO_Tools.sep_slash()
         self.__level_path = "levels{1}{0}{1}".format(name, slash)
         self.__load_sprites()

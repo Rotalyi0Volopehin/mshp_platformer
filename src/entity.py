@@ -11,6 +11,7 @@ class Entity(RigidBody): #abstract
         rect = image.get_rect()
         rect.x = posx
         rect.y = posy
+        rect.width = rect.height = 64
         super().__init__(game, rect)
         self.image = image
         self.vx = self.vy = 0
