@@ -1,4 +1,4 @@
-from src.entity import Entity
+from src.arch.entity import Entity
 
 
 # Это анимация, которая может показаться на lifetime итераций, двигаться с указанной скоростью и исчезать

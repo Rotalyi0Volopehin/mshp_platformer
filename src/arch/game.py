@@ -1,12 +1,10 @@
 import pygame
 import time
 
-from src.gameplay_stage import GameplayStage
+from src.arch.gameplay_stage import GameplayStage
 from src.time import TimeGame
 from src.coins import Coins
 from src.score import Score
-from src.constants import Color
-from src.highscores import Highscore
 from src.io_tools import IO_Tools
 from src.lifes_stage import LifesStage
 
@@ -89,6 +87,6 @@ class Game:
 
     def write_scores(self):
         self.file = open("scores{}highscores.txt".format(IO_Tools.sep_slash()), mode='a', encoding='utf-8')
-        self.file.write(str(self.score.get_score()) + '\n')
+        self.file.write(str(self.score.score) + '\n')
         self.file.close()
 

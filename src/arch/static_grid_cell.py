@@ -1,7 +1,7 @@
 ﻿import pygame
 
 from src.exceptions import Exceptions
-from src.rigid_body import RigidBody
+from src.arch.rigid_body import RigidBody
 
 
 # Это ячейка статической сетки

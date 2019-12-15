@@ -1,6 +1,6 @@
 ﻿import copy
-from src.entity import Entity
-from src.save_symbol_register import SaveSymbolRegister
+from src.arch.entity import Entity
+from src.arch.save_symbol_register import SaveSymbolRegister
 from src.exceptions import Exceptions
 from src.constants import *
 

@@ -1,6 +1,6 @@
 ﻿from src.exceptions import Exceptions
-from src.static_grid_cell import StaticGridCell
-from src.save_symbol_register import SaveSymbolRegister
+from src.arch.static_grid_cell import StaticGridCell
+from src.arch.save_symbol_register import SaveSymbolRegister
 
 
 # Это сетка статических игровых объектов (игровое поле)

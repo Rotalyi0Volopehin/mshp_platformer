@@ -1,5 +1,5 @@
 from src.entities.player import Player
-from src.static_grid_cell import StaticGridCell
+from src.arch.static_grid_cell import StaticGridCell
 
 
 class Coin(StaticGridCell):

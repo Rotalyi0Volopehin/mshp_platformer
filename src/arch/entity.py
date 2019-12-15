@@ -1,6 +1,6 @@
 ﻿import pygame
 
-from src.rigid_body import RigidBody
+from src.arch.rigid_body import RigidBody
 from src.exceptions import Exceptions
 
 # Это сущность - игровой объект, обладающий позицией, скоростью и спрайтом

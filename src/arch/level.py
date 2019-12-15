@@ -1,17 +1,17 @@
 ﻿import glob
 import pygame
 
-from src.static_grid import StaticGrid
-from src.entity import Entity
+from src.arch.static_grid import StaticGrid
+from src.arch.entity import Entity
 from src.io_tools import IO_Tools
-from src.entity_set import EntitySet
+from src.arch.entity_set import EntitySet
 from src.base_classes import DrawableObject
 from src.exceptions import Exceptions
-from src.static_grid_cell import StaticGridCell
+from src.arch.static_grid_cell import StaticGridCell
 from src.entities.player import Player
-from src.camera import Camera
+from src.arch.camera import Camera
 from src.entities.death_touch_entity import DeathTouchEntity
-from src.rigid_body import RigidBody
+from src.arch.rigid_body import RigidBody
 from src.entities.turtle import Turtle
 
 

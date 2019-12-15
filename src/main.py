@@ -1,6 +1,6 @@
 import random
 
-from src.game import Game
+from src.arch.game import Game
 from src.menu import Menu
 
 

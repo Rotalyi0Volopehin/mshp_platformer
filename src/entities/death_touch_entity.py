@@ -1,4 +1,4 @@
-from src.entity import Entity
+from src.arch.entity import Entity
 from src.exceptions import Exceptions
 
 

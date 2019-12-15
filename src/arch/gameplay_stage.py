@@ -1,6 +1,6 @@
 import os
 
-from src.level import Level
+from src.arch.level import Level
 from src.base_classes import DrawableObject
 
 
@@ -31,6 +31,8 @@ class GameplayStage(DrawableObject):
         if self.current_level_index == len(self.levels):
             self.game_object.game_over = True
             self.current_level_index = 0
+        else:
+            self.current_level.restart()
 
     def process_draw(self):
         if not self.pause:

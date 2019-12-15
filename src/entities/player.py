@@ -1,6 +1,6 @@
 import pygame
 
-from src.entity import Entity
+from src.arch.entity import Entity
 from src.static_grid_cells.obstacle import Obstacle
 from src.static_grid_cells.brick_cell import BrickCell
 from src.entities.animation import Animation

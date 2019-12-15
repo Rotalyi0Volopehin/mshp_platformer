@@ -1,4 +1,4 @@
-from src.static_grid_cell import StaticGridCell
+from src.arch.static_grid_cell import StaticGridCell
 from src.entities.animation import Animation
 
 
