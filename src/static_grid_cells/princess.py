@@ -12,7 +12,7 @@ class Princess(StaticGridCell):
         level = self.level
         if (level.boss is None) and (level.player != None):
             if (self.thanks is None) and self.quick_collide_with(level.player):
-                self.thanks = Animation(self.game_object, level.images["Thanks"], self.rect.x - 64, self.rect.y - 64, 120, 0, 0)
+                self.thanks = Animation(self.game_object, level.images["Thanks"], self.rect.x - 128, self.rect.y - 64, 120, 0, 0)
                 level.add_new_entity(self.thanks)
                 SFX_Player.play_sound("Victory")
                 self.game_object.score.process_get_score(self.game_object.gameplay_stage.player_lifes * 100)
