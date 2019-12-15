@@ -2,6 +2,7 @@ import pygame
 
 from src.base_classes import DrawableObject
 from src.constants import Color
+from src.io_tools import IO_Tools
 
 
 class Score(DrawableObject):
@@ -28,6 +29,7 @@ class Score(DrawableObject):
 
     def process_get_score(self, value):
         self.score += value
+        self.refresh()
 
     def refresh(self):
         self.data = self.font.render('{:0>4}'.format(self.score), False, Color.WHITE)

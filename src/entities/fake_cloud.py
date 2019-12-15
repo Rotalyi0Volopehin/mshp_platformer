@@ -36,3 +36,4 @@ class FakeCloud(DeathTouchEntity):
     def on_collide_with_player(self, collision):
         if collision.top:
             self.disappear()
+            self.game_object.score.process_get_score(1)

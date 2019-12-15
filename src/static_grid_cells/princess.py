@@ -15,6 +15,7 @@ class Princess(StaticGridCell):
                 self.thanks = Animation(self.game_object, level.images["Thanks"], self.rect.x - 64, self.rect.y - 64, 120, 0, 0)
                 level.add_new_entity(self.thanks)
                 SFX_Player.play_sound("Victory")
+                self.game_object.score.process_get_score(self.game_object.gameplay_stage.player_lifes * 100)
             elif (self.thanks != None) and (self.thanks.lifetime == 0):
                 self.game_object.gameplay_stage.next_level()
 

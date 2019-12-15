@@ -330,8 +330,7 @@ class Menu:
 
             elif self.highscoresIsActive: # если мы в разделе рекордов
                 self.highscores_events()
-                self.highscore.process_event()
-                self.highscore.process_draw(self.screen)
+                self.highscore.draw(self.screen)
                 self.go_back_show()
             pygame.display.flip()
             pygame.time.wait(5)
