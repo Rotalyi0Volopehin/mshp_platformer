@@ -25,13 +25,18 @@ class Turtle(DeathTouchEntity):
             self.hp_images_right.append(pygame.transform.flip(img_left, True, False))
         self.image = images["Princess"]
         self.speedup = False
+        self.__bgm_stoped = False
 
     def process_logic(self):
         level = self.level
+        if not self.__bgm_stoped:
+            level.stop_bgm()
+            self.__bgm_stoped = True
         if self.fake:
             if (level.player != None) and (level.player.rect.x > self.rect.x - (Turtle.range >> 1)):
                 self.fake = False
                 self.vx = -Turtle.speed
+                self.level.play_bgm()
             return
         if self.dmg_cooldown > 0:
             self.dmg_cooldown -= 1
@@ -88,6 +93,7 @@ class Turtle(DeathTouchEntity):
             if self.hp == 0:
                 self.level.add_new_entity(Animation(self.game_object, self.level.images["Turtle-death"], self.rect.x, self.rect.y, 120, 0, 4))
                 self.disappear()
+                self.level.stop_bgm()
 
     def __try_take_damage(self):
         if self.dmg_cooldown == 0:

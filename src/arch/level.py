@@ -31,9 +31,9 @@ class Level(DrawableObject):
         self.name = name
         slash = IO_Tools.sep_slash()
         self.__level_path = "levels{1}{0}{1}".format(name, slash)
+        self.__load_bgm()
         self.__load_sprites()
         self.restart()
-        self.__load_bgm()
         Level.active_level = None
         Level.__prev_level = self
 
