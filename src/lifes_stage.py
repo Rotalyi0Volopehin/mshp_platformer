@@ -1,6 +1,7 @@
 import pygame
 
 from src.constants import Color
+from src.constants import get_retro_font
 
 
 class LifesStage:
@@ -16,7 +17,7 @@ class LifesStage:
         game.screen.blit(mario_image, mario_rect)
         #draw lifes count
         text = "X " + str(lifes)
-        font = pygame.font.SysFont("Consolas", 32, True, False)
+        font = get_retro_font(32)
         render = font.render(text, True, Color.WHITE)
         render_rect = render.get_rect()
         render_rect.x = (game.width >> 1) + 8

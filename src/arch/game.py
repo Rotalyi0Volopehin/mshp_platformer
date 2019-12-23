@@ -2,9 +2,7 @@ import pygame
 import time
 
 from src.arch.gameplay_stage import GameplayStage
-from src.time import TimeGame
-from src.coins import Coins
-from src.score import Score
+from src.ui_panel import UI_Panel
 from src.lifes_stage import LifesStage
 from src.arch.sfx_player import SFX_Player
 from src.highscores import Highscore
@@ -37,12 +35,8 @@ class Game:
         self.display_player_lifes()
 
     def create_game_objects(self):
-        self.time = TimeGame(self)
-        self.objects.append(self.time)
-        self.score = Score(self)
-        self.objects.append(self.score)
-        self.coins = Coins(self)
-        self.objects.append(self.coins)
+        self.ui_panel = UI_Panel(self)
+        self.objects.append(self.ui_panel)
 
     def main_loop(self):
         while not self.game_over:  # Основной цикл работы программы
@@ -62,7 +56,7 @@ class Game:
             if time_left > 0:
                 pygame.time.wait(time_left)
         self.gameplay_stage.current_level.stop_bgm()
-        Highscore.highscore.add_score(self.score.score)
+        Highscore.highscore.add_score(self.ui_panel.score.score)
         Highscore.highscore.save()
 
     def process_draw(self):
@@ -88,7 +82,7 @@ class Game:
                     if self.gameplay_stage.pause:
                         PauseStage.draw(self.screen)
                     else:
-                        self.time.unpause()
+                        self.ui_panel.time.unpause()
             for item in self.objects:
                 item.process_event(event)
 

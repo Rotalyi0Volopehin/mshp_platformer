@@ -1,7 +1,15 @@
 import os
+import pygame
+
+from src.io_tools import IO_Tools
+
 
 IMAGES_DIR = 'images_blank'
 ICON_DIR = os.path.dirname(__file__)  # Полный путь к каталогу с файлами
+
+
+def get_retro_font(size):
+    return pygame.font.Font("..{0}fonts{0}RetroGaming.ttf".format(IO_Tools.sep_slash()), size)
 
 
 class Color:

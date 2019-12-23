@@ -35,7 +35,7 @@ class Mushroom(DeathTouchEntity):
     def on_collide_with_player(self, collision):
         if collision.top:
             self.disappear()
-            self.game_object.score.process_get_score(2)
+            self.game_object.ui_panel.score.process_get_score(2)
 
     def process_logic(self):
         if (self.vx > 0) and (self.rect.right >= self.game_object.gameplay_stage.current_level.width - 1):

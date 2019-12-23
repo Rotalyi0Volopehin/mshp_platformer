@@ -205,7 +205,7 @@ class Player(Entity):
             self.vy = self.jump_force * (self.max_jump_duration - self.ignoring_jump_duration)
 
     def on_collide_with_dte(self, reverse_collision):
-        if self.dead:
+        if self.dead or not reverse_collision.main_rb.is_touch_deadly():
             return
         self.__try_to_die = True
         self.__try_to_die_by = reverse_collision.main_rb

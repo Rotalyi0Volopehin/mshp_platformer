@@ -13,6 +13,9 @@ class DeathTouchEntity(Entity): #abstract
     def on_collide_with_player(self, collision): #event
         pass
 
+    def is_touch_deadly(self):
+        return True
+
 
 # Это просто информация о сущности, убивающей с тычка
 class DeathTouchEntityInfo:

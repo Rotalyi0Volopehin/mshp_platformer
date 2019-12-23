@@ -1,7 +1,7 @@
 import pygame
 
-from src.io_tools import IO_Tools
 from src.constants import Color
+from src.constants import get_retro_font
 
 
 class PauseStage:
@@ -10,7 +10,7 @@ class PauseStage:
 
     @staticmethod
     def init():
-        font = pygame.font.Font("..{0}fonts{0}RetroGaming.ttf".format(IO_Tools.sep_slash()), 46)
+        font = get_retro_font(46)
         PauseStage.render = pygame.Surface((600, 300))
         text = font.render("ПАУЗА", True, Color.WHITE)
         text_rect = text.get_rect()

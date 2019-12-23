@@ -88,7 +88,7 @@ class Turtle(DeathTouchEntity):
 
     def on_collide_with_player(self, collision):
         if collision.top and self.__try_take_damage():
-            self.game_object.score.process_get_score(9)
+            self.game_object.ui_panel.score.process_get_score(9)
             self.hp -= 1
             if self.hp == 0:
                 self.level.add_new_entity(Animation(self.game_object, self.level.images["Turtle-death"], self.rect.x, self.rect.y, 120, 0, 4))
